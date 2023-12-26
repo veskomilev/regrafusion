@@ -25,9 +25,9 @@ private:
     bool eventFilter(QObject *obj, QEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
-    QPoint size_;
-    QPoint view_offset_;
-    const QPoint kViewIdentity;
+    QPointF window_size_;
+    QPointF view_offset_;
+    const QPointF kViewIdentity;
 
     float view_scale_;
     float kMinViewScale;
@@ -36,8 +36,8 @@ private:
     const uint kGridSize = 120U;
 
     // navigation related
-    QPoint drag_start_position_;
-    QPoint view_offset_before_drag_start_;
+    QPointF drag_start_position_;
+    QPointF view_offset_before_drag_start_;
 };
 
 #endif // DISPLAYWIDGET_H
