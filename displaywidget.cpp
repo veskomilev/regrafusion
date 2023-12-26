@@ -36,8 +36,8 @@ void DisplayWidget::paintGL()
     painter.setPen(Qt::gray);
     painter.drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
 
-    float offset_x = view_offset_.x();
-    float offset_y = view_offset_.y();
+    float view_offset_x = view_offset_.x();
+    float view_offset_y = view_offset_.y();
     float window_size_x = window_size_.x();
     float window_size_y = window_size_.y();
     float grid_size = kGridSize * view_scale_;
@@ -52,26 +52,26 @@ void DisplayWidget::paintGL()
 
     // draw coordinate grid
     painter.setPen(Qt::gray);
-    for (float i = grid_size; i < window_size_x - offset_x; i += grid_size) {
-        painter.drawLine(i + offset_x, 0, i + offset_x, window_size_y);
+    for (float i = grid_size; i < window_size_x - view_offset_x; i += grid_size) {
+        painter.drawLine(i + view_offset_x, 0, i + view_offset_x, window_size_y);
     }
 
-    for (float i = -grid_size; i > -offset_x; i -= grid_size) {
-        painter.drawLine(i + offset_x, 0, i + offset_x, window_size_y);
+    for (float i = -grid_size; i > -view_offset_x; i -= grid_size) {
+        painter.drawLine(i + view_offset_x, 0, i + view_offset_x, window_size_y);
     }
 
-    for (float i = grid_size; i < window_size_y - offset_y; i += grid_size) {
-        painter.drawLine(0, i + offset_y, window_size_x, i + offset_y);
+    for (float i = grid_size; i < window_size_y - view_offset_y; i += grid_size) {
+        painter.drawLine(0, i + view_offset_y, window_size_x, i + view_offset_y);
     }
 
-    for (float i = -grid_size; i > -offset_y; i -= grid_size) {
-        painter.drawLine(0, i + offset_y, window_size_x, i + offset_y);
+    for (float i = -grid_size; i > -view_offset_y; i -= grid_size) {
+        painter.drawLine(0, i + view_offset_y, window_size_x, i + view_offset_y);
     }
 
     // draw coordinate axes
     painter.setPen(Qt::black);
-    painter.drawLine(0, offset_y, window_size_x, offset_y);
-    painter.drawLine(offset_x, 0, offset_x, window_size_y);
+    painter.drawLine(0, view_offset_y, window_size_x, view_offset_y);
+    painter.drawLine(view_offset_x, 0, view_offset_x, window_size_y);
 
     // white background above is at constant relative position - it shouldn't be affected by the matrix
     // also, grid and axes look better when they're always a single pixel wide
