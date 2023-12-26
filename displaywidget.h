@@ -1,8 +1,9 @@
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
 
-#include <QOpenGLWidget>
 #include <QPoint>
+#include <QStatusBar>
+#include <QOpenGLWidget>
 
 class DisplayWidget : public QOpenGLWidget
 {
@@ -21,9 +22,14 @@ public:
 
     void resetViewScale();
 
+    void setStatusBar(QStatusBar* const& bar);
+
 private:
     bool eventFilter(QObject *obj, QEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+    void updateStatus();
+
+    QStatusBar* status_bar_;
 
     QPointF window_size_;
     QPointF view_offset_;

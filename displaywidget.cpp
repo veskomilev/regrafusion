@@ -7,6 +7,7 @@
 
 DisplayWidget::DisplayWidget(QWidget* parent) :
     QOpenGLWidget {parent},
+    status_bar_(nullptr),
     kViewIdentity(0.0f, 0.0f),
     drag_start_position_(kViewIdentity),
     view_offset_before_drag_start_(kViewIdentity),
@@ -95,17 +96,27 @@ void DisplayWidget::resizeGL(int w, int h)
     if (view_offset_ == kViewIdentity) {
         view_offset_ = QPointF(w / 2.0f, h / 2.0f);
     }
+
+    updateStatus();
+}
+
+void DisplayWidget::setStatusBar(QStatusBar * const &bar)
+{
+    status_bar_ = bar;
+    updateStatus();
 }
 
 void DisplayWidget::resetViewScale()
 {
     view_scale_ = 1.0f;
+    updateStatus();
     update();
 }
 
 void DisplayWidget::resetViewPosition()
 {
     view_offset_ = window_size_ / 2;
+    updateStatus();
     update();
 }
 
@@ -123,6 +134,7 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         view_offset_ = view_offset_before_drag_start_ - drag_start_position_ + mouseEvent->pos();
+        updateStatus();
         update();
         return true;
     }
@@ -146,8 +158,22 @@ void DisplayWidget::wheelEvent(QWheelEvent *event)
         float scale_factor = view_scale_ / old_scale;
         view_offset_ = (view_offset_ - window_size_ / 2) * scale_factor + window_size_ / 2;
 
+        updateStatus();
         update();
     }
 
     event->accept();
+}
+
+void DisplayWidget::updateStatus()
+{
+    assert(status_bar_ != nullptr);
+    status_bar_->showMessage(
+        QString("Position: (") +
+        QString::number(window_size_.x() / view_scale_ / 2 - view_offset_.x() / view_scale_) +
+        QString(", ") +
+        QString::number(window_size_.y() / view_scale_ / 2 - view_offset_.y() / view_scale_) +
+        QString("); Scale: ") +
+        QString::number(view_scale_)
+        );
 }

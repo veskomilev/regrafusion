@@ -18,7 +18,7 @@
     <item>
      <widget class="DisplayWidget" name="display_widget" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>100</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -90,6 +90,7 @@ to origin</string>
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="status_bar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>

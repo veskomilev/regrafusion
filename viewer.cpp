@@ -1,4 +1,5 @@
 #include <QStatusBar>
+#include <QString>
 
 #include "viewer.h"
 #include "./ui_viewer.h"
@@ -8,8 +9,7 @@ viewer::viewer(QWidget *parent)
     , ui(new Ui::viewer)
 {
     ui->setupUi(this);
-    QStatusBar *bar = new QStatusBar(this);
-    ui->horizontalLayout->addWidget(bar);
+    ui->display_widget->setStatusBar(ui->status_bar);
 }
 
 viewer::~viewer()
