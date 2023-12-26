@@ -20,6 +20,8 @@ public:
 private slots:
     void on_reset_view_button_pressed();
 
+    void on_reset_scale_button_pressed();
+
 private:
     Ui::viewer *ui;
 };

@@ -17,14 +17,23 @@ public:
 
     void resizeGL(int w, int h) override;
 
-    void resetView();
+    void resetViewPosition();
+
+    void resetViewScale();
 
 private:
     bool eventFilter(QObject *obj, QEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
     QPoint size_;
     QPoint view_offset_;
     const QPoint kViewIdentity;
+
+    float view_scale_;
+    float kMinViewScale;
+    float kMaxViewScale;
+
+    const uint kGridSize = 120U;
 
     // navigation related
     QPoint drag_start_position_;

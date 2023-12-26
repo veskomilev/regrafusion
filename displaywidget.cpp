@@ -3,12 +3,16 @@
 #include <QPainter>
 
 #include "displaywidget.h"
+#include "math.h"
 
-DisplayWidget::DisplayWidget(QWidget* parent)
-    : QOpenGLWidget {parent},
-      kViewIdentity(0, 0),
-      drag_start_position_(kViewIdentity),
-      view_offset_before_drag_start_(kViewIdentity)
+DisplayWidget::DisplayWidget(QWidget* parent) :
+    QOpenGLWidget {parent},
+    kViewIdentity(0, 0),
+    drag_start_position_(kViewIdentity),
+    view_offset_before_drag_start_(kViewIdentity),
+    view_scale_(1.0f),
+    kMinViewScale(0.01f),
+    kMaxViewScale(100.0f)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -25,40 +29,61 @@ void DisplayWidget::paintGL()
 {
     QPainter painter(this);
 
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
     painter.fillRect(QRect(kViewIdentity, size_), Qt::white);
     painter.setPen(Qt::gray);
     painter.drawRect(1, 0, size_.x() - 1, size_.y() - 1);
 
-    // white background above is at constant relative position - it shouldn't be affected by the matrix
-    painter.setWorldMatrixEnabled(true);
-    painter.setWorldTransform(QTransform(1, 0, 0, 1, view_offset_.x(), view_offset_.y()));
+    int offset_x = view_offset_.x();
+    int offset_y = view_offset_.y();
+    int size_x = size_.x();
+    int size_y = size_.y();
+    float grid_size = kGridSize * view_scale_;
 
-    int offset_x = -view_offset_.x();
-    int offset_y = -view_offset_.y();
+    // scale up or down grid adequately
+    while (grid_size < 25) {
+        grid_size *= 5;
+    }
+    while (grid_size > 125) {
+        grid_size /= 5;
+    }
 
     // draw coordinate grid
     painter.setPen(Qt::gray);
-    constexpr uint kGridSize = 40U;
-    for (int i = kGridSize; i < size_.x() + offset_x; i += kGridSize) {
-        painter.drawLine(i, size_.y() + offset_y, i, offset_y);
+    for (float i = grid_size; i < size_x - offset_x; i += grid_size) {
+        painter.drawLine(i + offset_x, 0, i + offset_x, size_y);
     }
 
-    for (int i = -kGridSize; i > offset_x; i -= kGridSize) {
-        painter.drawLine(i, size_.y() + offset_y, i, offset_y);
+    for (float i = -grid_size; i > -offset_x; i -= grid_size) {
+        painter.drawLine(i + offset_x, 0, i + offset_x, size_y);
     }
 
-    for (int i = kGridSize; i < size_.y() + offset_y; i += kGridSize) {
-        painter.drawLine(size_.x() + offset_x, i, offset_x, i);
+    for (float i = grid_size; i < size_y - offset_y; i += grid_size) {
+        painter.drawLine(0, i + offset_y, size_x, i + offset_y);
     }
 
-    for (int i = -kGridSize; i > offset_y; i -= kGridSize) {
-        painter.drawLine(size_.x() + offset_x, i, offset_x, i);
+    for (float i = -grid_size; i > -offset_y; i -= grid_size) {
+        painter.drawLine(0, i + offset_y, size_x, i + offset_y);
     }
 
     // draw coordinate axes
     painter.setPen(Qt::black);
-    painter.drawLine(size_.x() + offset_x, 0, offset_x, 0);
-    painter.drawLine(0, size_.y() + offset_y, 0, offset_y);
+    painter.drawLine(0, offset_y, size_x, offset_y);
+    painter.drawLine(offset_x, 0, offset_x, size_y);
+
+    // white background above is at constant relative position - it shouldn't be affected by the matrix
+    // also, grid and axes look better when they're always a single pixel wide
+    painter.setWorldMatrixEnabled(true);
+    painter.setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
+
+    // point out the origin
+    painter.setPen(Qt::red);
+    painter.drawEllipse(kViewIdentity, 1, 1);
+    painter.drawEllipse(kViewIdentity, 10, 10);
+    painter.drawEllipse(kViewIdentity, 100, 100);
+    painter.drawEllipse(kViewIdentity, 1000, 1000);
+
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -72,7 +97,13 @@ void DisplayWidget::resizeGL(int w, int h)
     }
 }
 
-void DisplayWidget::resetView()
+void DisplayWidget::resetViewScale()
+{
+    view_scale_ = 1.0f;
+    update();
+}
+
+void DisplayWidget::resetViewPosition()
 {
     view_offset_ = QPoint(size_.x() / 2, size_.y() / 2);
     update();
@@ -97,4 +128,26 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     }
 
     return false;
+}
+
+void DisplayWidget::wheelEvent(QWheelEvent *event)
+{
+    QPoint numDegrees = event->angleDelta();
+    float delta_y = numDegrees.y();
+
+    if (delta_y != 0.0f) {
+        float old_scale = view_scale_;
+
+        view_scale_ *= pow(1.1f, delta_y / 100.0f);
+        view_scale_ = fmin(kMaxViewScale, view_scale_);
+        view_scale_ = fmax(kMinViewScale, view_scale_);
+
+        // scale around the window center instead of around the origin - so adjust the view
+        float scale_factor = view_scale_ / old_scale;
+        view_offset_ = (view_offset_ - size_ / 2) * scale_factor + size_ / 2;
+
+        update();
+    }
+
+    event->accept();
 }

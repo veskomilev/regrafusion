@@ -19,5 +19,10 @@ viewer::~viewer()
 
 void viewer::on_reset_view_button_pressed()
 {
-    ui->display_widget->resetView();
+    ui->display_widget->resetViewPosition();
+}
+
+void viewer::on_reset_scale_button_pressed()
+{
+    ui->display_widget->resetViewScale();
 }
