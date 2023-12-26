@@ -17,6 +17,9 @@ public:
     viewer(QWidget *parent = nullptr);
     ~viewer();
 
+private slots:
+    void on_reset_view_button_pressed();
+
 private:
     Ui::viewer *ui;
 };

@@ -17,6 +17,8 @@ public:
 
     void resizeGL(int w, int h) override;
 
+    void resetView();
+
 private:
     bool eventFilter(QObject *obj, QEvent *event) override;
 

@@ -6,17 +6,50 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1606</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>viewer</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="central_widget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="DisplayWidget" name="widget" native="true"/>
+     <widget class="DisplayWidget" name="display_widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>100</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>500</width>
+        <height>500</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item alignment="Qt::AlignLeft|Qt::AlignTop">
+     <widget class="QPushButton" name="reset_view_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Reset view
+to origin</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -25,7 +58,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1606</width>
      <height>22</height>
     </rect>
    </property>

@@ -76,6 +76,12 @@ void DisplayWidget::resizeGL(int w, int h)
     }
 }
 
+void DisplayWidget::resetView()
+{
+    view_offset_ = QPoint(size_.x() / 2, size_.y() / 2);
+    update();
+}
+
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
