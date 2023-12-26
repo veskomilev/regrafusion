@@ -24,13 +24,11 @@ private:
 
     QPoint size_;
     QPoint view_offset_;
-    const QPoint kIdentity;
+    const QPoint kViewIdentity;
 
     // navigation related
     QPoint drag_start_position_;
     QPoint view_offset_before_drag_start_;
 };
-
-
 
 #endif // DISPLAYWIDGET_H

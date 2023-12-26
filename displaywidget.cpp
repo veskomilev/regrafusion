@@ -6,13 +6,13 @@
 
 DisplayWidget::DisplayWidget(QWidget* parent)
     : QOpenGLWidget {parent},
-      kIdentity(0, 0),
-      drag_start_position_(kIdentity),
-      view_offset_before_drag_start_(kIdentity)
+      kViewIdentity(0, 0),
+      drag_start_position_(kViewIdentity),
+      view_offset_before_drag_start_(kViewIdentity)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
-    view_offset_ = kIdentity;
+    view_offset_ = kViewIdentity;
     parent->installEventFilter(this);
 }
 
@@ -25,7 +25,7 @@ void DisplayWidget::paintGL()
 {
     QPainter painter(this);
 
-    painter.fillRect(QRect(kIdentity, size_), Qt::white);
+    painter.fillRect(QRect(kViewIdentity, size_), Qt::white);
     painter.setPen(Qt::gray);
     painter.drawRect(1, 0, size_.x() - 1, size_.y() - 1);
 
@@ -59,10 +59,6 @@ void DisplayWidget::paintGL()
     painter.setPen(Qt::black);
     painter.drawLine(size_.x() + offset_x, 0, offset_x, 0);
     painter.drawLine(0, size_.y() + offset_y, 0, offset_y);
-
-    // point out the origin
-    painter.setPen(Qt::red);
-    painter.drawEllipse(kIdentity, 10, 10);
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -71,7 +67,7 @@ void DisplayWidget::resizeGL(int w, int h)
 
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
-    if (view_offset_ == kIdentity) {
+    if (view_offset_ == kViewIdentity) {
         view_offset_ = QPoint(w / 2, h / 2);
     }
 }
