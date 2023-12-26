@@ -18,9 +18,15 @@ public:
     void resizeGL(int w, int h) override;
 
 private:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
     QPoint size_;
     QPoint view_offset_;
     const QPoint kIdentity;
+
+    // navigation related
+    QPoint drag_start_position_;
+    QPoint view_offset_before_drag_start_;
 };
 
 

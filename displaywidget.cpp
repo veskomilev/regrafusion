@@ -1,13 +1,19 @@
+#include <QEvent>
+#include <QMouseEvent>
 #include <QPainter>
 
 #include "displaywidget.h"
 
 DisplayWidget::DisplayWidget(QWidget* parent)
-    : QOpenGLWidget {parent}, kIdentity(0, 0)
+    : QOpenGLWidget {parent},
+      kIdentity(0, 0),
+      drag_start_position_(kIdentity),
+      view_offset_before_drag_start_(kIdentity)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
     view_offset_ = kIdentity;
+    parent->installEventFilter(this);
 }
 
 void DisplayWidget::initializeGL()
@@ -68,4 +74,25 @@ void DisplayWidget::resizeGL(int w, int h)
     if (view_offset_ == kIdentity) {
         view_offset_ = QPoint(w / 2, h / 2);
     }
+}
+
+bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        drag_start_position_ = mouseEvent->pos();
+        view_offset_before_drag_start_ = view_offset_;
+        return true;
+    }
+
+    if (event->type() == QEvent::MouseMove)
+    {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        view_offset_ = view_offset_before_drag_start_ - drag_start_position_ + mouseEvent->pos();
+        update();
+        return true;
+    }
+
+    return false;
 }
