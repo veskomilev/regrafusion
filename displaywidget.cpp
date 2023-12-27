@@ -25,6 +25,82 @@ void DisplayWidget::initializeGL()
 {
 }
 
+void DisplayWidget::paintGL()
+{
+    QPainter painter(this);
+
+    initializeCanvas(&painter);
+
+    // set up and adequate grid scale
+    float grid_size = kGridSize * view_scale_;
+    float ruler_size = kGridSize;
+    scaleGridSizes(grid_size, ruler_size);
+
+    drawGridAndAxes(&painter, grid_size);
+
+    // above elements are at constant relative position - they shouldn't be affected by the matrix
+    // also, grid and axes look better when they're always a single pixel wide
+    painter.setWorldMatrixEnabled(true);
+    painter.setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
+
+    // point out the origin
+    painter.setPen(Qt::red);
+    painter.drawEllipse(kViewIdentity, 1, 1);
+    painter.drawEllipse(kViewIdentity, 10, 10);
+    painter.drawEllipse(kViewIdentity, 100, 100);
+    painter.drawEllipse(kViewIdentity, 1000, 1000);
+
+    // disable the matrix for overlaid elements
+    painter.setWorldMatrixEnabled(false);
+
+    // overlay coordinate labels on top of drawn elements
+    // TODO: make it a setting if labels and/or axes should be overlaid or not
+    drawCoordinateLabels(&painter);
+
+    drawRulerNumbers(&painter, grid_size, ruler_size);
+}
+
+void DisplayWidget::resizeGL(int w, int h)
+{
+    window_size_ = QPointF(w, h);
+
+    // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
+    // (which always gets called on start before paintGL())
+    if (view_offset_ == kViewIdentity) {
+        view_offset_ = QPointF(w / 2.0f, h / 2.0f);
+    }
+
+    updateStatus();
+}
+
+void DisplayWidget::resetViewPosition()
+{
+    view_offset_ = window_size_ / 2;
+    updateStatus();
+    update();
+}
+
+void DisplayWidget::resetViewScale()
+{
+    view_scale_ = 1.0f;
+    updateStatus();
+    update();
+}
+
+void DisplayWidget::setStatusBar(QStatusBar * const &bar)
+{
+    status_bar_ = bar;
+    updateStatus();
+}
+
+void DisplayWidget::initializeCanvas(QPainter *painter)
+{
+    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    painter->fillRect(QRectF(kViewIdentity, window_size_), Qt::white);
+    painter->setPen(Qt::gray);
+    painter->drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
+}
+
 void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size)
 {
     // hardcoded values for precise control over scaling
@@ -67,6 +143,57 @@ void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size)
         grid_size /= 500;
         ruler_size = 0.2;
     }
+}
+
+void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
+{
+    // draw coordinate grid
+    painter->setPen(Qt::gray);
+    for (float i = grid_size; i < window_size_.x() - view_offset_.x(); i += grid_size) {
+        painter->drawLine(i + view_offset_.x(), 0, i + view_offset_.x(), window_size_.y());
+    }
+
+    for (float i = -grid_size; i > -view_offset_.x(); i -= grid_size) {
+        painter->drawLine(i + view_offset_.x(), 0, i + view_offset_.x(), window_size_.y());
+    }
+
+    for (float i = grid_size; i < window_size_.y() - view_offset_.y(); i += grid_size) {
+        painter->drawLine(0, i + view_offset_.y(), window_size_.x(), i + view_offset_.y());
+    }
+
+    for (float i = -grid_size; i > -view_offset_.y(); i -= grid_size) {
+        painter->drawLine(0, i + view_offset_.y(), window_size_.x(), i + view_offset_.y());
+    }
+
+    // draw coordinate axes
+    painter->setPen(Qt::black);
+    painter->drawLine(0, view_offset_.y(), window_size_.x(), view_offset_.y());
+    painter->drawLine(view_offset_.x(), 0, view_offset_.x(), window_size_.y());
+}
+
+void DisplayWidget::drawCoordinateLabels(QPainter *painter)
+{
+    painter->setPen(Qt::black);
+
+    painter->drawText(
+        window_size_.x() - kLabelsOffset,
+        view_offset_.y() + kLabelsOffset,
+        "x");
+    painter->drawText(
+        kLabelsOffset / 2,
+        view_offset_.y() + kLabelsOffset,
+        "-x");
+
+    painter->drawText(
+        QRectF(QPointF(0, window_size_.y() - kTextHeight),
+               QPointF(view_offset_.x() - kLabelsOffset / 2, window_size_.y() + kTextHeight)),
+        Qt::AlignRight,
+        "y");
+    painter->drawText(
+        QRectF(QPointF(0, 0),
+               QPointF(view_offset_.x() - kLabelsOffset / 2, kTextHeight)),
+        Qt::AlignRight,
+        "-y");
 }
 
 void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size)
@@ -129,123 +256,6 @@ void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float r
             QString::number(i));
     }
 
-}
-
-void DisplayWidget::paintGL()
-{
-    QPainter painter(this);
-
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-
-    painter.fillRect(QRectF(kViewIdentity, window_size_), Qt::white);
-    painter.setPen(Qt::gray);
-    painter.drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
-
-    float view_offset_x = view_offset_.x();
-    float view_offset_y = view_offset_.y();
-    float window_size_x = window_size_.x();
-    float window_size_y = window_size_.y();
-    float grid_size = kGridSize * view_scale_;
-    float ruler_size = kGridSize;
-
-    // scale up or down grid adequately
-    scaleGridSizes(grid_size, ruler_size);
-
-    // draw coordinate grid
-    painter.setPen(Qt::gray);
-    for (float i = grid_size; i < window_size_x - view_offset_x; i += grid_size) {
-        painter.drawLine(i + view_offset_x, 0, i + view_offset_x, window_size_y);
-    }
-
-    for (float i = -grid_size; i > -view_offset_x; i -= grid_size) {
-        painter.drawLine(i + view_offset_x, 0, i + view_offset_x, window_size_y);
-    }
-
-    for (float i = grid_size; i < window_size_y - view_offset_y; i += grid_size) {
-        painter.drawLine(0, i + view_offset_y, window_size_x, i + view_offset_y);
-    }
-
-    for (float i = -grid_size; i > -view_offset_y; i -= grid_size) {
-        painter.drawLine(0, i + view_offset_y, window_size_x, i + view_offset_y);
-    }
-
-    // draw coordinate axes
-    painter.setPen(Qt::black);
-    painter.drawLine(0, view_offset_y, window_size_x, view_offset_y);
-    painter.drawLine(view_offset_x, 0, view_offset_x, window_size_y);
-
-    // white background above is at constant relative position - it shouldn't be affected by the matrix
-    // also, grid and axes look better when they're always a single pixel wide
-    painter.setWorldMatrixEnabled(true);
-    painter.setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
-
-    // point out the origin
-    painter.setPen(Qt::red);
-    painter.drawEllipse(kViewIdentity, 1, 1);
-    painter.drawEllipse(kViewIdentity, 10, 10);
-    painter.drawEllipse(kViewIdentity, 100, 100);
-    painter.drawEllipse(kViewIdentity, 1000, 1000);
-
-    // draw coordinate labels
-    // overlay them on top of drawn elements
-    // TODO: make it a setting if labels and/or axes should be overlaid or not
-    painter.setWorldMatrixEnabled(false);
-    painter.setPen(Qt::black);
-
-    painter.drawText(
-                    window_size_x - kLabelsOffset,
-                    view_offset_y + kLabelsOffset,
-                    "x");
-    painter.drawText(
-                    kLabelsOffset / 2,
-                    view_offset_y + kLabelsOffset,
-                    "-x");
-
-    painter.drawText(
-                    QRectF(QPointF(0, window_size_y - kTextHeight),
-                           QPointF(view_offset_x - kLabelsOffset / 2, window_size_y + kTextHeight)),
-                    Qt::AlignRight,
-                    "y");
-    painter.drawText(
-                    QRectF(QPointF(0, 0),
-                           QPointF(view_offset_x - kLabelsOffset / 2, kTextHeight)),
-                    Qt::AlignRight,
-                    "-y");
-
-    drawRulerNumbers(&painter, grid_size, ruler_size);
-}
-
-void DisplayWidget::resizeGL(int w, int h)
-{
-    window_size_ = QPointF(w, h);
-
-    // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
-    // (which always gets called on start before paintGL())
-    if (view_offset_ == kViewIdentity) {
-        view_offset_ = QPointF(w / 2.0f, h / 2.0f);
-    }
-
-    updateStatus();
-}
-
-void DisplayWidget::setStatusBar(QStatusBar * const &bar)
-{
-    status_bar_ = bar;
-    updateStatus();
-}
-
-void DisplayWidget::resetViewScale()
-{
-    view_scale_ = 1.0f;
-    updateStatus();
-    update();
-}
-
-void DisplayWidget::resetViewPosition()
-{
-    view_offset_ = window_size_ / 2;
-    updateStatus();
-    update();
 }
 
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)

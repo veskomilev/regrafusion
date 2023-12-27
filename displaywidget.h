@@ -25,7 +25,13 @@ public:
     void setStatusBar(QStatusBar* const& bar);
 
 private:
+    void initializeCanvas(QPainter *painter);
+
     void scaleGridSizes(float& grid_size, float& ruler_size);
+
+    void drawGridAndAxes(QPainter *painter, float grid_size);
+
+    void drawCoordinateLabels(QPainter *painter);
 
     void drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size);
 
