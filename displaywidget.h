@@ -27,13 +27,13 @@ public:
 private:
     void initializeCanvas(QPainter *painter);
 
-    void scaleGridSizes(float& grid_size, float& ruler_size);
+    void scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width);
 
     void drawGridAndAxes(QPainter *painter, float grid_size);
 
     void drawCoordinateLabels(QPainter *painter);
 
-    void drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size);
+    void drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size, float ruler_text_width);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -60,7 +60,6 @@ private:
     // axes and ruler related
     static constexpr uint kLabelsOffset = 15;
     static constexpr uint kTextHeight = 20;
-    static constexpr uint kRulerTextWidth = 50;
 };
 
 #endif // DISPLAYWIDGET_H

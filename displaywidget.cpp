@@ -34,7 +34,8 @@ void DisplayWidget::paintGL()
     // set up and adequate grid scale
     float grid_size = kGridSize * view_scale_;
     float ruler_size = kGridSize;
-    scaleGridSizes(grid_size, ruler_size);
+    float ruler_text_width = 25;
+    scaleGridSizes(grid_size, ruler_size, ruler_text_width);
 
     drawGridAndAxes(&painter, grid_size);
 
@@ -57,7 +58,7 @@ void DisplayWidget::paintGL()
     // TODO: make it a setting if labels and/or axes should be overlaid or not
     drawCoordinateLabels(&painter);
 
-    drawRulerNumbers(&painter, grid_size, ruler_size);
+    drawRulerNumbers(&painter, grid_size, ruler_size, ruler_text_width);
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -101,29 +102,36 @@ void DisplayWidget::initializeCanvas(QPainter *painter)
     painter->drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
 }
 
-void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size)
+void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width)
 {
     // hardcoded values for precise control over scaling
     if (grid_size < 2) {
         grid_size *= 100;
         ruler_size = 10'000;
+        ruler_text_width = 55;
     } else if (grid_size < 2.5) {
         grid_size *= 40;
         ruler_size = 4000;
+        ruler_text_width = 55;
     } else if (grid_size < 5) {
         grid_size *= 20;
         ruler_size = 2000;
+        ruler_text_width = 45;
     } else if (grid_size < 20) {
         grid_size *= 10;
         ruler_size = 1000;
+        ruler_text_width = 45;
     } else if (grid_size < 25) {
         grid_size *= 4;
         ruler_size = 400;
+        ruler_text_width = 35;
     } else if (grid_size < 50) {
         grid_size *= 2;
         ruler_size = 200;
+        ruler_text_width = 35;
     } else if (grid_size < 200) {
         // do nothing - identity
+        ruler_text_width = 35;
     } else if (grid_size < 500) {
         grid_size /= 5;
         ruler_size = 20;
@@ -227,9 +235,9 @@ void DisplayWidget::drawCoordinateLabels(QPainter *painter)
         "-y");
 }
 
-void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size)
+void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size, float ruler_text_width)
 {
-    float left_edge = kRulerTextWidth;
+    float left_edge = ruler_text_width;
     float right_edge = window_size_.x() - kLabelsOffset;
     float top_edge = kLabelsOffset;
     float bottom_edge = window_size_.y() - kLabelsOffset;
@@ -240,8 +248,8 @@ void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float r
 
     // positive x coordinates
     // use min/max to make labels stick to edges of the screen
-    // subtract an additional kRulerTextWidth in condition, so that numbers aren't overlaid on top of 'x' label
-    for (float i = ruler_size; i * view_scale_ < right_edge - grid_origin.x() - kRulerTextWidth; i += ruler_size) {
+    // subtract an additional ruler_text_width in condition, so that numbers aren't overlaid on top of 'x' label
+    for (float i = ruler_size; i * view_scale_ < right_edge - grid_origin.x() - ruler_text_width; i += ruler_size) {
 
         float xpos = i * view_scale_ + grid_origin.x();
         float ypos = grid_origin.y() + kLabelsOffset;
