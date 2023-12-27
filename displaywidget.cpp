@@ -85,6 +85,34 @@ void DisplayWidget::paintGL()
     painter.drawEllipse(kViewIdentity, 100, 100);
     painter.drawEllipse(kViewIdentity, 1000, 1000);
 
+    // draw coordinate labels
+    // overlay them on top of drawn elements
+    // TODO: make it a setting if labels and/or axes should be overlaid or not
+    painter.setWorldMatrixEnabled(false);
+    painter.setPen(Qt::black);
+    constexpr uint kLabelsOffset = 15;
+    constexpr uint kTextHeight = 20;
+
+    painter.drawText(
+                    window_size_x - kLabelsOffset,
+                    view_offset_y + kLabelsOffset,
+                    "x");
+    painter.drawText(
+                    kLabelsOffset / 2,
+                    view_offset_y + kLabelsOffset,
+                    "-x");
+
+    painter.drawText(
+                    QRectF(QPointF(0, window_size_y - kTextHeight),
+                           QPointF(view_offset_x - kLabelsOffset / 2, window_size_y + kTextHeight)),
+                    Qt::AlignRight,
+                    "y");
+    painter.drawText(
+                    QRectF(QPointF(0, 0),
+                           QPointF(view_offset_x - kLabelsOffset / 2, kTextHeight)),
+                    Qt::AlignRight,
+                    "-y");
+
 }
 
 void DisplayWidget::resizeGL(int w, int h)
