@@ -25,6 +25,111 @@ void DisplayWidget::initializeGL()
 {
 }
 
+void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size)
+{
+    // hardcoded values for precise control over scaling
+    if (grid_size < 2) {
+        grid_size *= 100;
+        ruler_size = 10'000;
+    } else if (grid_size < 2.5) {
+        grid_size *= 40;
+        ruler_size = 4000;
+    } else if (grid_size < 5) {
+        grid_size *= 20;
+        ruler_size = 2000;
+    } else if (grid_size < 20) {
+        grid_size *= 10;
+        ruler_size = 1000;
+    } else if (grid_size < 25) {
+        grid_size *= 4;
+        ruler_size = 400;
+    } else if (grid_size < 50) {
+        grid_size *= 2;
+        ruler_size = 200;
+    } else if (grid_size < 200) {
+        // do nothing - identity
+    } else if (grid_size < 500) {
+        grid_size /= 5;
+        ruler_size = 20;
+    } else if (grid_size < 1000) {
+        grid_size /= 10;
+        ruler_size = 10;
+    } else if (grid_size < 2000) {
+        grid_size /= 20;
+        ruler_size = 5;
+    } else if (grid_size < 5000) {
+        grid_size /= 50;
+        ruler_size = 2;
+    } else if (grid_size < 20000) {
+        grid_size /= 100;
+        ruler_size = 1;
+    } else {
+        grid_size /= 500;
+        ruler_size = 0.2;
+    }
+}
+
+void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size)
+{
+    painter->setPen(Qt::black);
+
+    for (float i = ruler_size; i * view_scale_ < window_size_.x() - view_offset_.x() - kRulerMarginRight; i += ruler_size) {
+        float xpos = i * view_scale_ + view_offset_.x();
+        float ypos = view_offset_.y() + kLabelsOffset;
+        if (xpos < kRulerMarginLeft)
+            continue;
+
+        ypos = fmin(ypos, window_size_.y() - kTextHeight);
+        ypos = fmax(ypos, kTextHeight);
+
+        painter->drawText(xpos, ypos, QString::number(i));
+    }
+
+    for (float i = -ruler_size; i * view_scale_ >  - view_offset_.x() + kRulerMarginLeft; i -= ruler_size) {
+        float xpos = i * view_scale_ + view_offset_.x();
+        float ypos = view_offset_.y() + kLabelsOffset;
+        if (xpos > window_size_.x() - kRulerMarginRight)
+            continue;
+
+        ypos = fmin(ypos, window_size_.y() - kTextHeight);
+        ypos = fmax(ypos, kTextHeight);
+
+        painter->drawText(xpos, ypos, QString::number(i));
+    }
+
+    for (float i = ruler_size; i * view_scale_ < window_size_.y() - view_offset_.y() - kRulerMarginBottom; i += ruler_size) {
+        float ypos = i * view_scale_ + view_offset_.y();
+        float xpos = view_offset_.x() - kLabelsOffset / 2;
+        if (ypos < kRulerMarginTop)
+            continue;
+
+        xpos = fmin(xpos, window_size_.x() - kTextHeight);
+        xpos = fmax(xpos, kRulerTextWidth);
+
+        painter->drawText(
+            QRectF(QPointF(xpos - window_size_.x(), ypos),
+                   QPointF(xpos, ypos + kTextHeight)),
+            Qt::AlignRight,
+            QString::number(i));
+    }
+
+    for (float i = -ruler_size; i * view_scale_ >  - view_offset_.y() + kRulerMarginTop; i -= ruler_size) {
+        float ypos = i * view_scale_ + view_offset_.y();
+        float xpos = view_offset_.x() - kLabelsOffset / 2;
+        if (ypos > window_size_.y() - kRulerMarginTop)
+            continue;
+
+        xpos = fmin(xpos, window_size_.x() - kTextHeight);
+        xpos = fmax(xpos, kRulerTextWidth);
+
+        painter->drawText(
+            QRectF(QPointF(xpos - window_size_.x(), ypos),
+                   QPointF(xpos, ypos + kTextHeight)),
+            Qt::AlignRight,
+            QString::number(i));
+    }
+
+}
 
 void DisplayWidget::paintGL()
 {
@@ -41,14 +146,10 @@ void DisplayWidget::paintGL()
     float window_size_x = window_size_.x();
     float window_size_y = window_size_.y();
     float grid_size = kGridSize * view_scale_;
+    float ruler_size = kGridSize;
 
     // scale up or down grid adequately
-    while (grid_size < 25) {
-        grid_size *= 5;
-    }
-    while (grid_size > 125) {
-        grid_size /= 5;
-    }
+    scaleGridSizes(grid_size, ruler_size);
 
     // draw coordinate grid
     painter.setPen(Qt::gray);
@@ -90,8 +191,6 @@ void DisplayWidget::paintGL()
     // TODO: make it a setting if labels and/or axes should be overlaid or not
     painter.setWorldMatrixEnabled(false);
     painter.setPen(Qt::black);
-    constexpr uint kLabelsOffset = 15;
-    constexpr uint kTextHeight = 20;
 
     painter.drawText(
                     window_size_x - kLabelsOffset,
@@ -113,6 +212,7 @@ void DisplayWidget::paintGL()
                     Qt::AlignRight,
                     "-y");
 
+    drawRulerNumbers(&painter, grid_size, ruler_size);
 }
 
 void DisplayWidget::resizeGL(int w, int h)

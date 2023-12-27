@@ -25,8 +25,14 @@ public:
     void setStatusBar(QStatusBar* const& bar);
 
 private:
+    void scaleGridSizes(float& grid_size, float& ruler_size);
+
+    void drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size);
+
     bool eventFilter(QObject *obj, QEvent *event) override;
+
     void wheelEvent(QWheelEvent *event) override;
+
     void updateStatus();
 
     QStatusBar* status_bar_;
@@ -39,11 +45,20 @@ private:
     float kMinViewScale;
     float kMaxViewScale;
 
-    const uint kGridSize = 120U;
+    const uint kGridSize = 100U;
 
     // navigation related
     QPointF drag_start_position_;
     QPointF view_offset_before_drag_start_;
+
+    // axes and ruler related
+    static constexpr uint kLabelsOffset = 15;
+    static constexpr uint kTextHeight = 20;
+    static constexpr uint kRulerTextWidth = 50;
+    static constexpr uint kRulerMarginRight = 50;
+    static constexpr uint kRulerMarginLeft = 30;
+    static constexpr uint kRulerMarginTop = 30;
+    static constexpr uint kRulerMarginBottom = 50;
 };
 
 #endif // DISPLAYWIDGET_H
