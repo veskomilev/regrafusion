@@ -155,21 +155,38 @@ void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size, float& r
 
 void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
 {
+    float left_edge = -view_offset_.x();
+    float right_edge = window_size_.x() - view_offset_.x();
+    float top_edge = -view_offset_.y();
+    float bottom_edge = window_size_.y() - view_offset_.y();
+
     // draw coordinate grid
     painter->setPen(Qt::gray);
     for (float i = grid_size; i < window_size_.x() - view_offset_.x(); i += grid_size) {
+        if (i < left_edge)
+            continue;
+
         painter->drawLine(i + view_offset_.x(), 0, i + view_offset_.x(), window_size_.y());
     }
 
     for (float i = -grid_size; i > -view_offset_.x(); i -= grid_size) {
+        if (i > right_edge)
+            continue;
+
         painter->drawLine(i + view_offset_.x(), 0, i + view_offset_.x(), window_size_.y());
     }
 
     for (float i = grid_size; i < window_size_.y() - view_offset_.y(); i += grid_size) {
+        if (i < top_edge)
+            continue;
+
         painter->drawLine(0, i + view_offset_.y(), window_size_.x(), i + view_offset_.y());
     }
 
     for (float i = -grid_size; i > -view_offset_.y(); i -= grid_size) {
+        if (i > bottom_edge)
+            continue;
+
         painter->drawLine(0, i + view_offset_.y(), window_size_.x(), i + view_offset_.y());
     }
 
