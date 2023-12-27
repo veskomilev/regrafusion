@@ -39,6 +39,9 @@ private:
 
     void wheelEvent(QWheelEvent *event) override;
 
+    // limit view position to mitigate artifacts due to loss of floating point precision
+    void limitViewPosition();
+
     void updateStatus();
 
     QStatusBar* status_bar_;
@@ -46,10 +49,11 @@ private:
     QPointF window_size_;
     QPointF view_offset_;
     const QPointF kViewIdentity;
+    static constexpr float kMaxViewOffset = 5000.0f;
 
     float view_scale_;
-    float kMinViewScale;
-    float kMaxViewScale;
+    static constexpr float kMinViewScale = 0.2f;
+    static constexpr float kMaxViewScale = 100.0f;
 
     const uint kGridSize = 100U;
 

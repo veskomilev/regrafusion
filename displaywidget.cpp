@@ -11,9 +11,7 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     kViewIdentity(0.0f, 0.0f),
     drag_start_position_(kViewIdentity),
     view_offset_before_drag_start_(kViewIdentity),
-    view_scale_(1.0f),
-    kMinViewScale(0.01f),
-    kMaxViewScale(100.0f)
+    view_scale_(1.0f)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -71,6 +69,7 @@ void DisplayWidget::resizeGL(int w, int h)
         view_offset_ = QPointF(w / 2.0f, h / 2.0f);
     }
 
+    limitViewPosition();
     updateStatus();
 }
 
@@ -349,6 +348,9 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         view_offset_ = view_offset_before_drag_start_ - drag_start_position_ + mouseEvent->pos();
+
+        limitViewPosition();
+
         updateStatus();
         update();
         return true;
@@ -378,6 +380,14 @@ void DisplayWidget::wheelEvent(QWheelEvent *event)
     }
 
     event->accept();
+}
+
+void DisplayWidget::limitViewPosition()
+{
+    view_offset_.rx() = fmin(view_offset_.x(), window_size_.x() / 2 + kMaxViewOffset * view_scale_);
+    view_offset_.rx() = fmax(view_offset_.x(), window_size_.x() / 2 - kMaxViewOffset * view_scale_);
+    view_offset_.ry() = fmin(view_offset_.y(), window_size_.y() / 2 + kMaxViewOffset * view_scale_);
+    view_offset_.ry() = fmax(view_offset_.y(), window_size_.y() / 2 - kMaxViewOffset * view_scale_);
 }
 
 void DisplayWidget::updateStatus()
