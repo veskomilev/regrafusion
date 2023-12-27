@@ -173,25 +173,44 @@ void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
 
 void DisplayWidget::drawCoordinateLabels(QPainter *painter)
 {
+    float xpos;
+    float ypos;
     painter->setPen(Qt::black);
 
-    painter->drawText(
-        window_size_.x() - kLabelsOffset,
-        view_offset_.y() + kLabelsOffset,
-        "x");
-    painter->drawText(
-        kLabelsOffset / 2,
-        view_offset_.y() + kLabelsOffset,
-        "-x");
+    // use min/max to make labels stick to edges of the screen
+    xpos = window_size_.x() - kLabelsOffset;
+    ypos = view_offset_.y() + kLabelsOffset;
+    ypos = fmin(ypos, window_size_.y() - kTextHeight);
+    ypos = fmax(ypos, kTextHeight);
+    xpos = fmax(xpos, view_offset_.x() + kLabelsOffset);
+    painter->drawText(xpos, ypos, "x");
 
+    xpos = kLabelsOffset / 2;
+    ypos = view_offset_.y() + kLabelsOffset;
+    ypos = fmin(ypos, window_size_.y() - kTextHeight);
+    ypos = fmax(ypos, kTextHeight);
+    xpos = fmin(xpos, view_offset_.x() - kLabelsOffset);
+    painter->drawText(xpos, ypos, "-x");
+
+    xpos = view_offset_.x() - kLabelsOffset / 2;
+    ypos = window_size_.y() - kTextHeight;
+    xpos = fmin(xpos, window_size_.x() - kTextHeight);
+    xpos = fmax(xpos, kTextHeight);
+    ypos = fmax(ypos, view_offset_.y() + kLabelsOffset);
     painter->drawText(
-        QRectF(QPointF(0, window_size_.y() - kTextHeight),
-               QPointF(view_offset_.x() - kLabelsOffset / 2, window_size_.y() + kTextHeight)),
+        QRectF(QPointF(0, ypos),
+               QPointF(xpos, ypos + kTextHeight)),
         Qt::AlignRight,
         "y");
+
+    xpos = view_offset_.x() - kLabelsOffset / 2;
+    ypos = 0;
+    xpos = fmin(xpos, window_size_.x() - kTextHeight);
+    xpos = fmax(xpos, kTextHeight);
+    ypos = fmin(ypos, view_offset_.y() - kLabelsOffset);
     painter->drawText(
-        QRectF(QPointF(0, 0),
-               QPointF(view_offset_.x() - kLabelsOffset / 2, kTextHeight)),
+        QRectF(QPointF(0, ypos),
+               QPointF(xpos, ypos + kTextHeight)),
         Qt::AlignRight,
         "-y");
 }
@@ -200,6 +219,7 @@ void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float r
 {
     painter->setPen(Qt::black);
 
+    // use min/max to make labels stick to edges of the screen
     for (float i = ruler_size; i * view_scale_ < window_size_.x() - view_offset_.x() - kRulerMarginRight; i += ruler_size) {
         float xpos = i * view_scale_ + view_offset_.x();
         float ypos = view_offset_.y() + kLabelsOffset;
