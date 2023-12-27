@@ -61,10 +61,6 @@ private:
     static constexpr uint kLabelsOffset = 15;
     static constexpr uint kTextHeight = 20;
     static constexpr uint kRulerTextWidth = 50;
-    static constexpr uint kRulerMarginRight = 50;
-    static constexpr uint kRulerMarginLeft = 30;
-    static constexpr uint kRulerMarginTop = 30;
-    static constexpr uint kRulerMarginBottom = 50;
 };
 
 #endif // DISPLAYWIDGET_H

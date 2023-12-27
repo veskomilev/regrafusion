@@ -173,41 +173,53 @@ void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
 
 void DisplayWidget::drawCoordinateLabels(QPainter *painter)
 {
+    float left_edge = kLabelsOffset;
+    float right_edge = window_size_.x() - kLabelsOffset;
+    float top_edge = kLabelsOffset;
+    float bottom_edge = window_size_.y() - kLabelsOffset;
+
+    float label_left_edge = kLabelsOffset / 2;
+    float label_right_edge = window_size_.x() - kLabelsOffset;
+    float label_top_edge = kLabelsOffset / 2;
+    float label_bottom_edge = window_size_.y() - kTextHeight;
+
+    QPointF& grid_origin = view_offset_; // rename for clarity's sake
+
     float xpos;
     float ypos;
+
     painter->setPen(Qt::black);
 
     // use min/max to make labels stick to edges of the screen
-    xpos = window_size_.x() - kLabelsOffset;
-    ypos = view_offset_.y() + kLabelsOffset;
-    ypos = fmin(ypos, window_size_.y() - kTextHeight);
-    ypos = fmax(ypos, kTextHeight);
-    xpos = fmax(xpos, view_offset_.x() + kLabelsOffset);
+    // common y coordinate for 'x' labels
+    ypos = grid_origin.y() + kLabelsOffset;
+    ypos = fmin(ypos, bottom_edge);
+    ypos = fmax(ypos, top_edge);
+
+    xpos = label_right_edge;
+    xpos = fmax(xpos, grid_origin.x() + kLabelsOffset);
     painter->drawText(xpos, ypos, "x");
 
-    xpos = kLabelsOffset / 2;
-    ypos = view_offset_.y() + kLabelsOffset;
-    ypos = fmin(ypos, window_size_.y() - kTextHeight);
-    ypos = fmax(ypos, kTextHeight);
-    xpos = fmin(xpos, view_offset_.x() - kLabelsOffset);
+    xpos = label_left_edge;
+    xpos = fmin(xpos, grid_origin.x() - kLabelsOffset);
     painter->drawText(xpos, ypos, "-x");
 
-    xpos = view_offset_.x() - kLabelsOffset / 2;
-    ypos = window_size_.y() - kTextHeight;
-    xpos = fmin(xpos, window_size_.x() - kTextHeight);
-    xpos = fmax(xpos, kTextHeight);
-    ypos = fmax(ypos, view_offset_.y() + kLabelsOffset);
+
+    // common x coordinate for 'y' labels
+    xpos = grid_origin.x() - kLabelsOffset / 2;
+    xpos = fmin(xpos, right_edge);
+    xpos = fmax(xpos, left_edge);
+
+    ypos = label_bottom_edge;
+    ypos = fmax(ypos, grid_origin.y() + kLabelsOffset);
     painter->drawText(
         QRectF(QPointF(0, ypos),
                QPointF(xpos, ypos + kTextHeight)),
         Qt::AlignRight,
         "y");
 
-    xpos = view_offset_.x() - kLabelsOffset / 2;
-    ypos = 0;
-    xpos = fmin(xpos, window_size_.x() - kTextHeight);
-    xpos = fmax(xpos, kTextHeight);
-    ypos = fmin(ypos, view_offset_.y() - kLabelsOffset);
+    ypos = label_top_edge;
+    ypos = fmin(ypos, grid_origin.y() - kLabelsOffset);
     painter->drawText(
         QRectF(QPointF(0, ypos),
                QPointF(xpos, ypos + kTextHeight)),
@@ -217,65 +229,85 @@ void DisplayWidget::drawCoordinateLabels(QPainter *painter)
 
 void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size)
 {
+    float left_edge = kRulerTextWidth;
+    float right_edge = window_size_.x() - kLabelsOffset;
+    float top_edge = kLabelsOffset;
+    float bottom_edge = window_size_.y() - kLabelsOffset;
+
+    QPointF& grid_origin = view_offset_; // rename for clarity's sake
+
     painter->setPen(Qt::black);
 
+    // positive x coordinates
     // use min/max to make labels stick to edges of the screen
-    for (float i = ruler_size; i * view_scale_ < window_size_.x() - view_offset_.x() - kRulerMarginRight; i += ruler_size) {
-        float xpos = i * view_scale_ + view_offset_.x();
-        float ypos = view_offset_.y() + kLabelsOffset;
-        if (xpos < kRulerMarginLeft)
+    // subtract an additional kRulerTextWidth in condition, so that numbers aren't overlaid on top of 'x' label
+    for (float i = ruler_size; i * view_scale_ < right_edge - grid_origin.x() - kRulerTextWidth; i += ruler_size) {
+
+        float xpos = i * view_scale_ + grid_origin.x();
+        float ypos = grid_origin.y() + kLabelsOffset;
+
+        if (xpos < left_edge)
             continue;
 
-        ypos = fmin(ypos, window_size_.y() - kTextHeight);
-        ypos = fmax(ypos, kTextHeight);
+        ypos = fmin(ypos, bottom_edge);
+        ypos = fmax(ypos, top_edge);
 
         painter->drawText(xpos, ypos, QString::number(i));
     }
 
-    for (float i = -ruler_size; i * view_scale_ >  - view_offset_.x() + kRulerMarginLeft; i -= ruler_size) {
-        float xpos = i * view_scale_ + view_offset_.x();
-        float ypos = view_offset_.y() + kLabelsOffset;
-        if (xpos > window_size_.x() - kRulerMarginRight)
+    // negative x coordinates
+    for (float i = -ruler_size; i * view_scale_ > left_edge - grid_origin.x(); i -= ruler_size) {
+
+        float xpos = i * view_scale_ + grid_origin.x();
+        float ypos = grid_origin.y() + kLabelsOffset;
+
+        if (xpos > right_edge)
             continue;
 
-        ypos = fmin(ypos, window_size_.y() - kTextHeight);
-        ypos = fmax(ypos, kTextHeight);
+        ypos = fmin(ypos, bottom_edge);
+        ypos = fmax(ypos, top_edge);
 
         painter->drawText(xpos, ypos, QString::number(i));
     }
 
-    for (float i = ruler_size; i * view_scale_ < window_size_.y() - view_offset_.y() - kRulerMarginBottom; i += ruler_size) {
-        float ypos = i * view_scale_ + view_offset_.y();
-        float xpos = view_offset_.x() - kLabelsOffset / 2;
-        if (ypos < kRulerMarginTop)
+    // negative y coordinates
+    // subtract an additional kLabelsOffset in condition, so that numbers aren't overlaid on top of 'y' label
+    for (float i = ruler_size; i * view_scale_ < bottom_edge - grid_origin.y() - kLabelsOffset; i += ruler_size) {
+
+        float ypos = i * view_scale_ + grid_origin.y();
+        float xpos = grid_origin.x() - kLabelsOffset / 2;
+
+        if (ypos < top_edge)
             continue;
 
-        xpos = fmin(xpos, window_size_.x() - kTextHeight);
-        xpos = fmax(xpos, kRulerTextWidth);
+        xpos = fmin(xpos, right_edge);
+        xpos = fmax(xpos, left_edge);
 
         painter->drawText(
-            QRectF(QPointF(xpos - window_size_.x(), ypos),
+            QRectF(QPointF(0, ypos),
                    QPointF(xpos, ypos + kTextHeight)),
             Qt::AlignRight,
             QString::number(i));
     }
 
-    for (float i = -ruler_size; i * view_scale_ >  - view_offset_.y() + kRulerMarginTop; i -= ruler_size) {
-        float ypos = i * view_scale_ + view_offset_.y();
-        float xpos = view_offset_.x() - kLabelsOffset / 2;
-        if (ypos > window_size_.y() - kRulerMarginTop)
+    // positive y coordinates
+    for (float i = -ruler_size; i * view_scale_ > top_edge - grid_origin.y(); i -= ruler_size) {
+
+        float ypos = i * view_scale_ + grid_origin.y();
+        float xpos = grid_origin.x() - kLabelsOffset / 2;
+
+        if (ypos > bottom_edge)
             continue;
 
-        xpos = fmin(xpos, window_size_.x() - kTextHeight);
-        xpos = fmax(xpos, kRulerTextWidth);
+        xpos = fmin(xpos, right_edge);
+        xpos = fmax(xpos, left_edge);
 
         painter->drawText(
-            QRectF(QPointF(xpos - window_size_.x(), ypos),
+            QRectF(QPointF(0, ypos),
                    QPointF(xpos, ypos + kTextHeight)),
             Qt::AlignRight,
             QString::number(i));
     }
-
 }
 
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
