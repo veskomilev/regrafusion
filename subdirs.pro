@@ -2,4 +2,8 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
         src \
-        inc
+        src/gfx \
+        src/gfx/leaves \
+        inc \
+        inc/gfx \
+        inc/gfx/leaves

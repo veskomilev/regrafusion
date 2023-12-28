@@ -27,6 +27,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         inc/displaywidget.h src/displaywidget.cpp
+        inc/gfx/tree.h src/gfx/tree.cpp
+        inc/gfx/branch.h src/gfx/branch.cpp
+        inc/gfx/leaf.h src/gfx/leaf.cpp
         subdirs.pro
     )
 # Define target properties for Android with Qt 6 as:
