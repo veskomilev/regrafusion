@@ -5,6 +5,8 @@
 #include <QStatusBar>
 #include <QOpenGLWidget>
 
+#include "gfx/tree.h"
+
 class DisplayWidget : public QOpenGLWidget
 {
     Q_OBJECT
@@ -25,15 +27,15 @@ public:
     void setStatusBar(QStatusBar* const& bar);
 
 private:
-    void initializeCanvas(QPainter *painter);
+    void initializeCanvas(std::shared_ptr<QPainter> painter);
 
     void scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width);
 
-    void drawGridAndAxes(QPainter *painter, float grid_size);
+    void drawGridAndAxes(std::shared_ptr<QPainter>  painter, float grid_size);
 
-    void drawCoordinateLabels(QPainter *painter);
+    void drawCoordinateLabels(std::shared_ptr<QPainter> painter);
 
-    void drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size, float ruler_text_width);
+    void drawRulerNumbers(std::shared_ptr<QPainter> painter, float grid_size, float ruler_size, float ruler_text_width);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -48,7 +50,7 @@ private:
 
     QPointF window_size_;
     QPointF view_offset_;
-    const QPointF kViewIdentity;
+    static constexpr QPointF kViewIdentity = QPointF(0.0f, 0.0f);
     static constexpr float kMaxViewOffset = 5000.0f;
 
     float view_scale_;

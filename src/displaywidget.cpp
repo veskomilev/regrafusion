@@ -8,10 +8,11 @@
 DisplayWidget::DisplayWidget(QWidget* parent) :
     QOpenGLWidget {parent},
     status_bar_(nullptr),
-    kViewIdentity(0.0f, 0.0f),
+    window_size_(kViewIdentity),
+    view_offset_(kViewIdentity),
+    view_scale_(1.0f),
     drag_start_position_(kViewIdentity),
-    view_offset_before_drag_start_(kViewIdentity),
-    view_scale_(1.0f)
+    view_offset_before_drag_start_(kViewIdentity)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -26,9 +27,9 @@ void DisplayWidget::initializeGL()
 void DisplayWidget::paintGL()
 {
     // TODO: use QOpenGLWidget or QImage as the QPaintDevice, allegedly it's faster
-    QPainter painter(this);
+    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(this);
 
-    initializeCanvas(&painter);
+    initializeCanvas(painter);
 
     // set up and adequate grid scale
     float grid_size = kGridSize * view_scale_;
@@ -36,28 +37,28 @@ void DisplayWidget::paintGL()
     float ruler_text_width = 25;
     scaleGridSizes(grid_size, ruler_size, ruler_text_width);
 
-    drawGridAndAxes(&painter, grid_size);
+    drawGridAndAxes(painter, grid_size);
 
     // above elements are at constant relative position - they shouldn't be affected by the matrix
     // also, grid and axes look better when they're always a single pixel wide
-    painter.setWorldMatrixEnabled(true);
-    painter.setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
+    painter->setWorldMatrixEnabled(true);
+    painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
 
     // point out the origin
-    painter.setPen(Qt::red);
-    painter.drawEllipse(kViewIdentity, 1, 1);
-    painter.drawEllipse(kViewIdentity, 10, 10);
-    painter.drawEllipse(kViewIdentity, 100, 100);
-    painter.drawEllipse(kViewIdentity, 1000, 1000);
+    painter->setPen(Qt::red);
+    painter->drawEllipse(kViewIdentity, 1, 1);
+    painter->drawEllipse(kViewIdentity, 10, 10);
+    painter->drawEllipse(kViewIdentity, 100, 100);
+    painter->drawEllipse(kViewIdentity, 1000, 1000);
 
     // disable the matrix for overlaid elements
-    painter.setWorldMatrixEnabled(false);
+    painter->setWorldMatrixEnabled(false);
 
     // overlay coordinate labels on top of drawn elements
     // TODO: make it a setting if labels and/or axes should be overlaid or not
-    drawCoordinateLabels(&painter);
+    drawCoordinateLabels(painter);
 
-    drawRulerNumbers(&painter, grid_size, ruler_size, ruler_text_width);
+    drawRulerNumbers(painter, grid_size, ruler_size, ruler_text_width);
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -94,7 +95,7 @@ void DisplayWidget::setStatusBar(QStatusBar * const &bar)
     updateStatus();
 }
 
-void DisplayWidget::initializeCanvas(QPainter *painter)
+void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter)
 {
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     painter->fillRect(QRectF(kViewIdentity, window_size_), Qt::white);
@@ -153,7 +154,7 @@ void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size, float& r
     }
 }
 
-void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
+void DisplayWidget::drawGridAndAxes(std::shared_ptr<QPainter> painter, float grid_size)
 {
     float left_edge = -view_offset_.x();
     float right_edge = window_size_.x() - view_offset_.x();
@@ -196,7 +197,7 @@ void DisplayWidget::drawGridAndAxes(QPainter *painter, float grid_size)
     painter->drawLine(view_offset_.x(), 0, view_offset_.x(), window_size_.y());
 }
 
-void DisplayWidget::drawCoordinateLabels(QPainter *painter)
+void DisplayWidget::drawCoordinateLabels(std::shared_ptr<QPainter> painter)
 {
     float left_edge = kLabelsOffset;
     float right_edge = window_size_.x() - kLabelsOffset;
@@ -252,7 +253,7 @@ void DisplayWidget::drawCoordinateLabels(QPainter *painter)
         "-y");
 }
 
-void DisplayWidget::drawRulerNumbers(QPainter *painter, float grid_size, float ruler_size, float ruler_text_width)
+void DisplayWidget::drawRulerNumbers(std::shared_ptr<QPainter> painter, float grid_size, float ruler_size, float ruler_text_width)
 {
     float left_edge = ruler_text_width;
     float right_edge = window_size_.x() - kLabelsOffset;
