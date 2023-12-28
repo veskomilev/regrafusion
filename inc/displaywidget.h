@@ -1,3 +1,7 @@
+// Regrafusion - draws graphics recursively
+// Distributed under GPL-3.0
+// Copyright (C) 2023  Vesko Milev
+
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
 

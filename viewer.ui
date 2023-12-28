@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Regrafusion - draws graphics recursively
+Distributed under GPL-3.0
+Copyright (C) 2023  Vesko Milev
+-->
+
 <ui version="4.0">
  <class>viewer</class>
  <widget class="QMainWindow" name="viewer">

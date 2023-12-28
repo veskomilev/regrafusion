@@ -1,3 +1,7 @@
+# Regrafusion - draws graphics recursively
+# Distributed under GPL-3.0
+# Copyright (C) 2023  Vesko Milev
+
 cmake_minimum_required(VERSION 3.5)
 
 project(Regrafusion VERSION 0.1 LANGUAGES CXX)

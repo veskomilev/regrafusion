@@ -1,3 +1,7 @@
+// Regrafusion - draws graphics recursively
+// Distributed under GPL-3.0
+// Copyright (C) 2023  Vesko Milev
+
 #ifndef LEAF_H
 #define LEAF_H
 
