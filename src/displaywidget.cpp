@@ -25,6 +25,7 @@ void DisplayWidget::initializeGL()
 
 void DisplayWidget::paintGL()
 {
+    // TODO: use QOpenGLWidget or QImage as the QPaintDevice, allegedly it's faster
     QPainter painter(this);
 
     initializeCanvas(&painter);

@@ -14,17 +14,20 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        viewer.cpp
-        viewer.h
+        src/main.cpp
+        src/viewer.cpp
+        inc/viewer.h
         viewer.ui
 )
+
+set(CMAKE_AUTOUIC_SEARCH_PATHS .)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Regrafusion
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        displaywidget.h displaywidget.cpp
+        inc/displaywidget.h src/displaywidget.cpp
+        subdirs.pro
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Regrafusion APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -44,7 +47,7 @@ else()
     endif()
 endif()
 
-target_include_directories(Regrafusion PRIVATE .)
+target_include_directories(Regrafusion PRIVATE ./inc)
 
 target_link_libraries(Regrafusion PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Regrafusion PRIVATE Qt${QT_VERSION_MAJOR}::OpenGLWidgets)
