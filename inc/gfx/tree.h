@@ -13,7 +13,9 @@
 class Tree
 {
 public:
-    Tree();
+    Tree(uint num_branches_to_draw);
+
+    void draw(std::shared_ptr<QPainter> painter);
 
 private:
     // disable copy and assignment ctors

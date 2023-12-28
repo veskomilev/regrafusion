@@ -16,7 +16,8 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_offset_(kViewIdentity),
     view_scale_(1.0f),
     drag_start_position_(kViewIdentity),
-    view_offset_before_drag_start_(kViewIdentity)
+    view_offset_before_drag_start_(kViewIdentity),
+    tree_(std::make_unique<Tree>(100))
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -48,12 +49,8 @@ void DisplayWidget::paintGL()
     painter->setWorldMatrixEnabled(true);
     painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
 
-    // point out the origin
-    painter->setPen(Qt::red);
-    painter->drawEllipse(kViewIdentity, 1, 1);
-    painter->drawEllipse(kViewIdentity, 10, 10);
-    painter->drawEllipse(kViewIdentity, 100, 100);
-    painter->drawEllipse(kViewIdentity, 1000, 1000);
+    // draw the tree itself
+    tree_->draw(painter);
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);

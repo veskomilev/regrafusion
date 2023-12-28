@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/gfx/tree.h src/gfx/tree.cpp
         inc/gfx/branch.h src/gfx/branch.cpp
         inc/gfx/leaf.h src/gfx/leaf.cpp
+        inc/gfx/leaves/spawnpoint.h src/gfx/leaves/spawnpoint.cpp
         subdirs.pro
     )
 # Define target properties for Android with Qt 6 as:

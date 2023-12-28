@@ -14,6 +14,8 @@ class Branch
 public:
     Branch();
 
+    void draw(std::shared_ptr<QPainter> painter, uint num_iterations);
+
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;

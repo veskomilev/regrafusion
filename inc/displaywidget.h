@@ -70,6 +70,8 @@ private:
     // axes and ruler related
     static constexpr uint kLabelsOffset = 15;
     static constexpr uint kTextHeight = 20;
+
+    const std::unique_ptr<Tree> tree_;
 };
 
 #endif // DISPLAYWIDGET_H
