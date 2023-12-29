@@ -10,12 +10,20 @@
 
 #include "branch.h"
 
+struct TreeStatistics
+{
+    std::vector<uint> render_time_us;
+    std::vector<uint> first_branch_render_time_us;
+    std::vector<uint> last_branch_render_time_us;
+    std::vector<uint> avg_branch_render_time_us;
+};
+
 class Tree
 {
 public:
     Tree(uint num_branches_to_draw);
 
-    void draw(std::shared_ptr<QPainter> painter);
+    TreeStatistics& draw(std::shared_ptr<QPainter> painter);
 
 private:
     // disable copy and assignment ctors
@@ -23,7 +31,12 @@ private:
     Tree& operator=(const Tree&) = delete;
 
     std::vector<std::unique_ptr<Branch>> branches_;
+
     uint num_branches_to_draw_;
+
+    TreeStatistics stats_;
+
+    static constexpr uint kMaxStatsSampleSize = 100;
 };
 
 #endif // TREE_H

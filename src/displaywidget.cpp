@@ -50,7 +50,7 @@ void DisplayWidget::paintGL()
     painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
 
     // draw the tree itself
-    tree_->draw(painter);
+    TreeStatistics stats = tree_->draw(painter);
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
@@ -60,6 +60,8 @@ void DisplayWidget::paintGL()
     drawCoordinateLabels(painter);
 
     drawRulerNumbers(painter, grid_size, ruler_size, ruler_text_width);
+
+    drawStats(painter, stats);
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -335,6 +337,21 @@ void DisplayWidget::drawRulerNumbers(std::shared_ptr<QPainter> painter, float gr
             Qt::AlignRight,
             QString::number(i));
     }
+}
+
+void DisplayWidget::drawStats(std::shared_ptr<QPainter> painter, TreeStatistics& stats)
+{
+    int avg_time_to_draw_tree = vector_average<uint>(stats.render_time_us);
+    int avg_time_to_draw_first_branch = vector_average<uint>(stats.first_branch_render_time_us);
+    int avg_time_to_draw_last_branch = vector_average<uint>(stats.last_branch_render_time_us);
+    int avg_time_to_draw_branch = vector_average<uint>(stats.avg_branch_render_time_us);
+
+    painter->setPen(Qt::black);
+    painter->drawText(QRectF(kLabelsOffset, kLabelsOffset * 1.5, window_size_.x(), window_size_.y()),
+                      "Average time to render the tree: " + QString::number(avg_time_to_draw_tree) + "µs\n" +
+                      "Average time to render a branch: " + QString::number(avg_time_to_draw_branch) + "µs\n" +
+                      "Average time to render first branch: " + QString::number(avg_time_to_draw_first_branch) + "µs\n" +
+                      "Average time to render last branch: " + QString::number(avg_time_to_draw_last_branch) + "µs");
 }
 
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)

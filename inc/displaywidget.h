@@ -41,6 +41,8 @@ private:
 
     void drawRulerNumbers(std::shared_ptr<QPainter> painter, float grid_size, float ruler_size, float ruler_text_width);
 
+    void drawStats(std::shared_ptr<QPainter> painter, TreeStatistics& stats);
+
     bool eventFilter(QObject *obj, QEvent *event) override;
 
     void wheelEvent(QWheelEvent *event) override;

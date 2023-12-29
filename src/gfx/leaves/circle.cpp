@@ -30,6 +30,7 @@ void Circle::draw(std::shared_ptr<QPainter> painter)
     painter->setBrush(color_);
 
     // TODO: don't draw a circle (or any graphics for that matter) if it's going to be less than 1 pixel wide in any dimension
+    // TODO: don't draw a circle (or any graphics for that matter) if it's going to be outside the view area
     painter->drawPath(circle);
 
     unapplyLocalTransformations(painter);
