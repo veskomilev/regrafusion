@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QTransform>
 
-enum class leaf_type_t { spawn_point, circle, line, rectangle };
+enum class leaf_type_t { spawn_point, circle, line, rectangle, path };
 
 class Leaf
 {

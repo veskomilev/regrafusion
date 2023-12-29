@@ -7,6 +7,7 @@
 #include "gfx/branch.h"
 #include "gfx/leaves/circle.h"
 #include "gfx/leaves/line.h"
+#include "gfx/leaves/path.h"
 #include "gfx/leaves/rectangle.h"
 #include "gfx/leaves/spawnpoint.h"
 
@@ -29,6 +30,16 @@ Branch::Branch()
     leaves_.push_back(std::make_unique<Line>(QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
 
     leaves_.push_back(std::make_unique<Rectangle>(QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
+
+    std::unique_ptr<Path> path = std::make_unique<Path>(QColor(0, 150, 0));
+    path->addPoint(QPointF(-40, 30));
+    path->addPoint(QPointF(40, 30));
+    path->addPoint(QPointF(32, 12));
+    path->addPoint(QPointF(14, -20));
+    path->addPoint(QPointF(-20, 20));
+    path->addPoint(QPointF(-20, -30));
+    leaves_.push_back(std::move(path));
+    leaves_[6]->setTransformationMatrix(leaves_[6]->matrix().translate(0, 70));
 }
 
 void Branch::draw(std::shared_ptr<QPainter> painter, uint num_iterations, BranchStatistics& stats)
