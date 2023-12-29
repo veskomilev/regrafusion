@@ -74,6 +74,8 @@ private:
     static constexpr uint kTextHeight = 20;
 
     const std::unique_ptr<Tree> tree_;
+
+    QImage window_buffer_;
 };
 
 #endif // DISPLAYWIDGET_H

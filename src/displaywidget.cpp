@@ -2,6 +2,7 @@
 // Distributed under GPL-3.0
 // Copyright (C) 2023  Vesko Milev
 
+#include <QGuiApplication>
 #include <QEvent>
 #include <QMouseEvent>
 #include <QPainter>
@@ -17,12 +18,17 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_scale_(1.0f),
     drag_start_position_(kViewIdentity),
     view_offset_before_drag_start_(kViewIdentity),
-    tree_(std::make_unique<Tree>(100))
+    tree_(std::make_unique<Tree>(100)),
+    window_buffer_(
+          QGuiApplication::primaryScreen()->geometry().width(),
+          QGuiApplication::primaryScreen()->geometry().height(),
+          QImage::Format_RGB32)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
     view_offset_ = kViewIdentity;
     parent->installEventFilter(this);
+    // TODO: do something about multiscreen support of the window buffer - secondary screen could have a larger resolution
 }
 
 void DisplayWidget::initializeGL()
@@ -31,8 +37,7 @@ void DisplayWidget::initializeGL()
 
 void DisplayWidget::paintGL()
 {
-    // TODO: use QOpenGLWidget or QImage as the QPaintDevice, allegedly it's faster
-    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(this);
+    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(&window_buffer_);
 
     initializeCanvas(painter);
 
@@ -62,6 +67,9 @@ void DisplayWidget::paintGL()
     drawRulerNumbers(painter, grid_size, ruler_size, ruler_text_width);
 
     drawStats(painter, stats);
+
+    QPainter display_painter(this);
+    display_painter.drawImage(0, 0, window_buffer_);
 }
 
 void DisplayWidget::resizeGL(int w, int h)
