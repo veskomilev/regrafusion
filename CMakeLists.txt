@@ -37,6 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/gfx/leaves/spawnpoint.h src/gfx/leaves/spawnpoint.cpp
         inc/gfx/leaves/circle.h src/gfx/leaves/circle.cpp
         inc/gfx/leaves/line.h src/gfx/leaves/line.cpp
+        inc/gfx/leaves/rectangle.h src/gfx/leaves/rectangle.cpp
         subdirs.pro
     )
 # Define target properties for Android with Qt 6 as:
