@@ -31,6 +31,11 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     // TODO: do something about multiscreen support of the window buffer - secondary screen could have a larger resolution
 }
 
+void DisplayWidget::setNumBranches(uint num_branches)
+{
+    tree_->setNumBranches(num_branches);
+}
+
 void DisplayWidget::initializeGL()
 {
 }

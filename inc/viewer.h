@@ -26,6 +26,10 @@ private slots:
 
     void on_reset_scale_button_pressed();
 
+    void on_num_branches_slider_valueChanged(int value);
+
+    void on_num_branches_spin_box_valueChanged(int arg1);
+
 private:
     Ui::viewer *ui;
 };

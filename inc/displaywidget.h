@@ -18,6 +18,8 @@ class DisplayWidget : public QOpenGLWidget
 public:
     DisplayWidget(QWidget* parent = NULL);
 
+    void setNumBranches(uint num_branches);
+
     void initializeGL() override;
 
     void paintGL() override;

@@ -25,6 +25,10 @@ public:
 
     TreeStatistics& draw(std::shared_ptr<QPainter> painter);
 
+    void setNumBranches(uint num_branches) { num_branches_to_draw_ = num_branches; }
+
+    uint getNumBranches() { return num_branches_to_draw_; }
+
 private:
     // disable copy and assignment ctors
     Tree(const Tree&) = delete;
