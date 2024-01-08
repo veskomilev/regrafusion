@@ -14,7 +14,7 @@ public:
 
     ~Circle();
 
-    void draw(std::shared_ptr<QPainter> painter) override;
+    void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter) override;
 
     inline bool isSpawnPoint() override { return false; };
 

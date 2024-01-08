@@ -23,7 +23,12 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     window_buffer_(
           QGuiApplication::primaryScreen()->geometry().width(),
           QGuiApplication::primaryScreen()->geometry().height(),
-          QImage::Format_RGB32)
+          QImage::Format_RGB32),
+    color_id_buffer_(
+        QGuiApplication::primaryScreen()->geometry().width(),
+        QGuiApplication::primaryScreen()->geometry().height(),
+        QImage::Format_RGB32),
+    draw_window_buffer_(true)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -44,8 +49,9 @@ void DisplayWidget::initializeGL()
 void DisplayWidget::paintGL()
 {
     std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(&window_buffer_);
+    std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(&color_id_buffer_);
 
-    initializeCanvas(painter);
+    initializeCanvas(painter, color_id_painter);
 
     // set up and adequate grid scale
     float grid_size = kGridSize * view_scale_;
@@ -59,9 +65,11 @@ void DisplayWidget::paintGL()
     // also, grid and axes look better when they're always a single pixel wide
     painter->setWorldMatrixEnabled(true);
     painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
+    color_id_painter->setWorldMatrixEnabled(true);
+    color_id_painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
 
     // draw the tree itself
-    TreeStatistics stats = tree_->draw(painter);
+    TreeStatistics stats = tree_->draw(painter, color_id_painter);
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
@@ -75,7 +83,11 @@ void DisplayWidget::paintGL()
     drawStats(painter, stats);
 
     QPainter display_painter(this);
-    display_painter.drawImage(0, 0, window_buffer_);
+    if (draw_window_buffer_) {
+        display_painter.drawImage(0, 0, window_buffer_);
+    } else {
+        display_painter.drawImage(0, 0, color_id_buffer_);
+    }
 }
 
 void DisplayWidget::resizeGL(int w, int h)
@@ -112,12 +124,19 @@ void DisplayWidget::setStatusBar(QStatusBar * const &bar)
     updateStatus();
 }
 
-void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter)
+void DisplayWidget::switchBuffers()
+{
+    draw_window_buffer_ = !draw_window_buffer_;
+}
+
+void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     painter->fillRect(QRectF(kViewIdentity, window_size_), Qt::white);
     painter->setPen(Qt::gray);
     painter->drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
+
+    color_id_painter->fillRect(QRectF(kViewIdentity, window_size_), leaf_identifier_->getBackgroundColor());
 }
 
 void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width)

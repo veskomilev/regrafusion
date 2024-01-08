@@ -13,7 +13,7 @@ Tree::Tree(std::shared_ptr<LeafIdentifier> leaf_identifier, uint num_branches_to
     branches_.push_back(std::make_unique<Branch>(leaf_identifier_));
 }
 
-TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter)
+TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
     BranchStatistics branch_stats;
     branch_stats.num_branches = num_branches_to_draw_;
@@ -21,7 +21,7 @@ TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter)
     std::chrono::steady_clock::time_point drawing_start = std::chrono::steady_clock::now();
 
     for (auto &branch : branches_) {
-        branch->draw(painter, num_branches_to_draw_, branch_stats);
+        branch->draw(painter, color_id_painter, num_branches_to_draw_, branch_stats);
     }
 
     std::chrono::steady_clock::time_point drawing_end = std::chrono::steady_clock::now();

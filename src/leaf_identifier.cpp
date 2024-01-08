@@ -15,32 +15,53 @@ LeafIdentifier::~LeafIdentifier()
 
 }
 
-bool LeafIdentifier::RegisterLeaf(std::shared_ptr<Leaf> leaf)
+bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
 {
     if (next_unused_color_ == kBackgroundColor) {
         // TODO: add wraparound functionality if someone ever adds 16 million leaves manually
         return false;
     }
 
-    leaf->SetColorId(next_unused_color_);
-    leaf_map_.insert(std::pair<QColor, std::shared_ptr<Leaf>>(next_unused_color_, leaf));
-    GoToNextColor();
+    // some qd hashing - assign a distinct color for debug purposes that is not just shades of black
+    size_t hashing = next_unused_color_.rgb();
+
+    hashing *= 11;
+    hashing &= 0xFFFFFF;
+    hashing *= 577;
+    hashing &= 0xFFFFFF;
+    hashing *= 997;
+    hashing &= 0xFFFFFF;
+    hashing *= 1009;
+    hashing &= 0xFFFFFF;
+    hashing *= 1597;
+    hashing &= 0xFFFFFF;
+    hashing *= 1741;
+    hashing &= 0xFFFFFF;
+
+    QColor display_color;
+    display_color.setRgb(hashing);
+
+    fprintf(stderr, "switched to %u - %d\n", next_unused_color_.rgb()  &  0xFFFFFF , display_color.rgb()   );
+
+    leaf->SetColorId(display_color);
+    leaf_map_.insert(std::pair<QColor, std::shared_ptr<Leaf>>(display_color, leaf));
+    goToNextColor();
 
     return true;
 }
 
-void LeafIdentifier::UnregisterLeaf(std::shared_ptr<Leaf> leaf)
+void LeafIdentifier::unregisterLeaf(std::shared_ptr<Leaf> leaf)
 {
     QColor id = leaf->GetColorId();
     leaf_map_.erase(id);
 }
 
-std::shared_ptr<Leaf> LeafIdentifier::GetLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position)
+std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position)
 {
-    return GetLeaf(color_id_buffer, position.toPoint());
+    return getLeaf(color_id_buffer, position.toPoint());
 }
 
-std::shared_ptr<Leaf> LeafIdentifier::GetLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position)
+std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position)
 {
     QColor color_id = color_id_buffer->pixelColor(position);
 
@@ -55,7 +76,7 @@ std::shared_ptr<Leaf> LeafIdentifier::GetLeaf(std::shared_ptr<QImage> color_id_b
     return leaf_map_[color_id];
 }
 
-void LeafIdentifier::GoToNextColor()
+void LeafIdentifier::goToNextColor()
 {
     QRgb rgb = next_unused_color_.rgb();
 

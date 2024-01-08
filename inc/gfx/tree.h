@@ -24,7 +24,7 @@ class Tree
 public:
     Tree(std::shared_ptr<LeafIdentifier> leaf_identifier, uint num_branches_to_draw);
 
-    TreeStatistics& draw(std::shared_ptr<QPainter> painter);
+    TreeStatistics& draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
     void setNumBranches(uint num_branches) { num_branches_to_draw_ = num_branches; }
 

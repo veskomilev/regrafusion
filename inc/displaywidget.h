@@ -33,8 +33,10 @@ public:
 
     void setStatusBar(QStatusBar* const& bar);
 
+    void switchBuffers();
+
 private:
-    void initializeCanvas(std::shared_ptr<QPainter> painter);
+    void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
     void scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width);
 
@@ -81,6 +83,10 @@ private:
     const std::unique_ptr<Tree> tree_;
 
     QImage window_buffer_;
+
+    QImage color_id_buffer_;
+
+    bool draw_window_buffer_;
 };
 
 #endif // DISPLAYWIDGET_H

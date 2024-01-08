@@ -18,7 +18,7 @@ public:
 
     virtual ~Leaf();
 
-    virtual void draw(std::shared_ptr<QPainter> painter);
+    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
     virtual inline bool isSpawnPoint() = 0;
 
@@ -38,6 +38,9 @@ public:
     // TODO: maybe make a factory
     void SetColorId(QColor color_id) { color_id_ = color_id; }; /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
 
+protected:
+    QColor color_id_;
+
 private:
     // disable copy and assignment ctors
     Leaf(const Leaf&) = delete;
@@ -46,8 +49,6 @@ private:
     leaf_type_t type_;
 
     QTransform matrix_;
-
-    QColor color_id_;
 };
 
 

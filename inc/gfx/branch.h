@@ -33,7 +33,7 @@ class Branch
 public:
     Branch(std::shared_ptr<LeafIdentifier> leaf_identifier);
 
-    void draw(std::shared_ptr<QPainter> painter, uint num_iterations, BranchStatistics& stats);
+    void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats);
 
 private:
     // disable copy and assignment ctors

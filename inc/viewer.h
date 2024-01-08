@@ -30,6 +30,8 @@ private slots:
 
     void on_num_branches_spin_box_valueChanged(int arg1);
 
+    void on_switch_buffers_pressed();
+
 private:
     Ui::viewer *ui;
 };

@@ -33,6 +33,7 @@ Branch::Branch(std::shared_ptr<LeafIdentifier> leaf_identifier) :
     leaf_identifier_->registerLeaf(leaves_[3]);
 
     leaves_.push_back(std::make_shared<Line>(QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
+    leaves_[4]->setTransformationMatrix(leaves_[4]->matrix().translate(0, -30));
     leaf_identifier_->registerLeaf(leaves_[4]);
 
     leaves_.push_back(std::make_shared<Rectangle>(QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
@@ -50,7 +51,7 @@ Branch::Branch(std::shared_ptr<LeafIdentifier> leaf_identifier) :
     leaf_identifier_->registerLeaf(leaves_[6]);
 }
 
-void Branch::draw(std::shared_ptr<QPainter> painter, uint num_iterations, BranchStatistics& stats)
+void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats)
 {
     // each invocation of draw() immediately uses up one iteration
     num_iterations--;
@@ -66,17 +67,18 @@ void Branch::draw(std::shared_ptr<QPainter> painter, uint num_iterations, Branch
     for (auto &leaf : leaves_) {
 
         if (!leaf->isSpawnPoint()) {
-            leaf->draw(painter);
+            leaf->draw(painter, color_id_painter);
 
         } else if (num_iterations > 0) {
-            leaf->draw(painter);
+            leaf->draw(painter, color_id_painter);
 
             // exclude drawing time of subbranches from this branch's stats
             branching_start = std::chrono::steady_clock::now();
-            draw(painter, num_iterations, stats);
+            draw(painter, color_id_painter, num_iterations, stats);
             branching_end = std::chrono::steady_clock::now();
 
             leaf->unapplyLocalTransformations(painter);
+            leaf->unapplyLocalTransformations(color_id_painter);
         }
 
     }

@@ -19,19 +19,21 @@ Circle::~Circle()
 
 }
 
-void Circle::draw(std::shared_ptr<QPainter> painter)
-{;
-    Leaf::draw(painter);
-
-    QPainterPath circle;
-    circle.addEllipse(QRectF(-radius_, -radius_, radius_ * 2, radius_ * 2));
+void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+{
+    Leaf::draw(painter, color_id_painter);
 
     painter->setPen(QColor(0, 0, 0, 0));
     painter->setBrush(color_);
 
     // TODO: don't draw a circle (or any graphics for that matter) if it's going to be less than 1 pixel wide in any dimension
     // TODO: don't draw a circle (or any graphics for that matter) if it's going to be outside the view area
-    painter->drawPath(circle);
+    painter->drawEllipse(QRectF(-radius_, -radius_, radius_ * 2, radius_ * 2));
+
+    color_id_painter->setBrush(color_id_);
+    color_id_painter->setPen(QColor(0, 0, 0, 0));
+    color_id_painter->drawEllipse(QRectF(-radius_, -radius_, radius_ * 2, radius_ * 2));
 
     unapplyLocalTransformations(painter);
+    unapplyLocalTransformations(color_id_painter);
 }

@@ -15,11 +15,12 @@ Leaf::~Leaf()
 {
 }
 
-void Leaf::draw(std::shared_ptr<QPainter> painter)
+void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
     if (!matrix_.isIdentity()) {
         // combine param is true, so combine matrix_ with the existing transformations instead of overwriting them
         painter->setWorldTransform(matrix_, true);
+        color_id_painter->setWorldTransform(matrix_, true);
     }
 
     // in principle the side should be 1, but 1 pixel is too short of a length
@@ -35,6 +36,10 @@ void Leaf::draw(std::shared_ptr<QPainter> painter)
 
     painter->setPen(QColor(0, 0, 255, 64));
     painter->drawLine(side, 0, 0, 0);
+
+    color_id_painter->setBrush(color_id_);
+    color_id_painter->setPen(QColor(0, 0, 0, 0));
+    color_id_painter->drawRect(0, 0, side, side);
 }
 
 bool Leaf::setTransformationMatrix(QTransform matrix)

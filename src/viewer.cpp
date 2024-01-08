@@ -19,6 +19,11 @@ viewer::viewer(QWidget *parent)
     uint num_branches = ui->num_branches_spin_box->value();
     ui->num_branches_slider->setValue(num_branches);
     ui->display_widget->setNumBranches(num_branches);
+
+#ifndef QT_DEBUG
+    // make this button visible only in debug mode
+    ui->switch_buffers->hide();
+#endif
 }
 
 viewer::~viewer()
@@ -47,5 +52,11 @@ void viewer::on_num_branches_spin_box_valueChanged(int arg1)
 {
     ui->num_branches_slider->setValue(arg1);
     ui->display_widget->setNumBranches(arg1);
+    ui->display_widget->update();
+}
+
+void viewer::on_switch_buffers_pressed()
+{
+    ui->display_widget->switchBuffers();
     ui->display_widget->update();
 }

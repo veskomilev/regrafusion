@@ -18,9 +18,9 @@ Path::~Path()
 
 }
 
-void Path::draw(std::shared_ptr<QPainter> painter)
-{;
-    Leaf::draw(painter);
+void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+{
+    Leaf::draw(painter, color_id_painter);
 
     QPainterPath path;
 
@@ -34,7 +34,12 @@ void Path::draw(std::shared_ptr<QPainter> painter)
     painter->setBrush(color_);
     painter->drawPath(path);
 
+    color_id_painter->setPen(QColor(0, 0, 0, 0));
+    color_id_painter->setBrush(color_id_);
+    color_id_painter->drawPath(path);
+
     unapplyLocalTransformations(painter);
+    unapplyLocalTransformations(color_id_painter);
 }
 
 void Path::addPoint(QPointF point)
