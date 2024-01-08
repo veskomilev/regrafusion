@@ -6,7 +6,8 @@
 
 Leaf::Leaf(leaf_type_t type) :
     type_(type),
-    matrix_(QTransform())
+    matrix_(QTransform()),
+    color_id_(QColor(255, 255, 255))
 {
 }
 
