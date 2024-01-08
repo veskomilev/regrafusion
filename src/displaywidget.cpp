@@ -18,7 +18,8 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_scale_(1.0f),
     drag_start_position_(kViewIdentity),
     view_offset_before_drag_start_(kViewIdentity),
-    tree_(std::make_unique<Tree>(100)),
+    leaf_identifier_(std::make_shared<LeafIdentifier>()),
+    tree_(std::make_unique<Tree>(leaf_identifier_, 100)),
     window_buffer_(
           QGuiApplication::primaryScreen()->geometry().width(),
           QGuiApplication::primaryScreen()->geometry().height(),

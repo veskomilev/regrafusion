@@ -6,10 +6,11 @@
 
 #include "gfx/tree.h"
 
-Tree::Tree(uint num_branches_to_draw) :
+Tree::Tree(std::shared_ptr<LeafIdentifier> leaf_identifier, uint num_branches_to_draw) :
+    leaf_identifier_(leaf_identifier),
     num_branches_to_draw_(num_branches_to_draw)
 {
-    branches_.push_back(std::make_unique<Branch>());
+    branches_.push_back(std::make_unique<Branch>(leaf_identifier_));
 }
 
 TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter)

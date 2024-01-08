@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "leaf.h"
+#include "leaf_identifier.h"
 
 // TODO: move this function somewhere sensible (e.g. to a utils inc file)
 template<class T>
@@ -30,7 +31,7 @@ struct BranchStatistics
 class Branch
 {
 public:
-    Branch();
+    Branch(std::shared_ptr<LeafIdentifier> leaf_identifier);
 
     void draw(std::shared_ptr<QPainter> painter, uint num_iterations, BranchStatistics& stats);
 
@@ -39,7 +40,9 @@ private:
     Branch(const Branch&) = delete;
     Branch& operator=(const Branch&) = delete;
 
-    std::vector<std::unique_ptr<Leaf>> leaves_;
+    std::shared_ptr<LeafIdentifier> leaf_identifier_;
+
+    std::vector<std::shared_ptr<Leaf>> leaves_;
     std::unique_ptr<Leaf> spawn_point_;
 };
 

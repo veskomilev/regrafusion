@@ -9,6 +9,7 @@
 #include <QtGlobal>
 
 #include "branch.h"
+#include "leaf_identifier.h"
 
 struct TreeStatistics
 {
@@ -21,7 +22,7 @@ struct TreeStatistics
 class Tree
 {
 public:
-    Tree(uint num_branches_to_draw);
+    Tree(std::shared_ptr<LeafIdentifier> leaf_identifier, uint num_branches_to_draw);
 
     TreeStatistics& draw(std::shared_ptr<QPainter> painter);
 
@@ -33,6 +34,8 @@ private:
     // disable copy and assignment ctors
     Tree(const Tree&) = delete;
     Tree& operator=(const Tree&) = delete;
+
+    std::shared_ptr<LeafIdentifier> leaf_identifier_;
 
     std::vector<std::unique_ptr<Branch>> branches_;
 

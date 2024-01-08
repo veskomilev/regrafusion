@@ -9,6 +9,7 @@
 #include <QStatusBar>
 #include <QOpenGLWidget>
 
+#include "leaf_identifier.h"
 #include "gfx/tree.h"
 
 class DisplayWidget : public QOpenGLWidget
@@ -74,6 +75,8 @@ private:
     // axes and ruler related
     static constexpr uint kLabelsOffset = 15;
     static constexpr uint kTextHeight = 20;
+
+    std::shared_ptr<LeafIdentifier> leaf_identifier_;
 
     const std::unique_ptr<Tree> tree_;
 
