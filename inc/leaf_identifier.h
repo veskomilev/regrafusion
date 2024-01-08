@@ -26,16 +26,18 @@ public:
 
     ~LeafIdentifier();
 
-    bool RegisterLeaf(std::shared_ptr<Leaf> leaf);
+    bool registerLeaf(std::shared_ptr<Leaf> leaf);
 
-    void UnregisterLeaf(std::shared_ptr<Leaf> leaf);
+    void unregisterLeaf(std::shared_ptr<Leaf> leaf);
 
-    std::shared_ptr<Leaf> GetLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position);
+    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position);
 
-    std::shared_ptr<Leaf> GetLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position);
+    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position);
+
+    QColor getBackgroundColor() const { return kBackgroundColor; };
 
 private:
-    void GoToNextColor();
+    void goToNextColor();
 
     std::map<QColor, std::shared_ptr<Leaf>, QColorComparison> leaf_map_;
 
