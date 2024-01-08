@@ -30,6 +30,8 @@ public:
 
     uint getNumBranches() { return num_branches_to_draw_; }
 
+    void deselect();
+
 private:
     // disable copy and assignment ctors
     Tree(const Tree&) = delete;

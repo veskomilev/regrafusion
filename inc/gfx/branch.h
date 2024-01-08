@@ -35,6 +35,8 @@ public:
 
     void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats);
 
+    void deselect();
+
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;

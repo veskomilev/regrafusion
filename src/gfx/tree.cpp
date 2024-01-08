@@ -49,3 +49,10 @@ TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QP
 
     return stats_;
 }
+
+void Tree::deselect()
+{
+    for (auto &branch : branches_) {
+        branch->deselect();
+    }
+}

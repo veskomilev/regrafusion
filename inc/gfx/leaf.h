@@ -33,10 +33,14 @@ public:
         }
     }
 
-    QColor GetColorId() const { return color_id_; };
+    QColor getColorId() const { return color_id_; };
 
     // TODO: maybe make a factory
-    void SetColorId(QColor color_id) { color_id_ = color_id; }; /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
+    void setColorId(QColor color_id) { color_id_ = color_id; }; /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
+
+    void select() { selected_ = true; }
+
+    void deselect() { selected_ = false; }
 
 protected:
     QColor color_id_;
@@ -49,6 +53,8 @@ private:
     leaf_type_t type_;
 
     QTransform matrix_;
+
+    bool selected_;
 };
 
 

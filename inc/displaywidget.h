@@ -73,6 +73,7 @@ private:
     // navigation related
     QPointF drag_start_position_;
     QPointF view_offset_before_drag_start_;
+    static constexpr QPointF kMouseClickCorrection = QPointF(-10.0f, -10.0f);
 
     // axes and ruler related
     static constexpr uint kLabelsOffset = 15;
@@ -82,9 +83,9 @@ private:
 
     const std::unique_ptr<Tree> tree_;
 
-    QImage window_buffer_;
+    std::shared_ptr<QImage> window_buffer_;
 
-    QImage color_id_buffer_;
+    std::shared_ptr<QImage> color_id_buffer_;
 
     bool draw_window_buffer_;
 };

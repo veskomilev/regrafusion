@@ -101,3 +101,10 @@ void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> c
 
     stats.branch_render_times_us.push_back(render_time_us);
 }
+
+void Branch::deselect()
+{
+    for (auto &leaf : leaves_) {
+        leaf->deselect();
+    }
+}

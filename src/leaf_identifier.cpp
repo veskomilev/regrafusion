@@ -41,9 +41,7 @@ bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
     QColor display_color;
     display_color.setRgb(hashing);
 
-    fprintf(stderr, "switched to %u - %d\n", next_unused_color_.rgb()  &  0xFFFFFF , display_color.rgb()   );
-
-    leaf->SetColorId(display_color);
+    leaf->setColorId(display_color);
     leaf_map_.insert(std::pair<QColor, std::shared_ptr<Leaf>>(display_color, leaf));
     goToNextColor();
 
@@ -52,7 +50,7 @@ bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
 
 void LeafIdentifier::unregisterLeaf(std::shared_ptr<Leaf> leaf)
 {
-    QColor id = leaf->GetColorId();
+    QColor id = leaf->getColorId();
     leaf_map_.erase(id);
 }
 

@@ -20,16 +20,18 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_offset_before_drag_start_(kViewIdentity),
     leaf_identifier_(std::make_shared<LeafIdentifier>()),
     tree_(std::make_unique<Tree>(leaf_identifier_, 100)),
-    window_buffer_(
+    window_buffer_(std::make_shared<QImage>(
           QGuiApplication::primaryScreen()->geometry().width(),
           QGuiApplication::primaryScreen()->geometry().height(),
-          QImage::Format_RGB32),
-    color_id_buffer_(
+          QImage::Format_RGB32)),
+    color_id_buffer_(std::make_shared<QImage>(
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
-        QImage::Format_RGB32),
+        QImage::Format_RGB32)),
     draw_window_buffer_(true)
 {
+    assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
+
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
     view_offset_ = kViewIdentity;
@@ -48,8 +50,8 @@ void DisplayWidget::initializeGL()
 
 void DisplayWidget::paintGL()
 {
-    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(&window_buffer_);
-    std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(&color_id_buffer_);
+    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(window_buffer_.get());
+    std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(color_id_buffer_.get());
 
     initializeCanvas(painter, color_id_painter);
 
@@ -84,9 +86,9 @@ void DisplayWidget::paintGL()
 
     QPainter display_painter(this);
     if (draw_window_buffer_) {
-        display_painter.drawImage(0, 0, window_buffer_);
+        display_painter.drawImage(0, 0, *window_buffer_);
     } else {
-        display_painter.drawImage(0, 0, color_id_buffer_);
+        display_painter.drawImage(0, 0, *color_id_buffer_);
     }
 }
 
@@ -394,6 +396,17 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         drag_start_position_ = mouseEvent->pos();
         view_offset_before_drag_start_ = view_offset_;
+
+        QPointF cursor_position = drag_start_position_ + kMouseClickCorrection;
+
+        tree_->deselect();
+        auto leaf = leaf_identifier_->getLeaf(color_id_buffer_, cursor_position);
+        if (leaf != nullptr) {
+            leaf->select();
+        }
+
+        update();
+
         return true;
     }
 

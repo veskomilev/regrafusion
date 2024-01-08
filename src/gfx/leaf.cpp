@@ -7,7 +7,8 @@
 Leaf::Leaf(leaf_type_t type) :
     type_(type),
     matrix_(QTransform()),
-    color_id_(QColor(255, 255, 255))
+    color_id_(QColor(255, 255, 255)),
+    selected_(false)
 {
 }
 
@@ -37,9 +38,11 @@ void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
     painter->setPen(QColor(0, 0, 255, 64));
     painter->drawLine(side, 0, 0, 0);
 
-    color_id_painter->setBrush(color_id_);
-    color_id_painter->setPen(QColor(0, 0, 0, 0));
-    color_id_painter->drawRect(0, 0, side, side);
+    color_id_painter->setPen(color_id_);
+    color_id_painter->drawLine(side, 0, side, side);
+    color_id_painter->drawLine(0, side, side, side);
+    color_id_painter->drawLine(0, side, 0, 0);
+    color_id_painter->drawLine(side, 0, 0, 0);
 }
 
 bool Leaf::setTransformationMatrix(QTransform matrix)
