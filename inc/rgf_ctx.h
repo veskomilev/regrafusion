@@ -6,6 +6,8 @@
 #define RGFCTX_H
 
 #include "displaywidget.h"
+#include "gfx/tree.h"
+#include "leaf_identifier.h"
 
 class RgfCtx
 {

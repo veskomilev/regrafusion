@@ -41,6 +41,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/gfx/leaves/path.h src/gfx/leaves/path.cpp
         inc/leaf_identifier.h src/leaf_identifier.cpp
         inc/rgf_ctx.h src/rgf_ctx.cpp
+        inc/uipainter.h src/uipainter.cpp
+        inc/view.h
         subdirs.pro
     )
 # Define target properties for Android with Qt 6 as:
