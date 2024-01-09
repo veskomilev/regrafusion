@@ -23,7 +23,20 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 {
     Leaf::draw(painter, color_id_painter);
 
-    painter->setPen(color_);
+    // draw just the outline
+    if (selected_) {
+        QPen pen(QColor(0, 0, 0, 255));
+        pen.setWidth(2);
+        painter->setPen(pen);
+
+        painter->drawLine(line_);
+    }
+
+    // reset pen width
+    QPen pen(color_);
+    pen.setWidth(1);
+    painter->setPen(pen);
+
     painter->drawLine(line_);
 
     color_id_painter->setPen(color_id_);

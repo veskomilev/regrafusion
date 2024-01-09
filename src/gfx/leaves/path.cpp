@@ -30,7 +30,11 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
     path.closeSubpath();
 
-    painter->setPen(QColor(0, 0, 0, 0));
+    if (selected_) {
+        painter->setPen(QColor(0, 0, 0, 255));
+    } else {
+        painter->setPen(QColor(0, 0, 0, 0));
+    }
     painter->setBrush(color_);
     painter->drawPath(path);
 

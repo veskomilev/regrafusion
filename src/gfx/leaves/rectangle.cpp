@@ -23,7 +23,11 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
 {
     Leaf::draw(painter, color_id_painter);
 
-    painter->setPen(QColor(0, 0, 0, 0));
+    if (selected_) {
+        painter->setPen(QColor(0, 0, 0, 255));
+    } else {
+        painter->setPen(QColor(0, 0, 0, 0));
+    }
     painter->setBrush(color_);
     painter->drawRect(rectangle_);
 

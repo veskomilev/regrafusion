@@ -45,6 +45,8 @@ public:
 protected:
     QColor color_id_;
 
+    bool selected_;
+
 private:
     // disable copy and assignment ctors
     Leaf(const Leaf&) = delete;
@@ -53,8 +55,6 @@ private:
     leaf_type_t type_;
 
     QTransform matrix_;
-
-    bool selected_;
 };
 
 

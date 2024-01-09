@@ -17,8 +17,14 @@ void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainte
 {
     Leaf::draw(painter, color_id_painter);
 
+
     painter->setPen(QColor(0, 0, 0, 128));
     painter->drawEllipse(QPointF(0, 0), 3, 3);
+
+    if (selected_) {
+        painter->setPen(QColor(0, 0, 0, 255));
+        painter->drawEllipse(QPointF(0, 0), 4, 4);
+    }
 
     color_id_painter->setBrush(color_id_);
     color_id_painter->setPen(QColor(0, 0, 0, 0));

@@ -5,10 +5,10 @@
 #include "gfx/leaf.h"
 
 Leaf::Leaf(leaf_type_t type) :
-    type_(type),
-    matrix_(QTransform()),
     color_id_(QColor(255, 255, 255)),
-    selected_(false)
+    selected_(false),
+    type_(type),
+    matrix_(QTransform())
 {
 }
 
