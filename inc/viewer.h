@@ -5,7 +5,10 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
+#include <memory>
 #include <QMainWindow>
+
+#include "rgf_ctx.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,5 +37,6 @@ private slots:
 
 private:
     Ui::viewer *ui;
+    std::shared_ptr<RgfCtx> ctx_;
 };
 #endif // VIEWER_H

@@ -12,14 +12,14 @@
 #include "leaf_identifier.h"
 #include "gfx/tree.h"
 
+class RgfCtx;
+
 class DisplayWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
     DisplayWidget(QWidget* parent = NULL);
-
-    void setNumBranches(uint num_branches);
 
     void initializeGL() override;
 
@@ -34,6 +34,10 @@ public:
     void setStatusBar(QStatusBar* const& bar);
 
     void switchBuffers();
+
+    void setPaintingCtx();
+
+    void setCtx(std::shared_ptr<RgfCtx> ctx) { ctx_ = ctx; };
 
 private:
     void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
@@ -79,13 +83,7 @@ private:
     static constexpr uint kLabelsOffset = 15;
     static constexpr uint kTextHeight = 20;
 
-    std::shared_ptr<LeafIdentifier> leaf_identifier_;
-
-    const std::unique_ptr<Tree> tree_;
-
-    std::shared_ptr<QImage> window_buffer_;
-
-    std::shared_ptr<QImage> color_id_buffer_;
+    std::shared_ptr<RgfCtx> ctx_;
 
     bool draw_window_buffer_;
 };

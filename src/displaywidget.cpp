@@ -9,6 +9,7 @@
 
 #include "displaywidget.h"
 #include "math.h"
+#include "rgf_ctx.h"
 
 DisplayWidget::DisplayWidget(QWidget* parent) :
     QOpenGLWidget {parent},
@@ -18,30 +19,13 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_scale_(1.0f),
     drag_start_position_(kViewIdentity),
     view_offset_before_drag_start_(kViewIdentity),
-    leaf_identifier_(std::make_shared<LeafIdentifier>()),
-    tree_(std::make_unique<Tree>(leaf_identifier_, 100)),
-    window_buffer_(std::make_shared<QImage>(
-          QGuiApplication::primaryScreen()->geometry().width(),
-          QGuiApplication::primaryScreen()->geometry().height(),
-          QImage::Format_RGB32)),
-    color_id_buffer_(std::make_shared<QImage>(
-        QGuiApplication::primaryScreen()->geometry().width(),
-        QGuiApplication::primaryScreen()->geometry().height(),
-        QImage::Format_RGB32)),
     draw_window_buffer_(true)
 {
-    assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
-
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
     view_offset_ = kViewIdentity;
     parent->installEventFilter(this);
     // TODO: do something about multiscreen support of the window buffer - secondary screen could have a larger resolution
-}
-
-void DisplayWidget::setNumBranches(uint num_branches)
-{
-    tree_->setNumBranches(num_branches);
 }
 
 void DisplayWidget::initializeGL()
@@ -50,8 +34,8 @@ void DisplayWidget::initializeGL()
 
 void DisplayWidget::paintGL()
 {
-    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(window_buffer_.get());
-    std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(color_id_buffer_.get());
+    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(ctx_->windowBuffer().get());
+    std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(ctx_->colorIdBuffer().get());
 
     initializeCanvas(painter, color_id_painter);
 
@@ -71,7 +55,7 @@ void DisplayWidget::paintGL()
     color_id_painter->setWorldTransform(QTransform(view_scale_, 0, 0, view_scale_, view_offset_.x(), view_offset_.y()));
 
     // draw the tree itself
-    TreeStatistics stats = tree_->draw(painter, color_id_painter);
+    TreeStatistics stats = ctx_->tree()->draw(painter, color_id_painter);
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
@@ -86,9 +70,9 @@ void DisplayWidget::paintGL()
 
     QPainter display_painter(this);
     if (draw_window_buffer_) {
-        display_painter.drawImage(0, 0, *window_buffer_);
+        display_painter.drawImage(0, 0, *ctx_->windowBuffer());
     } else {
-        display_painter.drawImage(0, 0, *color_id_buffer_);
+        display_painter.drawImage(0, 0, *ctx_->colorIdBuffer());
     }
 }
 
@@ -138,7 +122,7 @@ void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter, std::sha
     painter->setPen(Qt::gray);
     painter->drawRect(1, 0, window_size_.x() - 1, window_size_.y() - 1);
 
-    color_id_painter->fillRect(QRectF(kViewIdentity, window_size_), leaf_identifier_->getBackgroundColor());
+    color_id_painter->fillRect(QRectF(kViewIdentity, window_size_), ctx_->leafIdentifier()->getBackgroundColor());
 }
 
 void DisplayWidget::scaleGridSizes(float& grid_size, float& ruler_size, float& ruler_text_width)
@@ -399,8 +383,8 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 
         QPointF cursor_position = drag_start_position_ + kMouseClickCorrection;
 
-        tree_->deselect();
-        auto leaf = leaf_identifier_->getLeaf(color_id_buffer_, cursor_position);
+        ctx_->tree()->deselect();
+        auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position);
         if (leaf != nullptr) {
             leaf->select();
         }

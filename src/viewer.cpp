@@ -6,19 +6,22 @@
 #include <QString>
 
 #include "viewer.h"
-#include "./ui_viewer.h"
+#include "ui_viewer.h"
 
 viewer::viewer(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::viewer)
 {
     ui->setupUi(this);
+
+    ctx_ = std::make_shared<RgfCtx>(ui->display_widget);
+    ui->display_widget->setCtx(ctx_);
     ui->display_widget->setStatusBar(ui->status_bar);
 
     // TODO: should max and min values be defined in code somewhere and passed to the UI?
     uint num_branches = ui->num_branches_spin_box->value();
     ui->num_branches_slider->setValue(num_branches);
-    ui->display_widget->setNumBranches(num_branches);
+    ctx_->setNumBranches(num_branches);
 
 #ifndef QT_DEBUG
     // make this button visible only in debug mode
@@ -44,14 +47,14 @@ void viewer::on_reset_scale_button_pressed()
 void viewer::on_num_branches_slider_valueChanged(int value)
 {
     ui->num_branches_spin_box->setValue(value);
-    ui->display_widget->setNumBranches(value);
+    ctx_->setNumBranches(value);
     ui->display_widget->update();
 }
 
 void viewer::on_num_branches_spin_box_valueChanged(int arg1)
 {
     ui->num_branches_slider->setValue(arg1);
-    ui->display_widget->setNumBranches(arg1);
+    ctx_->setNumBranches(arg1);
     ui->display_widget->update();
 }
 
