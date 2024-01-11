@@ -45,7 +45,7 @@ private:
 
     TreeStatistics stats_;
 
-    static constexpr uint kMaxStatsSampleSize = 100;
+    static constexpr uint kMaxStatsSampleSize = 20;
 };
 
 #endif // TREE_H

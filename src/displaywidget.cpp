@@ -65,6 +65,8 @@ void DisplayWidget::paintGL()
 
     uipainter.drawStats(stats);
 
+    uipainter.drawCtxMode(ctx_->getMode());
+
     QPainter display_painter(this);
     if (draw_window_buffer_) {
         display_painter.drawImage(0, 0, *ctx_->windowBuffer());
@@ -126,16 +128,18 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress)
     {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         drag_start_position_ = mouseEvent->pos();
         view_offset_before_drag_start_ = view_.offset;
 
         QPointF cursor_position = drag_start_position_ + kMouseClickCorrection;
 
-        ctx_->tree()->deselect();
-        auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position);
-        if (leaf != nullptr) {
-            leaf->select();
+        if (ctx_->getMode() == RgfCtx::mode_t::edit) {
+            ctx_->tree()->deselect();
+            auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position);
+            if (leaf != nullptr) {
+                leaf->select();
+            }
         }
 
         update();
@@ -145,7 +149,7 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 
     if (event->type() == QEvent::MouseMove)
     {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         view_.offset = view_offset_before_drag_start_ - drag_start_position_ + mouseEvent->pos();
 
         limitViewPosition();
@@ -156,6 +160,15 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     }
 
     return false;
+}
+
+void DisplayWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Tab) {
+        ctx_->switchModes();
+        update();
+        event->accept();
+    }
 }
 
 void DisplayWidget::wheelEvent(QWheelEvent *event)

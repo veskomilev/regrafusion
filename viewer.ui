@@ -29,6 +29,9 @@
         <height>500</height>
        </size>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
+      </property>
      </widget>
     </item>
     <item>
@@ -47,6 +50,9 @@
       </property>
       <item row="4" column="1">
        <widget class="QSpinBox" name="num_branches_spin_box">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
@@ -86,6 +92,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Reset view
 scale</string>
@@ -99,6 +108,9 @@ scale</string>
           <width>150</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -128,6 +140,9 @@ scale</string>
           <height>16777215</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Reset view
 to origin</string>
@@ -136,6 +151,9 @@ to origin</string>
       </item>
       <item row="2" column="0" colspan="2">
        <widget class="QPushButton" name="switch_buffers">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Switch buffers</string>
         </property>

@@ -8,6 +8,7 @@
 #include <memory>
 #include <QPainter>
 
+#include "rgf_ctx.h"
 #include "gfx/tree.h"
 #include "view.h"
 
@@ -25,6 +26,8 @@ public:
     void drawRulerNumbers();
 
     void drawStats(TreeStatistics& stats);
+
+    void drawCtxMode(RgfCtx::mode_t mode);
 
 private:
     void scaleGrid();

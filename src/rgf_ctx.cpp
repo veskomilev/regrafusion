@@ -17,7 +17,8 @@ RgfCtx::RgfCtx(DisplayWidget *display_widget) :
     color_id_buffer_(std::make_shared<QImage>(
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
-        QImage::Format_RGB32))
+        QImage::Format_RGB32)),
+    mode_(mode_t::view)
 {
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
 }
@@ -29,4 +30,19 @@ RgfCtx::~RgfCtx()
 void RgfCtx::setNumBranches(uint num_branches)
 {
     tree_->setNumBranches(num_branches);
+}
+
+void RgfCtx::switchModes()
+{
+    switch(mode_) {
+        case mode_t::view:
+            mode_ = mode_t::edit;
+            break;
+        case mode_t::edit:
+            mode_ = mode_t::view;
+            break;
+        default:
+            mode_ = mode_t::view;
+            break;
+    }
 }

@@ -26,6 +26,12 @@ public:
 
     const std::shared_ptr<QImage> & colorIdBuffer() const { return color_id_buffer_; }
 
+    enum class mode_t {view, edit};
+
+    const mode_t& getMode() const { return mode_; };
+
+    void switchModes();
+
 private:
 
     std::shared_ptr<LeafIdentifier> leaf_identifier_;
@@ -35,6 +41,8 @@ private:
     std::shared_ptr<QImage> window_buffer_;
 
     std::shared_ptr<QImage> color_id_buffer_;
+
+    mode_t mode_;
 };
 
 #endif // RGFCTX_H

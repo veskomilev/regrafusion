@@ -43,6 +43,8 @@ private:
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
+    void keyPressEvent(QKeyEvent *event) override;
+
     void wheelEvent(QWheelEvent *event) override;
 
     // limit view position to mitigate artifacts due to loss of floating point precision

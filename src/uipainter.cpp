@@ -266,3 +266,22 @@ void UiPainter::drawStats(TreeStatistics& stats)
                       "Average time to render first branch: " + QString::number(avg_time_to_draw_first_branch) + "µs\n" +
                       "Average time to render last branch: " + QString::number(avg_time_to_draw_last_branch) + "µs");
 }
+
+void UiPainter::drawCtxMode(RgfCtx::mode_t mode)
+{
+    std::string mode_string = "";
+
+    switch(mode) {
+        case RgfCtx::mode_t::view:
+            mode_string = "View mode";
+            break;
+        case RgfCtx::mode_t::edit:
+            mode_string = "Edit mode";
+            break;
+        default:
+            mode_string = "Error: Unknown mode";
+            break;
+    }
+
+    painter_->drawText(QRectF(kLabelsOffset, view_.size.y() - kLabelsOffset * 1.5, view_.size.x(), view_.size.y()), mode_string.c_str());
+}
