@@ -11,10 +11,12 @@
 
 enum class leaf_type_t { spawn_point, circle, line, rectangle, path };
 
+class RgfCtx;
+
 class Leaf
 {
 public:
-    Leaf(leaf_type_t type);
+    Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type);
 
     virtual ~Leaf();
 
@@ -43,6 +45,8 @@ public:
     void deselect() { selected_ = false; }
 
 protected:
+    std::weak_ptr<RgfCtx> ctx_;
+
     QColor color_id_;
 
     bool selected_;

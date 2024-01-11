@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "leaf.h"
-#include "leaf_identifier.h"
 
 class RgfCtx;
 

@@ -10,7 +10,7 @@
 class SpawnPoint : public Leaf
 {
 public:
-    SpawnPoint();
+    SpawnPoint(std::weak_ptr<RgfCtx> ctx);
 
     ~SpawnPoint();
 

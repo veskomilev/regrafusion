@@ -10,7 +10,7 @@
 class Path : public Leaf
 {
 public:
-    Path(QColor color);
+    Path(std::weak_ptr<RgfCtx> ctx, QColor color);
 
     ~Path();
 

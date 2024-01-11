@@ -10,7 +10,7 @@
 class Line : public Leaf
 {
 public:
-    Line(QLineF line, QColor color);
+    Line(std::weak_ptr<RgfCtx> ctx, QLineF line, QColor color);
 
     ~Line();
 

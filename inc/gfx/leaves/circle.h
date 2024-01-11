@@ -10,7 +10,7 @@
 class Circle : public Leaf
 {
 public:
-    Circle(qreal radius, QColor color);
+    Circle(std::weak_ptr<RgfCtx> ctx, qreal radius, QColor color);
 
     ~Circle();
 

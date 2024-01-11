@@ -21,31 +21,31 @@ Branch::Branch(std::weak_ptr<RgfCtx> ctx) :
 
     std::shared_ptr<LeafIdentifier> leaf_id = ctx_p->leafIdentifier();
     // each and every branch has at least one spawn (branching) point
-    leaves_.push_back(std::make_shared<SpawnPoint>());
+    leaves_.push_back(std::make_shared<SpawnPoint>(ctx_p));
     leaves_[0]->setTransformationMatrix(leaves_[0]->matrix().translate(60, 0).rotate(-10).scale(0.98, 0.98));
     leaf_id->registerLeaf(leaves_[0]);
 
     // some hardcoded leaves for now:
-    leaves_.push_back(std::make_shared<Circle>(15, Qt::green));
+    leaves_.push_back(std::make_shared<Circle>(ctx_p, 15, Qt::green));
     leaves_[1]->setTransformationMatrix(leaves_[1]->matrix().translate(-10, -10));
     leaf_id->registerLeaf(leaves_[1]);
 
-    leaves_.push_back(std::make_shared<Circle>(20, Qt::red));
+    leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::red));
     leaves_[2]->setTransformationMatrix(leaves_[2]->matrix().scale(1, 0.5).translate(0, 50));
     leaf_id->registerLeaf(leaves_[2]);
 
-    leaves_.push_back(std::make_shared<Circle>(30, Qt::blue));
+    leaves_.push_back(std::make_shared<Circle>(ctx_p, 30, Qt::blue));
     leaves_[3]->setTransformationMatrix(leaves_[3]->matrix().rotate(30).scale(1, 0.2).translate(60, 0));
     leaf_id->registerLeaf(leaves_[3]);
 
-    leaves_.push_back(std::make_shared<Line>(QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
+    leaves_.push_back(std::make_shared<Line>(ctx_p, QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
     leaves_[4]->setTransformationMatrix(leaves_[4]->matrix().translate(0, -30));
     leaf_id->registerLeaf(leaves_[4]);
 
-    leaves_.push_back(std::make_shared<Rectangle>(QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
+    leaves_.push_back(std::make_shared<Rectangle>(ctx_p, QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
     leaf_id->registerLeaf(leaves_[5]);
 
-    std::shared_ptr<Path> path = std::make_shared<Path>(QColor(0, 150, 0));
+    std::shared_ptr<Path> path = std::make_shared<Path>(ctx_p, QColor(0, 150, 0));
     path->addPoint(QPointF(-40, 30));
     path->addPoint(QPointF(40, 30));
     path->addPoint(QPointF(32, 12));

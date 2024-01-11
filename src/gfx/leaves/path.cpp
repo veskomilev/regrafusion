@@ -5,9 +5,10 @@
 #include <QPainterPath>
 
 #include "gfx/leaves/path.h"
+#include "rgf_ctx.h"
 
-Path::Path(QColor color) :
-    Leaf {leaf_type_t::path},
+Path::Path(std::weak_ptr<RgfCtx> ctx, QColor color) :
+    Leaf {ctx, leaf_type_t::path},
     color_(color)
 {
 
@@ -20,6 +21,12 @@ Path::~Path()
 
 void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+
+    if (ctx_p == nullptr)
+        return;
+
+
     Leaf::draw(painter, color_id_painter);
 
     QPainterPath path;
@@ -30,7 +37,7 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
     path.closeSubpath();
 
-    if (selected_) {
+    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
         painter->setPen(QColor(0, 0, 0, 255));
     } else {
         painter->setPen(QColor(0, 0, 0, 0));
@@ -38,9 +45,11 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
     painter->setBrush(color_);
     painter->drawPath(path);
 
-    color_id_painter->setPen(QColor(0, 0, 0, 0));
-    color_id_painter->setBrush(color_id_);
-    color_id_painter->drawPath(path);
+    if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
+        color_id_painter->setPen(QColor(0, 0, 0, 0));
+        color_id_painter->setBrush(color_id_);
+        color_id_painter->drawPath(path);
+    }
 
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);

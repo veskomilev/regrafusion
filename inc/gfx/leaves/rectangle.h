@@ -10,7 +10,7 @@
 class Rectangle : public Leaf
 {
 public:
-    Rectangle(QRectF rectangle, QColor color);
+    Rectangle(std::weak_ptr<RgfCtx> ctx, QRectF rectangle, QColor color);
 
     ~Rectangle();
 

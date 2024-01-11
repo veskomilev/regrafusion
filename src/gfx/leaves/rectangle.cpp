@@ -5,9 +5,10 @@
 #include <QPainterPath>
 
 #include "gfx/leaves/rectangle.h"
+#include "rgf_ctx.h"
 
-Rectangle::Rectangle(QRectF rectangle, QColor color) :
-    Leaf {leaf_type_t::rectangle},
+Rectangle::Rectangle(std::weak_ptr<RgfCtx> ctx, QRectF rectangle, QColor color) :
+    Leaf {ctx, leaf_type_t::rectangle},
     rectangle_(rectangle),
     color_(color)
 {
@@ -21,9 +22,15 @@ Rectangle::~Rectangle()
 
 void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+
+    if (ctx_p == nullptr)
+        return;
+
+
     Leaf::draw(painter, color_id_painter);
 
-    if (selected_) {
+    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
         painter->setPen(QColor(0, 0, 0, 255));
     } else {
         painter->setPen(QColor(0, 0, 0, 0));
@@ -31,9 +38,11 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
     painter->setBrush(color_);
     painter->drawRect(rectangle_);
 
-    color_id_painter->setPen(QColor(0, 0, 0, 0));
-    color_id_painter->setBrush(color_id_);
-    color_id_painter->drawRect(rectangle_);
+    if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
+        color_id_painter->setPen(QColor(0, 0, 0, 0));
+        color_id_painter->setBrush(color_id_);
+        color_id_painter->drawRect(rectangle_);
+    }
 
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
