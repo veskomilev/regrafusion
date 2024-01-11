@@ -12,7 +12,7 @@
 class RgfCtx
 {
 public:
-    RgfCtx(DisplayWidget *display_widget);
+    static std::shared_ptr<RgfCtx> create(DisplayWidget *display_widget);
 
     ~RgfCtx();
 
@@ -33,10 +33,11 @@ public:
     void switchModes();
 
 private:
+    RgfCtx();
 
     std::shared_ptr<LeafIdentifier> leaf_identifier_;
 
-    const std::shared_ptr<Tree> tree_;
+    std::shared_ptr<Tree> tree_;
 
     std::shared_ptr<QImage> window_buffer_;
 

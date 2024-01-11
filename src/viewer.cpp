@@ -14,8 +14,7 @@ viewer::viewer(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ctx_ = std::make_shared<RgfCtx>(ui->display_widget);
-    ui->display_widget->setCtx(ctx_);
+    ctx_ = RgfCtx::create(ui->display_widget);
     ui->display_widget->setStatusBar(ui->status_bar);
 
     // TODO: should max and min values be defined in code somewhere and passed to the UI?

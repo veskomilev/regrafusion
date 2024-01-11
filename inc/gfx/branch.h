@@ -10,6 +10,8 @@
 #include "leaf.h"
 #include "leaf_identifier.h"
 
+class RgfCtx;
+
 // TODO: move this function somewhere sensible (e.g. to a utils inc file)
 template<class T>
 inline T vector_average(std::vector<T> input)
@@ -31,7 +33,7 @@ struct BranchStatistics
 class Branch
 {
 public:
-    Branch(std::shared_ptr<LeafIdentifier> leaf_identifier);
+    Branch(std::weak_ptr<RgfCtx> ctx);
 
     void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats);
 
@@ -42,7 +44,7 @@ private:
     Branch(const Branch&) = delete;
     Branch& operator=(const Branch&) = delete;
 
-    std::shared_ptr<LeafIdentifier> leaf_identifier_;
+    std::weak_ptr<RgfCtx> ctx_;
 
     std::vector<std::shared_ptr<Leaf>> leaves_;
     std::unique_ptr<Leaf> spawn_point_;

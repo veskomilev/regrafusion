@@ -10,34 +10,40 @@
 #include "gfx/leaves/path.h"
 #include "gfx/leaves/rectangle.h"
 #include "gfx/leaves/spawnpoint.h"
+#include "rgf_ctx.h"
 
-Branch::Branch(std::shared_ptr<LeafIdentifier> leaf_identifier) :
-    leaf_identifier_(leaf_identifier)
+Branch::Branch(std::weak_ptr<RgfCtx> ctx) :
+    ctx_(ctx)
 {
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+
+    assert(ctx_p != nullptr && "Branch was created for a non existant context");
+
+    std::shared_ptr<LeafIdentifier> leaf_id = ctx_p->leafIdentifier();
     // each and every branch has at least one spawn (branching) point
     leaves_.push_back(std::make_shared<SpawnPoint>());
     leaves_[0]->setTransformationMatrix(leaves_[0]->matrix().translate(60, 0).rotate(-10).scale(0.98, 0.98));
-    leaf_identifier_->registerLeaf(leaves_[0]);
+    leaf_id->registerLeaf(leaves_[0]);
 
     // some hardcoded leaves for now:
     leaves_.push_back(std::make_shared<Circle>(15, Qt::green));
     leaves_[1]->setTransformationMatrix(leaves_[1]->matrix().translate(-10, -10));
-    leaf_identifier_->registerLeaf(leaves_[1]);
+    leaf_id->registerLeaf(leaves_[1]);
 
     leaves_.push_back(std::make_shared<Circle>(20, Qt::red));
     leaves_[2]->setTransformationMatrix(leaves_[2]->matrix().scale(1, 0.5).translate(0, 50));
-    leaf_identifier_->registerLeaf(leaves_[2]);
+    leaf_id->registerLeaf(leaves_[2]);
 
     leaves_.push_back(std::make_shared<Circle>(30, Qt::blue));
     leaves_[3]->setTransformationMatrix(leaves_[3]->matrix().rotate(30).scale(1, 0.2).translate(60, 0));
-    leaf_identifier_->registerLeaf(leaves_[3]);
+    leaf_id->registerLeaf(leaves_[3]);
 
     leaves_.push_back(std::make_shared<Line>(QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
     leaves_[4]->setTransformationMatrix(leaves_[4]->matrix().translate(0, -30));
-    leaf_identifier_->registerLeaf(leaves_[4]);
+    leaf_id->registerLeaf(leaves_[4]);
 
     leaves_.push_back(std::make_shared<Rectangle>(QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
-    leaf_identifier_->registerLeaf(leaves_[5]);
+    leaf_id->registerLeaf(leaves_[5]);
 
     std::shared_ptr<Path> path = std::make_shared<Path>(QColor(0, 150, 0));
     path->addPoint(QPointF(-40, 30));
@@ -48,7 +54,7 @@ Branch::Branch(std::shared_ptr<LeafIdentifier> leaf_identifier) :
     path->addPoint(QPointF(-20, -30));
     leaves_.push_back(path);
     leaves_[6]->setTransformationMatrix(leaves_[6]->matrix().translate(0, 70));
-    leaf_identifier_->registerLeaf(leaves_[6]);
+    leaf_id->registerLeaf(leaves_[6]);
 }
 
 void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats)

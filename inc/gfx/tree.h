@@ -11,6 +11,8 @@
 #include "branch.h"
 #include "leaf_identifier.h"
 
+class RgfCtx;
+
 struct TreeStatistics
 {
     std::vector<uint> render_time_us;
@@ -22,7 +24,7 @@ struct TreeStatistics
 class Tree
 {
 public:
-    Tree(std::shared_ptr<LeafIdentifier> leaf_identifier, uint num_branches_to_draw);
+    Tree(std::weak_ptr<RgfCtx> ctx, uint num_branches_to_draw);
 
     TreeStatistics& draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
@@ -37,7 +39,7 @@ private:
     Tree(const Tree&) = delete;
     Tree& operator=(const Tree&) = delete;
 
-    std::shared_ptr<LeafIdentifier> leaf_identifier_;
+    std::weak_ptr<RgfCtx> ctx_;
 
     std::vector<std::unique_ptr<Branch>> branches_;
 

@@ -7,9 +7,9 @@
 
 #include "rgf_ctx.h"
 
-RgfCtx::RgfCtx(DisplayWidget *display_widget) :
+RgfCtx::RgfCtx() :
     leaf_identifier_(std::make_shared<LeafIdentifier>()),
-    tree_(std::make_unique<Tree>(leaf_identifier_, 100)),
+    tree_(nullptr),
     window_buffer_(std::make_shared<QImage>(
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
@@ -21,6 +21,16 @@ RgfCtx::RgfCtx(DisplayWidget *display_widget) :
     mode_(mode_t::view)
 {
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
+}
+
+std::shared_ptr<RgfCtx> RgfCtx::create(DisplayWidget *display_widget)
+{
+    struct ctor : public RgfCtx {};
+    std::shared_ptr<RgfCtx> ctx = std::make_shared<ctor>();
+    ctx->tree_ = std::make_shared<Tree>(ctx, 100);
+    display_widget->setCtx(ctx);
+
+    return ctx;
 }
 
 RgfCtx::~RgfCtx()
