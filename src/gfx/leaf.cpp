@@ -58,6 +58,11 @@ bool Leaf::setTransformationMatrix(QTransform matrix)
     return true;
 }
 
+QPointF Leaf::toLocalSpace(QPointF coordinate)
+{
+    return matrix_.inverted().map(coordinate);
+}
+
 QColor Leaf::getUniqueColor(uint depth)
 {
     QColor result = color_id_;

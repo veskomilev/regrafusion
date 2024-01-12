@@ -18,7 +18,8 @@ RgfCtx::RgfCtx() :
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
         QImage::Format_RGB32)),
-    mode_(mode_t::view)
+    mode_(mode_t::view),
+    selected_leaf_(nullptr)
 {
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
 }

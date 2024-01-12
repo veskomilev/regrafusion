@@ -9,6 +9,7 @@
 #include <QStatusBar>
 #include <QOpenGLWidget>
 
+#include "gfx/leaf.h"
 #include "view.h"
 
 class RgfCtx;
@@ -36,12 +37,16 @@ public:
 
     void setPaintingCtx();
 
-    void setCtx(std::shared_ptr<RgfCtx> ctx) { ctx_ = ctx; };
+    void setCtx(std::shared_ptr<RgfCtx> ctx) { ctx_ = ctx; }
 
 private:
     void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+    void moveView(QMouseEvent *mouseEvent);
+
+    void moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf);
 
     void keyPressEvent(QKeyEvent *event) override;
 
@@ -57,8 +62,7 @@ private:
     View view_;
 
     // navigation related
-    QPointF drag_start_position_;
-    QPointF view_offset_before_drag_start_;
+    QPointF previous_mouse_position_;
     static constexpr QPointF kMouseClickCorrection = QPointF(-10.0f, -10.0f);
 
     std::shared_ptr<RgfCtx> ctx_;

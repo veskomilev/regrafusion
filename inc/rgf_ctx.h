@@ -28,9 +28,13 @@ public:
 
     enum class mode_t {view, edit};
 
-    const mode_t& getMode() const { return mode_; };
+    const mode_t& getMode() const { return mode_; }
 
     void switchModes();
+
+    void setSelectedLeaf(std::shared_ptr<Leaf> leaf) { selected_leaf_ = leaf; }
+
+    std::shared_ptr<Leaf> getSelectedLeaf() const { return selected_leaf_; }
 
 private:
     RgfCtx();
@@ -44,6 +48,8 @@ private:
     std::shared_ptr<QImage> color_id_buffer_;
 
     mode_t mode_;
+
+    std::shared_ptr<Leaf> selected_leaf_;
 };
 
 #endif // RGFCTX_H

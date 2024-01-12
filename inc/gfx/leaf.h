@@ -26,7 +26,7 @@ public:
 
     bool setTransformationMatrix(QTransform matrix);
 
-    QTransform matrix() { return matrix_; }
+    QTransform& matrix() { return matrix_; }
 
     inline void unapplyLocalTransformations(std::shared_ptr<QPainter> painter) {
         if (!matrix_.isIdentity()) {
@@ -43,6 +43,8 @@ public:
     void select() { selected_ = true; }
 
     void deselect() { selected_ = false; }
+
+    QPointF toLocalSpace(QPointF coordinate);
 
 protected:
     QColor getUniqueColor(uint depth);

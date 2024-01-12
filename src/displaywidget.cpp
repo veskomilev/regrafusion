@@ -18,8 +18,7 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     QOpenGLWidget {parent},
     status_bar_(nullptr),
     view_({View::kOffsetIdentity, View::kOffsetIdentity, 1.0}),
-    drag_start_position_(View::kOffsetIdentity),
-    view_offset_before_drag_start_(View::kOffsetIdentity),
+    previous_mouse_position_(View::kOffsetIdentity),
     draw_window_buffer_(true)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
@@ -129,16 +128,17 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::MouseButtonPress)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        drag_start_position_ = mouseEvent->pos();
-        view_offset_before_drag_start_ = view_.offset;
-
-        QPointF cursor_position = drag_start_position_ + kMouseClickCorrection;
+        previous_mouse_position_ = mouseEvent->pos();
+        QPointF cursor_position = mouseEvent->pos() + kMouseClickCorrection;
 
         if (ctx_->getMode() == RgfCtx::mode_t::edit) {
             ctx_->tree()->deselect();
+            ctx_->setSelectedLeaf(nullptr);
+
             auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position);
             if (leaf != nullptr) {
                 leaf->select();
+                ctx_->setSelectedLeaf(leaf);
             }
         }
 
@@ -150,16 +150,36 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::MouseMove)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        view_.offset = view_offset_before_drag_start_ - drag_start_position_ + mouseEvent->pos();
 
-        limitViewPosition();
+        if (ctx_->getMode() == RgfCtx::mode_t::edit && ctx_->getSelectedLeaf() != nullptr) {
+            moveLeaf(mouseEvent, ctx_->getSelectedLeaf());
+        } else {
+            moveView(mouseEvent);
+        }
 
         updateStatus();
         update();
+        previous_mouse_position_ = mouseEvent->pos();
         return true;
     }
 
     return false;
+}
+
+void DisplayWidget::moveView(QMouseEvent *mouseEvent)
+{
+    view_.offset += mouseEvent->pos() - previous_mouse_position_;
+    limitViewPosition();
+}
+
+void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf)
+{
+    float scale = view_.scale;
+    auto toLeafSpace = [leaf, scale](QPointF coords) { return leaf->toLocalSpace(coords / scale); };
+
+    QPointF deltaPosition = toLeafSpace(mouseEvent->pos()) - toLeafSpace(previous_mouse_position_);
+
+    leaf->matrix().translate(deltaPosition.x(), deltaPosition.y());
 }
 
 void DisplayWidget::keyPressEvent(QKeyEvent *event)
