@@ -18,28 +18,18 @@ LeafIdentifier::~LeafIdentifier()
 bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
 {
     if (next_unused_color_ == kBackgroundColor) {
-        // TODO: add wraparound functionality if someone ever adds 16 million leaves manually
+        // TODO: add wraparound functionality if someone ever adds enough leaves manually to 'overflow' the RNG
         return false;
     }
 
-    // some qd hashing - assign a distinct color for debug purposes that is not just shades of black
-    size_t hashing = next_unused_color_.rgb();
+    size_t rng = next_unused_color_.rgb();
 
-    hashing *= 11;
-    hashing &= 0xFFFFFF;
-    hashing *= 577;
-    hashing &= 0xFFFFFF;
-    hashing *= 997;
-    hashing &= 0xFFFFFF;
-    hashing *= 1009;
-    hashing &= 0xFFFFFF;
-    hashing *= 1597;
-    hashing &= 0xFFFFFF;
-    hashing *= 1741;
-    hashing &= 0xFFFFFF;
+    rng = (0xDABEDA * rng + 0xBABACECA) % 0x03FFFF;
+    rng <<= 10;
+    rng &= 0xFFFFFF;
 
     QColor display_color;
-    display_color.setRgb(hashing);
+    display_color.setRgb(rng);
 
     leaf->setColorId(display_color);
     leaf_map_.insert(std::pair<QColor, std::shared_ptr<Leaf>>(display_color, leaf));
