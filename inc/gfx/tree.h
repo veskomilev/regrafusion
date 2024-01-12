@@ -34,6 +34,8 @@ public:
 
     void deselect();
 
+    QTransform getSpawnPointTransformation();
+
 private:
     // disable copy and assignment ctors
     Tree(const Tree&) = delete;

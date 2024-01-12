@@ -38,6 +38,8 @@ public:
 
     void deselect();
 
+    QTransform getSpawnPointTransformation();
+
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;

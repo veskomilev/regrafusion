@@ -56,3 +56,13 @@ void Tree::deselect()
         branch->deselect();
     }
 }
+
+QTransform Tree::getSpawnPointTransformation()
+{
+    if (branches_.size() == 0) {
+        return QTransform();
+    }
+
+    // TODO: do something here if there are ever more than one branches
+    return branches_[0]->getSpawnPointTransformation();
+}

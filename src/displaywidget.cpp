@@ -133,12 +133,13 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 
         if (ctx_->getMode() == RgfCtx::mode_t::edit) {
             ctx_->tree()->deselect();
-            ctx_->setSelectedLeaf(nullptr);
+            ctx_->setSelectedLeaf(nullptr, 0);
 
-            auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position);
+            uint leaf_depth = 0;
+            auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position, leaf_depth);
             if (leaf != nullptr) {
                 leaf->select();
-                ctx_->setSelectedLeaf(leaf);
+                ctx_->setSelectedLeaf(leaf, leaf_depth);
             }
         }
 
@@ -174,8 +175,10 @@ void DisplayWidget::moveView(QMouseEvent *mouseEvent)
 
 void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf)
 {
-    float scale = view_.scale;
-    auto toLeafSpace = [leaf, scale](QPointF coords) { return leaf->toLocalSpace(coords / scale); };
+    auto toLeafSpace = [this, leaf](QPointF coords) {
+        coords = ctx_->toSelectedBranchSpace(coords / view_.scale);
+        return leaf->toLocalSpace(coords);
+    };
 
     QPointF deltaPosition = toLeafSpace(mouseEvent->pos()) - toLeafSpace(previous_mouse_position_);
 

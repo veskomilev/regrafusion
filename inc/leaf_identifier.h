@@ -30,9 +30,9 @@ public:
 
     void unregisterLeaf(std::shared_ptr<Leaf> leaf);
 
-    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position);
+    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position, uint& leaf_depth);
 
-    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position);
+    std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position, uint& leaf_depth);
 
     QColor getBackgroundColor() const { return kBackgroundColor; }
 

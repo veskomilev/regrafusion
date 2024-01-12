@@ -19,7 +19,8 @@ RgfCtx::RgfCtx() :
         QGuiApplication::primaryScreen()->geometry().height(),
         QImage::Format_RGB32)),
     mode_(mode_t::view),
-    selected_leaf_(nullptr)
+    selected_leaf_(nullptr),
+    cumulative_branch_transformations_(QTransform())
 {
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
 }
@@ -56,4 +57,23 @@ void RgfCtx::switchModes()
             mode_ = mode_t::view;
             break;
     }
+}
+
+void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+{
+    selected_leaf_ = leaf;
+    cumulative_branch_transformations_ = QTransform();
+
+    if (selected_leaf_ != nullptr) {
+        QTransform spawn_tfm = tree_->getSpawnPointTransformation();
+
+        for (uint i = 0; i < leaf_depth; i++) {
+            cumulative_branch_transformations_ *= spawn_tfm;
+        }
+    }
+}
+
+QPointF RgfCtx::toSelectedBranchSpace(QPointF coordinate)
+{
+    return cumulative_branch_transformations_.inverted().map(coordinate);
 }

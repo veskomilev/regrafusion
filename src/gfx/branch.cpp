@@ -114,3 +114,15 @@ void Branch::deselect()
         leaf->deselect();
     }
 }
+
+QTransform Branch::getSpawnPointTransformation()
+{
+    // TODO: if there are ever more than one spawn points, do something about it
+    for (auto &leaf : leaves_) {
+        if (leaf->isSpawnPoint()) {
+            return leaf->matrix();
+        }
+    }
+
+    return QTransform();
+}

@@ -46,12 +46,12 @@ void LeafIdentifier::unregisterLeaf(std::shared_ptr<Leaf> leaf)
     leaf_map_.erase(id);
 }
 
-std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position)
+std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPointF position, uint& leaf_depth)
 {
-    return getLeaf(color_id_buffer, position.toPoint());
+    return getLeaf(color_id_buffer, position.toPoint(), leaf_depth);
 }
 
-std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position)
+std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position, uint& leaf_depth)
 {
     QColor pixel_color = color_id_buffer->pixelColor(position);
 
@@ -59,14 +59,16 @@ std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_b
     QColor color_id(pixel_color.rgb() & kLeafMask);
 
     if (color_id == QColor::Invalid) {
+        leaf_depth = 0;
         return nullptr;
     }
 
     if (leaf_map_.find(color_id) == leaf_map_.end()) {
+        leaf_depth = 0;
         return nullptr;
     }
 
-    uint depth = pixel_color.rgb() & kDepthMask;
+    leaf_depth = pixel_color.rgb() & kDepthMask;
 
     return leaf_map_[color_id];
 }

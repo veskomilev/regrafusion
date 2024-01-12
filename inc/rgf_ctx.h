@@ -32,9 +32,11 @@ public:
 
     void switchModes();
 
-    void setSelectedLeaf(std::shared_ptr<Leaf> leaf) { selected_leaf_ = leaf; }
+    void setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
     std::shared_ptr<Leaf> getSelectedLeaf() const { return selected_leaf_; }
+
+    QPointF toSelectedBranchSpace(QPointF coordinate);
 
 private:
     RgfCtx();
@@ -50,6 +52,8 @@ private:
     mode_t mode_;
 
     std::shared_ptr<Leaf> selected_leaf_;
+
+    QTransform cumulative_branch_transformations_;
 };
 
 #endif // RGFCTX_H
