@@ -34,7 +34,7 @@ class Branch
 public:
     Branch(std::weak_ptr<RgfCtx> ctx);
 
-    void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats);
+    void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats, uint depth);
 
     void deselect();
 

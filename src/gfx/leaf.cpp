@@ -18,7 +18,7 @@ Leaf::~Leaf()
 {
 }
 
-void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
 
@@ -56,4 +56,16 @@ bool Leaf::setTransformationMatrix(QTransform matrix)
 
     matrix_ = matrix;
     return true;
+}
+
+QColor Leaf::getUniqueColor(uint depth)
+{
+    QColor result = color_id_;
+
+    // sanity verification
+    depth &= 0x3FF;
+
+    result.setRgb(result.rgb() | depth);
+
+    return result;
 }

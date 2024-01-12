@@ -14,7 +14,7 @@ SpawnPoint::~SpawnPoint()
 {
 }
 
-void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
 
@@ -22,7 +22,7 @@ void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainte
         return;
 
 
-    Leaf::draw(painter, color_id_painter);
+    Leaf::draw(painter, color_id_painter, depth);
 
 
     painter->setPen(QColor(0, 0, 0, 128));
@@ -34,7 +34,7 @@ void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainte
     }
 
     if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
-        color_id_painter->setBrush(color_id_);
+        color_id_painter->setBrush(getUniqueColor(depth));
         color_id_painter->setPen(QColor(0, 0, 0, 0));
         color_id_painter->drawEllipse(QPointF(0, 0), 3, 3);
     }

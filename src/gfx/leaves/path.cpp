@@ -19,7 +19,7 @@ Path::~Path()
 
 }
 
-void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
 
@@ -27,7 +27,7 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         return;
 
 
-    Leaf::draw(painter, color_id_painter);
+    Leaf::draw(painter, color_id_painter, depth);
 
     QPainterPath path;
 
@@ -47,7 +47,7 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
     if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
         color_id_painter->setPen(QColor(0, 0, 0, 0));
-        color_id_painter->setBrush(color_id_);
+        color_id_painter->setBrush(getUniqueColor(depth));
         color_id_painter->drawPath(path);
     }
 

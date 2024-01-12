@@ -24,6 +24,8 @@ bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
 
     size_t rng = next_unused_color_.rgb();
 
+    // out of 3 x 8 = 24 rgb bits, first 14 bits are for the leaf, and last 10 bits are for the branch depth
+    // so shift the RNG result left by 10 bits
     rng = (0xDABEDA * rng + 0xBABACECA) % 0x03FFFF;
     rng <<= 10;
     rng &= 0xFFFFFF;
@@ -51,7 +53,10 @@ std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_b
 
 std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position)
 {
-    QColor color_id = color_id_buffer->pixelColor(position);
+    QColor pixel_color = color_id_buffer->pixelColor(position);
+
+    // apply leaf mask - ignore branch depth information
+    QColor color_id(pixel_color.rgb() & kLeafMask);
 
     if (color_id == QColor::Invalid) {
         return nullptr;
@@ -60,6 +65,8 @@ std::shared_ptr<Leaf> LeafIdentifier::getLeaf(std::shared_ptr<QImage> color_id_b
     if (leaf_map_.find(color_id) == leaf_map_.end()) {
         return nullptr;
     }
+
+    uint depth = pixel_color.rgb() & kDepthMask;
 
     return leaf_map_[color_id];
 }

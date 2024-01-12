@@ -21,7 +21,7 @@ TreeStatistics& Tree::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QP
     std::chrono::steady_clock::time_point drawing_start = std::chrono::steady_clock::now();
 
     for (auto &branch : branches_) {
-        branch->draw(painter, color_id_painter, num_branches_to_draw_, branch_stats);
+        branch->draw(painter, color_id_painter, num_branches_to_draw_, branch_stats, 0);
     }
 
     std::chrono::steady_clock::time_point drawing_end = std::chrono::steady_clock::now();

@@ -20,7 +20,7 @@ Rectangle::~Rectangle()
 
 }
 
-void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
 
@@ -28,7 +28,7 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
         return;
 
 
-    Leaf::draw(painter, color_id_painter);
+    Leaf::draw(painter, color_id_painter, depth);
 
     if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
         painter->setPen(QColor(0, 0, 0, 255));
@@ -40,7 +40,7 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
 
     if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
         color_id_painter->setPen(QColor(0, 0, 0, 0));
-        color_id_painter->setBrush(color_id_);
+        color_id_painter->setBrush(getUniqueColor(depth));
         color_id_painter->drawRect(rectangle_);
     }
 

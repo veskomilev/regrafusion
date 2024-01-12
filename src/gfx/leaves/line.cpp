@@ -20,7 +20,7 @@ Line::~Line()
 
 }
 
-void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
 
@@ -28,7 +28,7 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         return;
 
 
-    Leaf::draw(painter, color_id_painter);
+    Leaf::draw(painter, color_id_painter, depth);
 
     // draw just the outline
     if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
@@ -47,7 +47,7 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
     painter->drawLine(line_);
 
     if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
-        color_id_painter->setPen(color_id_);
+        color_id_painter->setPen(getUniqueColor(depth));
         color_id_painter->drawLine(line_);
     }
 

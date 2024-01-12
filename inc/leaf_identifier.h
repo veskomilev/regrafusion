@@ -34,7 +34,7 @@ public:
 
     std::shared_ptr<Leaf> getLeaf(std::shared_ptr<QImage> color_id_buffer, QPoint position);
 
-    QColor getBackgroundColor() const { return kBackgroundColor; };
+    QColor getBackgroundColor() const { return kBackgroundColor; }
 
 private:
     void goToNextColor();
@@ -49,6 +49,10 @@ private:
 
     // number of colors other than white, which is the background
     static constexpr size_t kMaxNumLeaves = 256 * 256 * 256 - 1;
+
+    // out of 3 x 8 = 24 rgb bits, first 14 bits are for the leaf, and last 10 bits are for the branch depth
+    static constexpr size_t kLeafMask = 0xFFFC00;
+    static constexpr size_t kDepthMask = 0x3FF;
 };
 
 #endif // LEAFIDENTIFIER_H

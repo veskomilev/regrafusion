@@ -20,7 +20,7 @@ public:
 
     virtual ~Leaf();
 
-    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
+    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth);
 
     virtual inline bool isSpawnPoint() = 0;
 
@@ -35,16 +35,18 @@ public:
         }
     }
 
-    QColor getColorId() const { return color_id_; };
+    QColor getColorId() const { return color_id_; }
 
     // TODO: maybe make a factory
-    void setColorId(QColor color_id) { color_id_ = color_id; }; /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
+    void setColorId(QColor color_id) { color_id_ = color_id; } /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
 
     void select() { selected_ = true; }
 
     void deselect() { selected_ = false; }
 
 protected:
+    QColor getUniqueColor(uint depth);
+
     std::weak_ptr<RgfCtx> ctx_;
 
     QColor color_id_;
