@@ -36,6 +36,8 @@ private slots:
     void on_switch_buffers_pressed();
 
 private:
+    void setupToolbar();
+
     Ui::viewer *ui;
     std::shared_ptr<RgfCtx> ctx_;
 };

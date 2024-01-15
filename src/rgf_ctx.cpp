@@ -7,7 +7,9 @@
 
 #include "rgf_ctx.h"
 
-RgfCtx::RgfCtx() :
+RgfCtx::RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar) :
+    display_widget_(display_widget),
+    status_bar_(status_bar),
     leaf_identifier_(std::make_shared<LeafIdentifier>()),
     tree_(nullptr),
     window_buffer_(std::make_shared<QImage>(
@@ -26,10 +28,15 @@ RgfCtx::RgfCtx() :
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
 }
 
-std::shared_ptr<RgfCtx> RgfCtx::create(DisplayWidget *display_widget)
+std::shared_ptr<RgfCtx> RgfCtx::create(DisplayWidget *display_widget, QStatusBar* status_bar)
 {
-    struct ctor : public RgfCtx {};
-    std::shared_ptr<RgfCtx> ctx = std::make_shared<ctor>();
+    // just a wrapper to get to the private ctor
+    struct ctor : public RgfCtx {
+        ctor(DisplayWidget *display_widget, QStatusBar* status_bar) :
+            RgfCtx {display_widget, status_bar} {}
+    };
+
+    std::shared_ptr<RgfCtx> ctx = std::make_shared<ctor>(display_widget, status_bar);
     ctx->tree_ = std::make_shared<Tree>(ctx, 100);
     display_widget->setCtx(ctx);
 
@@ -73,6 +80,8 @@ void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
             cumulative_branch_transformations_ *= spawn_tfm;
         }
     }
+
+    display_widget_->updateStatus();
 }
 
 QPointF RgfCtx::toSelectedBranchSpace(QPointF coordinate)
@@ -80,7 +89,26 @@ QPointF RgfCtx::toSelectedBranchSpace(QPointF coordinate)
     return cumulative_branch_transformations_.inverted().map(coordinate);
 }
 
+void RgfCtx::deleteLeafAction()
+{
+    if (getMode() != RgfCtx::mode_t::edit) {
+        status_bar_->showMessage("You need to be in edit mode in order to delete shapes");
+        return;
+    }
+
+    auto leaf = getSelectedLeaf();
+    if (leaf == nullptr) {
+        status_bar_->showMessage("No shape is selected");
+        return;
+    }
+
+    deleteLeaf(leaf);
+    display_widget_->update();
+    display_widget_->updateStatus();
+}
+
 void RgfCtx::deleteLeaf(std::shared_ptr<Leaf> leaf)
 {
     tree_->deleteLeaf(leaf);
+    setSelectedLeaf(nullptr, 0);
 }

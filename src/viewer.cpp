@@ -2,8 +2,10 @@
 // Distributed under GPL-3.0
 // Copyright (C) 2023  Vesko Milev
 
+#include <functional>
 #include <QStatusBar>
 #include <QString>
+#include <QToolBar>
 
 #include "viewer.h"
 #include "ui_viewer.h"
@@ -14,8 +16,10 @@ viewer::viewer(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ctx_ = RgfCtx::create(ui->display_widget);
+    ctx_ = RgfCtx::create(ui->display_widget, ui->status_bar);
     ui->display_widget->setStatusBar(ui->status_bar);
+
+    setupToolbar();
 
     // TODO: should max and min values be defined in code somewhere and passed to the UI?
     uint num_branches = ui->num_branches_spin_box->value();
@@ -61,4 +65,17 @@ void viewer::on_switch_buffers_pressed()
 {
     ui->display_widget->switchBuffers();
     ui->display_widget->update();
+}
+
+void viewer::setupToolbar()
+{
+    QToolBar* toolbar = new QToolBar("edit");
+    this->addToolBar(Qt::LeftToolBarArea, toolbar);
+
+    const QIcon delete_icon= QIcon::fromTheme("process-stop");
+    QAction *delete_action = new QAction(delete_icon, "delete", this);
+    delete_action->setShortcuts(QKeySequence::Delete);
+    delete_action->setStatusTip("Delete the selected shape");
+    connect(delete_action, &QAction::triggered, std::bind(&RgfCtx::deleteLeafAction, ctx_));
+    toolbar->addAction(delete_action);
 }

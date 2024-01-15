@@ -39,6 +39,8 @@ public:
 
     void setCtx(std::shared_ptr<RgfCtx> ctx) { ctx_ = ctx; }
 
+    void updateStatus();
+
 private:
     void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
@@ -52,14 +54,10 @@ private:
 
     void handleKeyTabPressed();
 
-    void handleKeyDeletePressed();
-
     void wheelEvent(QWheelEvent *event) override;
 
     // limit view position to mitigate artifacts due to loss of floating point precision
     void limitViewPosition();
-
-    void updateStatus();
 
     QStatusBar* status_bar_;
 

@@ -12,7 +12,7 @@
 class RgfCtx
 {
 public:
-    static std::shared_ptr<RgfCtx> create(DisplayWidget *display_widget);
+    static std::shared_ptr<RgfCtx> create(DisplayWidget *display_widget, QStatusBar* status_bar);
 
     ~RgfCtx();
 
@@ -40,10 +40,18 @@ public:
 
     QPointF toSelectedBranchSpace(QPointF coordinate);
 
-    void deleteLeaf(std::shared_ptr<Leaf> leaf);
+    void deleteLeafAction();
 
 private:
-    RgfCtx();
+    RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar);
+
+    void deleteLeaf(std::shared_ptr<Leaf> leaf);
+
+    // TODO: figure out a way to replate these with shared pointers
+    // as long as the widgets aren't destroyed in run-time (which they aren't) these pointers should never be null
+    DisplayWidget *display_widget_;
+
+    QStatusBar* status_bar_;
 
     std::shared_ptr<LeafIdentifier> leaf_identifier_;
 
