@@ -47,8 +47,14 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
     painter->drawLine(line_);
 
     if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
-        color_id_painter->setPen(getUniqueColor(depth));
+        QPen pen(getUniqueColor(depth));
+        pen.setWidth(5); // make lines easier to select
+        color_id_painter->setPen(pen);
         color_id_painter->drawLine(line_);
+
+        // reset pen width
+        pen.setWidth(1);
+        color_id_painter->setPen(pen);
     }
 
     unapplyLocalTransformations(painter);
