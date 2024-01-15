@@ -193,16 +193,9 @@ void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf
 void DisplayWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Tab) {
-        handleKeyTabPressed();
+        ctx_->switchModesAction();
         event->accept();
     }
-}
-
-void DisplayWidget::handleKeyTabPressed()
-{
-    ctx_->switchModes();
-    update();
-
 }
 
 void DisplayWidget::wheelEvent(QWheelEvent *event)

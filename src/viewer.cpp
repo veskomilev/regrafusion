@@ -78,4 +78,10 @@ void viewer::setupToolbar()
     delete_action->setStatusTip("Delete the selected shape");
     connect(delete_action, &QAction::triggered, std::bind(&RgfCtx::deleteLeafAction, ctx_));
     toolbar->addAction(delete_action);
+
+    const QIcon switch_icon= QIcon::fromTheme("media-playlist-shuffle");
+    QAction *switch_action = new QAction(switch_icon, "switch", this);
+    switch_action->setStatusTip("Switch modes");
+    connect(switch_action, &QAction::triggered, std::bind(&RgfCtx::switchModesAction, ctx_));
+    toolbar->addAction(switch_action);
 }

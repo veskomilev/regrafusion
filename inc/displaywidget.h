@@ -52,8 +52,6 @@ private:
 
     void keyPressEvent(QKeyEvent *event) override;
 
-    void handleKeyTabPressed();
-
     void wheelEvent(QWheelEvent *event) override;
 
     // limit view position to mitigate artifacts due to loss of floating point precision

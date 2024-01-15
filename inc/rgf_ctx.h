@@ -30,8 +30,6 @@ public:
 
     const mode_t& getMode() const { return mode_; }
 
-    void switchModes();
-
     void setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
     std::shared_ptr<Leaf> getSelectedLeaf() const { return selected_leaf_; }
@@ -41,6 +39,11 @@ public:
     QPointF toSelectedBranchSpace(QPointF coordinate);
 
     void deleteLeafAction();
+
+    void switchModesAction();
+
+    void switchModes();
+
 
 private:
     RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar);

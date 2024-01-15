@@ -107,6 +107,13 @@ void RgfCtx::deleteLeafAction()
     display_widget_->updateStatus();
 }
 
+void RgfCtx::switchModesAction()
+{
+    switchModes();
+    display_widget_->update();
+    display_widget_->updateStatus();
+}
+
 void RgfCtx::deleteLeaf(std::shared_ptr<Leaf> leaf)
 {
     tree_->deleteLeaf(leaf);
