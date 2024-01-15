@@ -175,6 +175,11 @@ void DisplayWidget::moveView(QMouseEvent *mouseEvent)
 
 void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf)
 {
+    // make spawn points editable only from the base branch
+    // this is a task that requires much more complex calculations
+    if (leaf->isSpawnPoint() && ctx_->getSelectedLeafDepth() > 0)
+        return;
+
     auto toLeafSpace = [this, leaf](QPointF coords) {
         coords = ctx_->toSelectedBranchSpace(coords / view_.scale);
         return leaf->toLocalSpace(coords);

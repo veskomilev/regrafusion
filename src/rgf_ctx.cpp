@@ -20,6 +20,7 @@ RgfCtx::RgfCtx() :
         QImage::Format_RGB32)),
     mode_(mode_t::view),
     selected_leaf_(nullptr),
+    selected_leaf_depth_(0),
     cumulative_branch_transformations_(QTransform())
 {
     assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
@@ -62,13 +63,8 @@ void RgfCtx::switchModes()
 void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
     selected_leaf_ = leaf;
+    selected_leaf_depth_ = leaf_depth;
     cumulative_branch_transformations_ = QTransform();
-
-    // make spawn points editable only from the base branch
-    // this is a task that requires much more complex calculations
-    if (selected_leaf_ != nullptr && selected_leaf_->isSpawnPoint() && leaf_depth > 0) {
-        selected_leaf_ = nullptr;
-    }
 
     if (selected_leaf_ != nullptr) {
         QTransform spawn_tfm = tree_->getSpawnPointTransformation();

@@ -36,6 +36,8 @@ public:
 
     std::shared_ptr<Leaf> getSelectedLeaf() const { return selected_leaf_; }
 
+    uint getSelectedLeafDepth() const { return selected_leaf_depth_; }
+
     QPointF toSelectedBranchSpace(QPointF coordinate);
 
     void deleteLeaf(std::shared_ptr<Leaf> leaf);
@@ -54,6 +56,8 @@ private:
     mode_t mode_;
 
     std::shared_ptr<Leaf> selected_leaf_;
+
+    uint selected_leaf_depth_;
 
     QTransform cumulative_branch_transformations_;
 };
