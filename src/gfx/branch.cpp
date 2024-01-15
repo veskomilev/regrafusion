@@ -126,3 +126,14 @@ QTransform Branch::getSpawnPointTransformation()
 
     return QTransform();
 }
+
+void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
+{
+    leaves_.erase(
+        std::remove_if(
+            leaves_.begin(),
+            leaves_.end(),
+            [leaf](std::shared_ptr<Leaf> element) { return element == leaf; }
+            )
+        );
+}

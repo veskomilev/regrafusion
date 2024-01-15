@@ -38,6 +38,8 @@ public:
 
     QPointF toSelectedBranchSpace(QPointF coordinate);
 
+    void deleteLeaf(std::shared_ptr<Leaf> leaf);
+
 private:
     RgfCtx();
 

@@ -83,3 +83,8 @@ QPointF RgfCtx::toSelectedBranchSpace(QPointF coordinate)
 {
     return cumulative_branch_transformations_.inverted().map(coordinate);
 }
+
+void RgfCtx::deleteLeaf(std::shared_ptr<Leaf> leaf)
+{
+    tree_->deleteLeaf(leaf);
+}

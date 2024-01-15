@@ -40,6 +40,8 @@ public:
 
     QTransform getSpawnPointTransformation();
 
+    void deleteLeaf(std::shared_ptr<Leaf> leaf);
+
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;

@@ -66,3 +66,10 @@ QTransform Tree::getSpawnPointTransformation()
     // TODO: do something here if there are ever more than one branches
     return branches_[0]->getSpawnPointTransformation();
 }
+
+void Tree::deleteLeaf(std::shared_ptr<Leaf> leaf)
+{
+    for (auto &branch : branches_) {
+        branch->deleteLeaf(leaf);
+    }
+}
