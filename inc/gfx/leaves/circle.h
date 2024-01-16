@@ -16,16 +16,16 @@ public:
 
     void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth) override;
 
-    static void drawDragged(QPointF position, std::shared_ptr<QPainter> painter);
+    static void drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qreal scale);
 
     inline bool isSpawnPoint() override { return false; }
+
+    static constexpr uint kDefaultRadius = 20U;
 
 private:
     qreal radius_;
 
     QColor color_;
-
-    static constexpr uint kDefaultRadius = 20U;
 };
 
 #endif // CIRCLE_H

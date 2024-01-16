@@ -63,7 +63,7 @@ void DisplayWidget::paintGL()
     if (dragged_leaf_.exists) {
         switch(dragged_leaf_.leaf_type) {
             case leaf_type_t::circle:
-                Circle::drawDragged(dragged_leaf_.position, painter);
+                Circle::drawDragged(painter, dragged_leaf_.position, view_.scale);
                 break;
         }
     }
@@ -261,7 +261,7 @@ void DisplayWidget::dropEvent(QDropEvent *event)
     dragged_leaf_.exists = false;
     std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
     if (shape_type == kRgfMimeTypeCircle) {
-        ctx_->tree()->addShape(event->position() - view_.offset, leaf_type_t::circle);
+        ctx_->tree()->addShape(leaf_type_t::circle, event->position() - view_.offset, view_.scale);
     }
     update();
     event->acceptProposedAction();

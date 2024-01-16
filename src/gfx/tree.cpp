@@ -84,12 +84,12 @@ void Tree::addCircle()
     return branches_[0]->addCircle();
 }
 
-void Tree::addShape(QPointF position, leaf_type_t shape_type)
+void Tree::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
     if (branches_.size() == 0) {
         return;
     }
 
     // TODO: do something here if there are ever more than one branches
-    return branches_[0]->addShape(position, shape_type);
+    return branches_[0]->addShape(shape_type, position, scale);
 }

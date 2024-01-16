@@ -50,9 +50,13 @@ void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> c
     unapplyLocalTransformations(color_id_painter);
 }
 
-void Circle::drawDragged(QPointF position, std::shared_ptr<QPainter> painter)
+void Circle::drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qreal scale)
 {
     painter->setPen(QColor(0, 0, 0, 255));
     painter->setBrush(QColor(0, 0, 0, 0));
-    painter->drawEllipse(QRectF(position.rx() - kDefaultRadius, position.ry() - kDefaultRadius, kDefaultRadius * 2, kDefaultRadius * 2));
+    painter->drawEllipse(QRectF(
+        (position.rx() - kDefaultRadius) / scale,
+        (position.ry() - kDefaultRadius) / scale,
+        kDefaultRadius * 2 / scale,
+        kDefaultRadius * 2 / scale));
 }

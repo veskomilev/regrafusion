@@ -44,7 +44,7 @@ public:
 
     void addCircle();
 
-    void addShape(QPointF position, leaf_type_t shape_type);
+    void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
 
 private:
     // disable copy and assignment ctors
