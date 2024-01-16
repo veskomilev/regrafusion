@@ -129,6 +129,13 @@ QTransform Branch::getSpawnPointTransformation()
 
 void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
 {
+    if (leaf == nullptr)
+        return;
+
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+    assert(ctx_p != nullptr && "Branch exists for a non existant context");
+    ctx_p->leafIdentifier()->unregisterLeaf(leaf);
+
     leaves_.erase(
         std::remove_if(
             leaves_.begin(),
@@ -141,7 +148,6 @@ void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
 void Branch::addCircle()
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
-
     assert(ctx_p != nullptr && "Branch exists for a non existant context");
 
     leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::black));
