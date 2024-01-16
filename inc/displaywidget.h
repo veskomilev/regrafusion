@@ -5,12 +5,27 @@
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
 
+#include <QDragEnterEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QMimeData>
 #include <QPoint>
 #include <QStatusBar>
 #include <QOpenGLWidget>
 
 #include "gfx/leaf.h"
 #include "view.h"
+
+// TODO: move these somewhere more appropriate
+const static char *kRgfMimeType = "rgf/leaf";
+const static char *kRgfMimeTypeCircle = "circle";
+
+struct dragged_leaf_t
+{
+    bool exists;
+    leaf_type_t leaf_type;
+    QPointF position;
+};
 
 class RgfCtx;
 
@@ -57,6 +72,12 @@ private:
     // limit view position to mitigate artifacts due to loss of floating point precision
     void limitViewPosition();
 
+    void dropEvent(QDropEvent *event);
+
+    void dragEnterEvent(QDragEnterEvent *event);
+
+    void dragMoveEvent(QDragMoveEvent *event);
+
     QStatusBar* status_bar_;
 
     View view_;
@@ -68,6 +89,8 @@ private:
     std::shared_ptr<RgfCtx> ctx_;
 
     bool draw_window_buffer_;
+
+    dragged_leaf_t dragged_leaf_;
 };
 
 #endif // DISPLAYWIDGET_H

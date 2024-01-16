@@ -40,6 +40,8 @@ public:
 
     void addCircle();
 
+    void addShape(QPointF position, leaf_type_t shape_type);
+
 private:
     // disable copy and assignment ctors
     Tree(const Tree&) = delete;

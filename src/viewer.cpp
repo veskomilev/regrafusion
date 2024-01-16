@@ -3,6 +3,8 @@
 // Copyright (C) 2023  Vesko Milev
 
 #include <functional>
+#include <QDrag>
+#include <QMimeData>
 #include <QStatusBar>
 #include <QString>
 #include <QToolBar>
@@ -89,6 +91,14 @@ void viewer::setupToolbar()
 
     QAction *circle_action = new QAction(QIcon(":/icons/circle.png"), "add a circle", this);
     circle_action->setStatusTip("Drag and drop to add a circle");
-    connect(circle_action, &QAction::triggered, std::bind(&RgfCtx::addCircleAction, ctx_));
+    connect(circle_action, &QAction::triggered,
+            [this](){
+                QMimeData *mimeData = new QMimeData;
+                mimeData->setData(kRgfMimeType, QByteArray(kRgfMimeTypeCircle));
+                QDrag *drag = new QDrag(this);
+                drag->setMimeData(mimeData);
+                drag->exec();
+            }
+        );
     toolbar->addAction(circle_action);
 }

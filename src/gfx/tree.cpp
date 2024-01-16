@@ -83,3 +83,13 @@ void Tree::addCircle()
     // TODO: do something here if there are ever more than one branches
     return branches_[0]->addCircle();
 }
+
+void Tree::addShape(QPointF position, leaf_type_t shape_type)
+{
+    if (branches_.size() == 0) {
+        return;
+    }
+
+    // TODO: do something here if there are ever more than one branches
+    return branches_[0]->addShape(position, shape_type);
+}

@@ -153,3 +153,18 @@ void Branch::addCircle()
     leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::black));
     ctx_p->leafIdentifier()->registerLeaf(*(leaves_.end() - 1));
 }
+
+void Branch::addShape(QPointF position, leaf_type_t shape_type)
+{
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+    assert(ctx_p != nullptr && "Branch exists for a non existant context");
+
+    switch (shape_type) {
+        case leaf_type_t::circle:
+            leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::black));
+            auto leaf = *(leaves_.end() - 1);
+            leaf->matrix().translate(position.rx(), position.ry());
+            ctx_p->leafIdentifier()->registerLeaf(leaf);
+            break;
+    }
+}

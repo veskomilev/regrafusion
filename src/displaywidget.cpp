@@ -8,6 +8,7 @@
 #include <QPainter>
 
 #include "displaywidget.h"
+#include "gfx/leaves/circle.h"
 #include "gfx/tree.h"
 #include "leaf_identifier.h"
 #include "math.h"
@@ -19,13 +20,15 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     status_bar_(nullptr),
     view_({View::kOffsetIdentity, View::kOffsetIdentity, 1.0}),
     previous_mouse_position_(View::kOffsetIdentity),
-    draw_window_buffer_(true)
+    draw_window_buffer_(true),
+    dragged_leaf_ {false, leaf_type_t::circle, QPointF(0, 0)}
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
     view_.offset = View::kOffsetIdentity;
     parent->installEventFilter(this);
     // TODO: do something about multiscreen support of the window buffer - secondary screen could have a larger resolution
+    setAcceptDrops(true);
 }
 
 void DisplayWidget::initializeGL()
@@ -55,6 +58,15 @@ void DisplayWidget::paintGL()
 
     // draw the tree itself
     TreeStatistics stats = ctx_->tree()->draw(painter, color_id_painter);
+
+    // draw a new DnD leaf
+    if (dragged_leaf_.exists) {
+        switch(dragged_leaf_.leaf_type) {
+            case leaf_type_t::circle:
+                Circle::drawDragged(dragged_leaf_.position, painter);
+                break;
+        }
+    }
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
@@ -227,6 +239,37 @@ void DisplayWidget::limitViewPosition()
     view_.offset.rx() = fmax(view_.offset.x(), view_.size.x() / 2 - View::kMaxViewOffset * view_.scale);
     view_.offset.ry() = fmin(view_.offset.y(), view_.size.y() / 2 + View::kMaxViewOffset * view_.scale);
     view_.offset.ry() = fmax(view_.offset.y(), view_.size.y() / 2 - View::kMaxViewOffset * view_.scale);
+}
+
+void DisplayWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+    std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
+    dragged_leaf_.exists = false;
+
+    if (shape_type == kRgfMimeTypeCircle) {
+        dragged_leaf_.exists = true;
+        dragged_leaf_.leaf_type = leaf_type_t::circle;
+        dragged_leaf_.position = event->position() - view_.offset;
+        update();
+    }
+
+    event->acceptProposedAction();
+}
+
+void DisplayWidget::dropEvent(QDropEvent *event)
+{
+    dragged_leaf_.exists = false;
+    std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
+    if (shape_type == kRgfMimeTypeCircle) {
+        ctx_->tree()->addShape(event->position() - view_.offset, leaf_type_t::circle);
+    }
+    update();
+    event->acceptProposedAction();
+}
+
+void DisplayWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
 }
 
 void DisplayWidget::updateStatus()
