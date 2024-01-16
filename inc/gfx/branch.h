@@ -42,6 +42,8 @@ public:
 
     void deleteLeaf(std::shared_ptr<Leaf> leaf);
 
+    void addCircle();
+
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;

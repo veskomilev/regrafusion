@@ -44,6 +44,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/uipainter.h src/uipainter.cpp
         inc/view.h
         subdirs.pro
+        icons.qrc
+        icons/circle.png
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Regrafusion APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

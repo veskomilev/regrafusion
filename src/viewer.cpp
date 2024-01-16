@@ -72,16 +72,23 @@ void viewer::setupToolbar()
     QToolBar* toolbar = new QToolBar("edit");
     this->addToolBar(Qt::LeftToolBarArea, toolbar);
 
-    const QIcon delete_icon= QIcon::fromTheme("process-stop");
-    QAction *delete_action = new QAction(delete_icon, "delete", this);
+    const QIcon delete_icon = QIcon::fromTheme("process-stop");
+    QAction *delete_action = new QAction(delete_icon, "delete selected shape", this);
     delete_action->setShortcuts(QKeySequence::Delete);
     delete_action->setStatusTip("Delete the selected shape");
     connect(delete_action, &QAction::triggered, std::bind(&RgfCtx::deleteLeafAction, ctx_));
     toolbar->addAction(delete_action);
 
-    const QIcon switch_icon= QIcon::fromTheme("media-playlist-shuffle");
-    QAction *switch_action = new QAction(switch_icon, "switch", this);
+    const QIcon switch_icon = QIcon::fromTheme("media-playlist-shuffle");
+    QAction *switch_action = new QAction(switch_icon, "switch modes", this);
     switch_action->setStatusTip("Switch modes");
     connect(switch_action, &QAction::triggered, std::bind(&RgfCtx::switchModesAction, ctx_));
     toolbar->addAction(switch_action);
+
+    toolbar->addSeparator();
+
+    QAction *circle_action = new QAction(QIcon(":/icons/circle.png"), "add a circle", this);
+    circle_action->setStatusTip("Drag and drop to add a circle");
+    connect(circle_action, &QAction::triggered, std::bind(&RgfCtx::addCircleAction, ctx_));
+    toolbar->addAction(circle_action);
 }

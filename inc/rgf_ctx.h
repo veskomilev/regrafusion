@@ -44,6 +44,7 @@ public:
 
     void switchModes();
 
+    void addCircleAction();
 
 private:
     RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar);

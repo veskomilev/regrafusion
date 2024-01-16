@@ -73,3 +73,13 @@ void Tree::deleteLeaf(std::shared_ptr<Leaf> leaf)
         branch->deleteLeaf(leaf);
     }
 }
+
+void Tree::addCircle()
+{
+    if (branches_.size() == 0) {
+        return;
+    }
+
+    // TODO: do something here if there are ever more than one branches
+    return branches_[0]->addCircle();
+}

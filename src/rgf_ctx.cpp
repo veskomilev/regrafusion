@@ -64,7 +64,14 @@ void RgfCtx::switchModes()
         default:
             mode_ = mode_t::view;
             break;
-    }
+        }
+}
+
+void RgfCtx::addCircleAction()
+{
+    tree_->addCircle();
+    display_widget_->update();
+    display_widget_->updateStatus();
 }
 
 void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
