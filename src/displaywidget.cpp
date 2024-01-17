@@ -267,7 +267,7 @@ void DisplayWidget::dropEvent(QDropEvent *event)
     dragged_leaf_.exists = false;
     std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
     if (shape_type == kRgfMimeTypeCircle) {
-        ctx_->addShapeAction(leaf_type_t::circle, event->position() - view_.offset, view_.scale);
+        ctx_->addShape(leaf_type_t::circle, event->position() - view_.offset, view_.scale);
     }
     update();
     event->acceptProposedAction();

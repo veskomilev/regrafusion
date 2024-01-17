@@ -45,7 +45,9 @@ public:
 
     void switchModes();
 
-    void addShapeAction(leaf_type_t shape_type, QPointF position, qreal scale);
+    void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
+
+    void addShape(leaf_type_t shape_type);
 
 signals:
     void modeSwitched();

@@ -56,6 +56,8 @@ public:
 
     void updateStatus();
 
+    View getView() const { return view_; }
+
 private:
     void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 

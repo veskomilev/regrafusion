@@ -42,6 +42,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/leaf_identifier.h src/leaf_identifier.cpp
         inc/rgf_ctx.h src/rgf_ctx.cpp
         inc/uipainter.h src/uipainter.cpp
+        inc/shape_widget_event_filter.h src/shape_widget_event_filter.cpp
         inc/view.h
         subdirs.pro
         icons.qrc

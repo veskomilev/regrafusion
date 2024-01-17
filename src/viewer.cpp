@@ -9,6 +9,7 @@
 #include <QString>
 #include <QToolBar>
 
+#include "shape_widget_event_filter.h"
 #include "viewer.h"
 #include "ui_viewer.h"
 
@@ -102,16 +103,9 @@ void viewer::setupToolbar()
 
     QAction *circle_action = new QAction(QIcon(":/icons/circle.png"), "add a circle", this);
     circle_action->setStatusTip("Drag and drop to add a circle");
-    connect(circle_action, &QAction::triggered,
-            [this](){
-                QMimeData *mimeData = new QMimeData;
-                mimeData->setData(kRgfMimeType, QByteArray(kRgfMimeTypeCircle));
-                QDrag *drag = new QDrag(this);
-                drag->setMimeData(mimeData);
-                drag->exec();
-            }
-        );
     toolbar->addAction(circle_action);
+    shapeWidgetEventFilter *circle_filter = new shapeWidgetEventFilter(ctx_, circle_action, toolbar->widgetForAction(circle_action), leaf_type_t::circle);
+    toolbar->widgetForAction(circle_action)->installEventFilter(circle_filter);
 
     edit_mode_actions_.push_back(delete_action);
     edit_mode_actions_.push_back(circle_action);
