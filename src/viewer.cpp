@@ -19,6 +19,8 @@ viewer::viewer(QWidget *parent)
     ui->setupUi(this);
 
     ctx_ = RgfCtx::create(ui->display_widget, ui->status_bar);
+    connect(ctx_.get(), &RgfCtx::modeSwitched, this, &viewer::onRgfCtxModeSwitched);
+
     ui->display_widget->setStatusBar(ui->status_bar);
 
     setupToolbar();
@@ -69,6 +71,15 @@ void viewer::on_switch_buffers_pressed()
     ui->display_widget->update();
 }
 
+void viewer::onRgfCtxModeSwitched()
+{
+    if (ctx_->getMode() == RgfCtx::mode_t::edit) {
+        enableEditModeActions();
+    } else {
+        disableEditModeActions();
+    }
+}
+
 void viewer::setupToolbar()
 {
     QToolBar* toolbar = new QToolBar("edit");
@@ -101,4 +112,23 @@ void viewer::setupToolbar()
             }
         );
     toolbar->addAction(circle_action);
+
+    edit_mode_actions_.push_back(delete_action);
+    edit_mode_actions_.push_back(circle_action);
+
+    disableEditModeActions();
+}
+
+void viewer::enableEditModeActions()
+{
+    for (auto &action : edit_mode_actions_) {
+        action->setEnabled(true);
+    }
+}
+
+void viewer::disableEditModeActions()
+{
+    for (auto &action : edit_mode_actions_) {
+        action->setEnabled(false);
+    }
 }

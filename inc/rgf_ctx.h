@@ -9,8 +9,9 @@
 #include "gfx/tree.h"
 #include "leaf_identifier.h"
 
-class RgfCtx
+class RgfCtx : public QObject
 {
+Q_OBJECT
 public:
     static std::shared_ptr<RgfCtx> create(DisplayWidget *display_widget, QStatusBar* status_bar);
 
@@ -45,6 +46,9 @@ public:
     void switchModes();
 
     void addCircleAction();
+
+signals:
+    void modeSwitched();
 
 private:
     RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar);

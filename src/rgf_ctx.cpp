@@ -65,6 +65,8 @@ void RgfCtx::switchModes()
             mode_ = mode_t::view;
             break;
         }
+
+    emit modeSwitched();
 }
 
 void RgfCtx::addCircleAction()

@@ -35,10 +35,18 @@ private slots:
 
     void on_switch_buffers_pressed();
 
+    void onRgfCtxModeSwitched();
+
 private:
     void setupToolbar();
 
+    void enableEditModeActions();
+
+    void disableEditModeActions();
+
     Ui::viewer *ui;
     std::shared_ptr<RgfCtx> ctx_;
+
+    std::vector<QAction *> edit_mode_actions_;
 };
 #endif // VIEWER_H
