@@ -256,6 +256,12 @@ void DisplayWidget::dragMoveEvent(QDragMoveEvent *event)
     event->acceptProposedAction();
 }
 
+void DisplayWidget::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    dragged_leaf_.exists = false;
+    update();
+}
+
 void DisplayWidget::dropEvent(QDropEvent *event)
 {
     dragged_leaf_.exists = false;

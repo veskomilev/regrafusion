@@ -78,6 +78,8 @@ private:
 
     void dragMoveEvent(QDragMoveEvent *event);
 
+    void dragLeaveEvent(QDragLeaveEvent *event);
+
     QStatusBar* status_bar_;
 
     View view_;
