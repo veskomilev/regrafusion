@@ -69,9 +69,9 @@ void RgfCtx::switchModes()
     emit modeSwitched();
 }
 
-void RgfCtx::addCircleAction()
+void RgfCtx::addShapeAction(leaf_type_t shape_type, QPointF position, qreal scale)
 {
-    tree_->addCircle();
+    tree_->addShape(shape_type, position, scale);
     display_widget_->update();
     display_widget_->updateStatus();
 }

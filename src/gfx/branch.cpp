@@ -145,26 +145,22 @@ void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
         );
 }
 
-void Branch::addCircle()
-{
-    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
-    assert(ctx_p != nullptr && "Branch exists for a non existant context");
-
-    leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::black));
-    ctx_p->leafIdentifier()->registerLeaf(*(leaves_.end() - 1));
-}
-
 void Branch::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
+    switch (shape_type) {
+        case leaf_type_t::circle:
+            addCircle(position, scale);
+            break;
+    }
+}
+
+void Branch::addCircle(QPointF position, qreal scale)
+{
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
     assert(ctx_p != nullptr && "Branch exists for a non existant context");
 
-    switch (shape_type) {
-        case leaf_type_t::circle:
-            leaves_.push_back(std::make_shared<Circle>(ctx_p, Circle::kDefaultRadius / scale, Qt::black));
-            auto leaf = *(leaves_.end() - 1);
-            leaf->matrix().translate(position.rx() / scale, position.ry() / scale);
-            ctx_p->leafIdentifier()->registerLeaf(leaf);
-            break;
-    }
+    leaves_.push_back(std::make_shared<Circle>(ctx_p, Circle::kDefaultRadius / scale, Qt::black));
+    auto leaf = *(leaves_.end() - 1);
+    leaf->matrix().translate(position.rx() / scale, position.ry() / scale);
+    ctx_p->leafIdentifier()->registerLeaf(leaf);
 }

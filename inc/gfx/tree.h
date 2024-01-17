@@ -38,8 +38,6 @@ public:
 
     void deleteLeaf(std::shared_ptr<Leaf> leaf);
 
-    void addCircle();
-
     void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
 
 private:

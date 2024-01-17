@@ -42,14 +42,14 @@ public:
 
     void deleteLeaf(std::shared_ptr<Leaf> leaf);
 
-    void addCircle();
-
     void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
 
 private:
     // disable copy and assignment ctors
     Branch(const Branch&) = delete;
     Branch& operator=(const Branch&) = delete;
+
+    void addCircle(QPointF position, qreal scale);
 
     std::weak_ptr<RgfCtx> ctx_;
 

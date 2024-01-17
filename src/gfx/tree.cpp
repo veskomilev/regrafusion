@@ -74,16 +74,6 @@ void Tree::deleteLeaf(std::shared_ptr<Leaf> leaf)
     }
 }
 
-void Tree::addCircle()
-{
-    if (branches_.size() == 0) {
-        return;
-    }
-
-    // TODO: do something here if there are ever more than one branches
-    return branches_[0]->addCircle();
-}
-
 void Tree::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
     if (branches_.size() == 0) {
