@@ -20,41 +20,11 @@ Branch::Branch(std::weak_ptr<RgfCtx> ctx) :
     assert(ctx_p != nullptr && "Branch was created for a non existant context");
 
     std::shared_ptr<LeafIdentifier> leaf_id = ctx_p->leafIdentifier();
+
     // each and every branch has at least one spawn (branching) point
     leaves_.push_back(std::make_shared<SpawnPoint>(ctx_p));
     leaves_[0]->setTransformationMatrix(leaves_[0]->matrix().translate(60, 0).rotate(-10).scale(0.98, 0.98));
     leaf_id->registerLeaf(leaves_[0]);
-
-    // some hardcoded leaves for now:
-    leaves_.push_back(std::make_shared<Circle>(ctx_p, 15, Qt::green));
-    leaves_[1]->setTransformationMatrix(leaves_[1]->matrix().translate(-10, -10));
-    leaf_id->registerLeaf(leaves_[1]);
-
-    leaves_.push_back(std::make_shared<Circle>(ctx_p, 20, Qt::red));
-    leaves_[2]->setTransformationMatrix(leaves_[2]->matrix().scale(1, 0.5).translate(0, 50));
-    leaf_id->registerLeaf(leaves_[2]);
-
-    leaves_.push_back(std::make_shared<Circle>(ctx_p, 30, Qt::blue));
-    leaves_[3]->setTransformationMatrix(leaves_[3]->matrix().rotate(30).scale(1, 0.2).translate(60, 0));
-    leaf_id->registerLeaf(leaves_[3]);
-
-    leaves_.push_back(std::make_shared<Line>(ctx_p, QLineF(0, 0, 100, 100), QColor(200, 0, 200)));
-    leaves_[4]->setTransformationMatrix(leaves_[4]->matrix().translate(0, -30));
-    leaf_id->registerLeaf(leaves_[4]);
-
-    leaves_.push_back(std::make_shared<Rectangle>(ctx_p, QRectF(20, -40, 40, 20), QColor(0, 0, 200)));
-    leaf_id->registerLeaf(leaves_[5]);
-
-    std::shared_ptr<Path> path = std::make_shared<Path>(ctx_p, QColor(0, 150, 0));
-    path->addPoint(QPointF(-40, 30));
-    path->addPoint(QPointF(40, 30));
-    path->addPoint(QPointF(32, 12));
-    path->addPoint(QPointF(14, -20));
-    path->addPoint(QPointF(-20, 20));
-    path->addPoint(QPointF(-20, -30));
-    leaves_.push_back(path);
-    leaves_[6]->setTransformationMatrix(leaves_[6]->matrix().translate(0, 70));
-    leaf_id->registerLeaf(leaves_[6]);
 }
 
 void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats, uint depth)
@@ -147,20 +117,14 @@ void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
 
 void Branch::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
-    switch (shape_type) {
-        case leaf_type_t::circle:
-            addCircle(position, scale);
-            break;
-    }
-}
-
-void Branch::addCircle(QPointF position, qreal scale)
-{
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
     assert(ctx_p != nullptr && "Branch exists for a non existant context");
 
-    leaves_.push_back(std::make_shared<Circle>(ctx_p, Circle::kDefaultRadius / scale, Qt::black));
+    leaves_.push_back(Leaf::constructNew(ctx_p, shape_type));
+
     auto leaf = *(leaves_.end() - 1);
-    leaf->matrix().translate(position.rx() / scale, position.ry() / scale);
+    leaf->matrix().scale(1 / scale, 1 / scale);
+    leaf->matrix().translate(position.rx(), position.ry());
+
     ctx_p->leafIdentifier()->registerLeaf(leaf);
 }

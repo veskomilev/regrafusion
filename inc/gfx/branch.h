@@ -49,8 +49,6 @@ private:
     Branch(const Branch&) = delete;
     Branch& operator=(const Branch&) = delete;
 
-    void addCircle(QPointF position, qreal scale);
-
     std::weak_ptr<RgfCtx> ctx_;
 
     std::vector<std::shared_ptr<Leaf>> leaves_;

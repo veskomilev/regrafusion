@@ -20,6 +20,14 @@ Rectangle::~Rectangle()
 
 }
 
+std::shared_ptr<Rectangle> Rectangle::constructNew(std::weak_ptr<RgfCtx> ctx)
+{
+    std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
+    assert(ctx_p != nullptr && "A non existant context was accessed");
+
+    return std::make_shared<Rectangle>(ctx_p, kDefaultRectangle, QColor(0, 0, 0, 255));
+}
+
 void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
@@ -46,4 +54,17 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
 
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
+}
+
+void Rectangle::drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qreal scale)
+{
+    painter->setPen(QColor(0, 0, 0, 255));
+    painter->setBrush(QColor(0, 0, 0, 0));
+
+    QTransform t;
+    t.scale(1 / scale, 1 / scale);
+    t.translate(position.rx(), position.ry());
+    painter->setWorldTransform(t, true);
+    painter->drawRect(kDefaultRectangle);
+    painter->setWorldTransform(t.inverted(), true);
 }

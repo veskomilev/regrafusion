@@ -34,19 +34,14 @@ bool shapeWidgetEventFilter::eventFilter(QObject *obj, QEvent *event)
             mouse_event->pos().y() < 0 ||
             mouse_event->pos().x() > widget_->rect().width() ||
             mouse_event->pos().y() > widget_->rect().height())) {
-                QMimeData *mimeData = new QMimeData;
 
-                // TODO: make this a map in common.h
-                switch (leaf_type_) {
-                    case leaf_type_t::circle:
-                        mimeData->setData(kRgfMimeType, QByteArray(kRgfMimeTypeCircle));
-                        break;
-                    default:
-                        break;
-                }
+                QMimeData *mimeData = new QMimeData;
+                mimeData->setData(kRgfMimeType, QByteArray(1, static_cast<char>(leaf_type_)));
+
                 QDrag *drag = new QDrag(this);
                 drag->setMimeData(mimeData);
                 drag->exec();
+
                 pressed_ = false;
         }
     } else if (event->type() == QEvent::MouseButtonRelease) {

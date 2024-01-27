@@ -18,7 +18,6 @@
 
 // TODO: move these somewhere more appropriate
 const static char *kRgfMimeType = "rgf/leaf";
-const static char *kRgfMimeTypeCircle = "circle";
 
 struct dragged_leaf_t
 {
@@ -81,6 +80,8 @@ private:
     void dragMoveEvent(QDragMoveEvent *event);
 
     void dragLeaveEvent(QDragLeaveEvent *event);
+
+    void drawDraggedLeaf(std::shared_ptr<QPainter> painter);
 
     QStatusBar* status_bar_;
 

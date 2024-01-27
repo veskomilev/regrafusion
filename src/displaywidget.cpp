@@ -9,6 +9,9 @@
 
 #include "displaywidget.h"
 #include "gfx/leaves/circle.h"
+#include "gfx/leaves/line.h"
+#include "gfx/leaves/path.h"
+#include "gfx/leaves/rectangle.h"
 #include "gfx/tree.h"
 #include "leaf_identifier.h"
 #include "math.h"
@@ -60,13 +63,7 @@ void DisplayWidget::paintGL()
     TreeStatistics stats = ctx_->tree()->draw(painter, color_id_painter);
 
     // draw a new DnD leaf
-    if (dragged_leaf_.exists) {
-        switch(dragged_leaf_.leaf_type) {
-            case leaf_type_t::circle:
-                Circle::drawDragged(painter, dragged_leaf_.position, view_.scale);
-                break;
-        }
-    }
+    drawDraggedLeaf(painter);
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
@@ -243,15 +240,18 @@ void DisplayWidget::limitViewPosition()
 
 void DisplayWidget::dragMoveEvent(QDragMoveEvent *event)
 {
-    std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
     dragged_leaf_.exists = false;
 
-    if (shape_type == kRgfMimeTypeCircle) {
-        dragged_leaf_.exists = true;
-        dragged_leaf_.leaf_type = leaf_type_t::circle;
-        dragged_leaf_.position = event->position() - view_.offset;
+    leaf_type_t leaf_type = Leaf::extractType(event->mimeData());
+    if (leaf_type == leaf_type_t::invalid) {
         update();
+        return;
     }
+
+    dragged_leaf_.exists = true;
+    dragged_leaf_.leaf_type = leaf_type;
+    dragged_leaf_.position = event->position() - view_.offset;
+    update();
 
     event->acceptProposedAction();
 }
@@ -262,13 +262,25 @@ void DisplayWidget::dragLeaveEvent(QDragLeaveEvent *event)
     update();
 }
 
+void DisplayWidget::drawDraggedLeaf(std::shared_ptr<QPainter> painter)
+{
+    if (!dragged_leaf_.exists)
+        return;
+
+    Leaf::drawDragged(painter, dragged_leaf_.leaf_type, dragged_leaf_.position, view_.scale);
+}
+
 void DisplayWidget::dropEvent(QDropEvent *event)
 {
     dragged_leaf_.exists = false;
-    std::string shape_type = event->mimeData()->data(kRgfMimeType).toStdString();
-    if (shape_type == kRgfMimeTypeCircle) {
-        ctx_->addShape(leaf_type_t::circle, event->position() - view_.offset, view_.scale);
+
+    leaf_type_t leaf_type = Leaf::extractType(event->mimeData());
+    if (leaf_type == leaf_type_t::invalid) {
+        update();
+        return;
     }
+
+    ctx_->addShape(leaf_type, event->position() - view_.offset, view_.scale);
     update();
     event->acceptProposedAction();
 }

@@ -6,10 +6,19 @@
 #define LEAF_H
 
 #include <QColor>
+#include <QMimeData>
 #include <QPainter>
 #include <QTransform>
 
-enum class leaf_type_t { spawn_point, circle, line, rectangle, path };
+enum class leaf_type_t : char {
+    spawn_point = 0,
+    circle,
+    line,
+    rectangle,
+    path,
+
+    invalid // has to be last member
+};
 
 class RgfCtx;
 
@@ -20,7 +29,13 @@ public:
 
     virtual ~Leaf();
 
+    static leaf_type_t extractType(const QMimeData *mime_data);
+
     virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth);
+
+    static void drawDragged(std::shared_ptr<QPainter> painter, leaf_type_t leaf_type, QPointF position, qreal scale);
+
+    static std::shared_ptr<Leaf> constructNew(std::weak_ptr<RgfCtx> ctx, leaf_type_t leaf_type);
 
     virtual inline bool isSpawnPoint() = 0;
 

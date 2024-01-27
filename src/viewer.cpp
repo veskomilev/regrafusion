@@ -93,7 +93,7 @@ void viewer::setupToolbar()
     connect(delete_action, &QAction::triggered, std::bind(&RgfCtx::deleteLeafAction, ctx_));
     toolbar->addAction(delete_action);
 
-    const QIcon switch_icon = QIcon::fromTheme("media-playlist-shuffle");
+    const QIcon switch_icon = QIcon::fromTheme("go-jump");
     QAction *switch_action = new QAction(switch_icon, "switch modes", this);
     switch_action->setStatusTip("Switch modes");
     connect(switch_action, &QAction::triggered, std::bind(&RgfCtx::switchModesAction, ctx_));
@@ -107,8 +107,29 @@ void viewer::setupToolbar()
     shapeWidgetEventFilter *circle_filter = new shapeWidgetEventFilter(ctx_, circle_action, toolbar->widgetForAction(circle_action), leaf_type_t::circle);
     toolbar->widgetForAction(circle_action)->installEventFilter(circle_filter);
 
+    QAction *line_action = new QAction(QIcon(":/icons/line.png"), "add a line", this);
+    line_action->setStatusTip("Drag and drop to add a circle");
+    toolbar->addAction(line_action);
+    shapeWidgetEventFilter *line_filter = new shapeWidgetEventFilter(ctx_, line_action, toolbar->widgetForAction(line_action), leaf_type_t::line);
+    toolbar->widgetForAction(line_action)->installEventFilter(line_filter);
+
+    QAction *polygon_action = new QAction(QIcon(":/icons/polygon.png"), "add a polygon", this);
+    polygon_action->setStatusTip("Drag and drop to add a polygon");
+    toolbar->addAction(polygon_action);
+    shapeWidgetEventFilter *polygon_filter = new shapeWidgetEventFilter(ctx_, polygon_action, toolbar->widgetForAction(polygon_action), leaf_type_t::path);
+    toolbar->widgetForAction(polygon_action)->installEventFilter(polygon_filter);
+
+    QAction *rectangle_action = new QAction(QIcon(":/icons/rectangle.png"), "add a rectangle", this);
+    rectangle_action->setStatusTip("Drag and drop to add a rectangle");
+    toolbar->addAction(rectangle_action);
+    shapeWidgetEventFilter *rectangle_filter = new shapeWidgetEventFilter(ctx_, rectangle_action, toolbar->widgetForAction(rectangle_action), leaf_type_t::rectangle);
+    toolbar->widgetForAction(rectangle_action)->installEventFilter(rectangle_filter);
+
     edit_mode_actions_.push_back(delete_action);
     edit_mode_actions_.push_back(circle_action);
+    edit_mode_actions_.push_back(line_action);
+    edit_mode_actions_.push_back(polygon_action);
+    edit_mode_actions_.push_back(rectangle_action);
 
     disableEditModeActions();
 }

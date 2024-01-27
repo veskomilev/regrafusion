@@ -79,7 +79,7 @@ void RgfCtx::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 void RgfCtx::addShape(leaf_type_t shape_type)
 {
     View view = display_widget_->getView();
-    addShape(shape_type, view.size / 2 - view.offset, display_widget_->getView().scale);
+    addShape(shape_type, view.size / 2 - view.offset, view.scale);
 }
 
 void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)

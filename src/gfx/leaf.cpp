@@ -3,6 +3,10 @@
 // Copyright (C) 2023  Vesko Milev
 
 #include "gfx/leaf.h"
+#include "gfx/leaves/circle.h"
+#include "gfx/leaves/line.h"
+#include "gfx/leaves/path.h"
+#include "gfx/leaves/rectangle.h"
 #include "rgf_ctx.h"
 
 Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
@@ -17,6 +21,23 @@ Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
 Leaf::~Leaf()
 {
 }
+
+leaf_type_t Leaf::extractType(const QMimeData *mime_data)
+{
+    if (mime_data == nullptr)
+        return leaf_type_t::invalid;
+
+    QByteArray const &data = mime_data->data(kRgfMimeType);
+
+    if (!data.size())
+        return leaf_type_t::invalid;
+
+    if (data.front() >= static_cast<char>(leaf_type_t::invalid))
+        return leaf_type_t::invalid;
+
+    return static_cast<leaf_type_t>(data.front());
+}
+
 
 void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
@@ -47,6 +68,48 @@ void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
     painter->setPen(QColor(0, 0, 255, 64));
     painter->drawLine(side, 0, 0, 0);
+}
+
+void Leaf::drawDragged(std::shared_ptr<QPainter> painter, leaf_type_t leaf_type, QPointF position, qreal scale)
+{
+    switch(leaf_type) {
+    case leaf_type_t::circle:
+        Circle::drawDragged(painter, position, scale);
+        break;
+    case leaf_type_t::line:
+        Line::drawDragged(painter, position, scale);
+        break;
+    case leaf_type_t::path:
+        Path::drawDragged(painter, position, scale);
+        break;
+    case leaf_type_t::rectangle:
+        Rectangle::drawDragged(painter, position, scale);
+        break;
+    default:
+        assert("Invalid leaf type passed!");
+    }
+}
+
+std::shared_ptr<Leaf> Leaf::constructNew(std::weak_ptr<RgfCtx> ctx, leaf_type_t leaf_type)
+{
+    switch(leaf_type) {
+    case leaf_type_t::circle:
+        return Circle::constructNew(ctx);
+        break;
+    case leaf_type_t::line:
+        return Line::constructNew(ctx);
+        break;
+    case leaf_type_t::path:
+        return Path::constructNew(ctx);
+        break;
+    case leaf_type_t::rectangle:
+        return Rectangle::constructNew(ctx);
+        break;
+    default:
+        assert("Invalid leaf type passed!");
+    }
+
+    return nullptr;
 }
 
 bool Leaf::setTransformationMatrix(QTransform matrix)

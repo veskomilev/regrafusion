@@ -20,6 +20,14 @@ Circle::~Circle()
 
 }
 
+std::shared_ptr<Circle> Circle::constructNew(std::weak_ptr<RgfCtx> ctx)
+{
+    std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
+    assert(ctx_p != nullptr && "A non existant context was accessed");
+
+    return std::make_shared<Circle>(ctx_p, kDefaultRadius, QColor(0, 0, 0, 255));
+}
+
 void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
@@ -54,9 +62,11 @@ void Circle::drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qr
 {
     painter->setPen(QColor(0, 0, 0, 255));
     painter->setBrush(QColor(0, 0, 0, 0));
-    painter->drawEllipse(QRectF(
-        (position.rx() - kDefaultRadius) / scale,
-        (position.ry() - kDefaultRadius) / scale,
-        kDefaultRadius * 2 / scale,
-        kDefaultRadius * 2 / scale));
+
+    QTransform t;
+    t.scale(1 / scale, 1 / scale);
+    t.translate(position.rx(), position.ry());
+    painter->setWorldTransform(t, true);
+    painter->drawEllipse(QRectF(-kDefaultRadius, -kDefaultRadius, kDefaultRadius * 2, kDefaultRadius * 2));
+    painter->setWorldTransform(t.inverted(), true);
 }
