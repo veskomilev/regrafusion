@@ -1,6 +1,6 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #ifndef LEAF_H
 #define LEAF_H
@@ -10,15 +10,7 @@
 #include <QPainter>
 #include <QTransform>
 
-enum class leaf_type_t : char {
-    spawn_point = 0,
-    circle,
-    line,
-    rectangle,
-    path,
-
-    invalid // has to be last member
-};
+#include "common.h"
 
 class RgfCtx;
 

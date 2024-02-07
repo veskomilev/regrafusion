@@ -3,6 +3,8 @@
 // Copyright (C) 2023-2024  Vesko Milev
 
 #include "uipainter.h"
+
+#include "common.h"
 #include "view.h"
 
 UiPainter::UiPainter(View view, std::shared_ptr<QPainter>  painter) :

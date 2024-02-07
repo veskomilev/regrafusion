@@ -44,6 +44,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/uipainter.h src/uipainter.cpp
         inc/shape_widget_event_filter.h src/shape_widget_event_filter.cpp
         inc/view.h
+        inc/common.h
         subdirs.pro
         icons.qrc
         icons/circle.png

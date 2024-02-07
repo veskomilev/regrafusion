@@ -1,6 +1,6 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #ifndef DISPLAYWIDGET_H
 #define DISPLAYWIDGET_H
@@ -15,9 +15,6 @@
 
 #include "gfx/leaf.h"
 #include "view.h"
-
-// TODO: move these somewhere more appropriate
-const static char *kRgfMimeType = "rgf/leaf";
 
 struct dragged_leaf_t
 {

@@ -6,6 +6,7 @@
 
 #include "shape_widget_event_filter.h"
 
+#include "common.h"
 #include "displaywidget.h"
 
 shapeWidgetEventFilter::shapeWidgetEventFilter(std::shared_ptr<RgfCtx> rgf_ctx, QAction *action, QWidget *widget, leaf_type_t leaf_type) :

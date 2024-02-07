@@ -1,6 +1,6 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #ifndef BRANCH_H
 #define BRANCH_H
@@ -10,16 +10,6 @@
 #include "leaf.h"
 
 class RgfCtx;
-
-// TODO: move this function somewhere sensible (e.g. to a utils inc file)
-template<class T>
-inline T vector_average(std::vector<T> input)
-{
-    if (input.size() == 0) {
-        return 0;
-    }
-    return static_cast<T>(std::reduce(input.begin(), input.end()) / static_cast<float>(input.size()));
-}
 
 struct BranchStatistics
 {

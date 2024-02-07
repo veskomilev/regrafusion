@@ -1,7 +1,8 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
+#include "common.h"
 #include "gfx/leaf.h"
 #include "gfx/leaves/circle.h"
 #include "gfx/leaves/line.h"

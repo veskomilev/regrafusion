@@ -1,9 +1,10 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #include <chrono>
 
+#include "common.h"
 #include "gfx/tree.h"
 
 Tree::Tree(std::weak_ptr<RgfCtx> ctx, uint num_branches_to_draw) :
