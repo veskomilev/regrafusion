@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <QMainWindow>
+#include <string>
 
 #include "rgf_ctx.h"
 
@@ -43,6 +44,8 @@ private:
     void enableEditModeActions();
 
     void disableEditModeActions();
+
+    void addEditModeAction(QToolBar* toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type);
 
     Ui::viewer *ui;
     std::shared_ptr<RgfCtx> ctx_;
