@@ -141,15 +141,19 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
         QPointF cursor_position = mouseEvent->pos() + kMouseClickCorrection;
 
         if (ctx_->getMode() == RgfCtx::mode_t::edit) {
+
             ctx_->tree()->deselect();
-            ctx_->setSelectedLeaf(nullptr, 0);
 
             uint leaf_depth = 0;
             auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position, leaf_depth);
             if (leaf != nullptr) {
                 leaf->select();
                 ctx_->setSelectedLeaf(leaf, leaf_depth);
+
+            } else {
+                ctx_->setSelectedLeaf(nullptr, 0);
             }
+
         }
 
         update();

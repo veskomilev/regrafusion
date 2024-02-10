@@ -43,6 +43,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/rgf_ctx.h src/rgf_ctx.cpp
         inc/uipainter.h src/uipainter.cpp
         inc/shape_widget_event_filter.h src/shape_widget_event_filter.cpp
+        inc/editors/editor.h src/editors/editor.cpp
+        inc/editors/transform_editor.h src/editors/transform_editor.cpp
         inc/view.h
         inc/common.h
         subdirs.pro

@@ -6,8 +6,10 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
         src \
+        src/editors \
         src/gfx \
         src/gfx/leaves \
         inc \
+        inc/editors \
         inc/gfx \
         inc/gfx/leaves

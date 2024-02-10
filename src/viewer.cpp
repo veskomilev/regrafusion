@@ -21,6 +21,7 @@ viewer::viewer(QWidget *parent)
 
     ctx_ = RgfCtx::create(ui->display_widget, ui->status_bar);
     connect(ctx_.get(), &RgfCtx::modeSwitched, this, &viewer::onRgfCtxModeSwitched);
+    connect(ctx_.get(), &RgfCtx::leafSelected, this, &viewer::onLeafSelected);
 
     ui->display_widget->setStatusBar(ui->status_bar);
 
@@ -30,6 +31,12 @@ viewer::viewer(QWidget *parent)
     uint num_branches = ui->num_branches_spin_box->value();
     ui->num_branches_slider->setValue(num_branches);
     ctx_->setNumBranches(num_branches);
+
+    tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout);
+
+    // since there is no auto-adjusting of the spacer's row, set it manually to row 100
+    ui->gridLayout->removeItem(ui->verticalSpacer);
+    ui->gridLayout->addItem(ui->verticalSpacer, 100, 0, 1, 2);
 
 #ifndef QT_DEBUG
     // make this button visible only in debug mode
@@ -78,6 +85,15 @@ void viewer::onRgfCtxModeSwitched()
         enableEditModeActions();
     } else {
         disableEditModeActions();
+    }
+}
+
+void viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+{
+    if (leaf.get() != nullptr) {
+        tfm_editor_->showWidgets(leaf, leaf_depth);
+    } else {
+        tfm_editor_->hideWidgets();
     }
 }
 

@@ -8,8 +8,12 @@
 #include <memory>
 #include <QMainWindow>
 #include <string>
+#include <vector>
 
 #include "rgf_ctx.h"
+
+#include "editors/editor.h"
+#include "editors/transform_editor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,6 +42,8 @@ private slots:
 
     void onRgfCtxModeSwitched();
 
+    void onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth);
+
 private:
     void setupToolbar();
 
@@ -51,5 +57,7 @@ private:
     std::shared_ptr<RgfCtx> ctx_;
 
     std::vector<QAction *> edit_mode_actions_;
+
+    std::shared_ptr<TransformEditor> tfm_editor_;
 };
 #endif // VIEWER_H

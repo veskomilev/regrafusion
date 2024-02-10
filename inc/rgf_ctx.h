@@ -52,6 +52,8 @@ public:
 signals:
     void modeSwitched();
 
+    void leafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth);
+
 private:
     RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar);
 
