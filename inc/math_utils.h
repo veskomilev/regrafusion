@@ -26,8 +26,13 @@ TransformationInfo decomposeMatrix(QTransform matrix)
     info.scale.rx() = sqrt(mx.rx() * mx.rx() + mx.ry() * mx.ry());
     info.scale.ry() = sqrt(my.rx() * my.rx() + my.ry() * my.ry());
 
-    qreal normalised_m11 = matrix.m11() / info.scale.rx();
-    info.rotation_rad = acos(normalised_m11);
+    double angle = asin(mx.ry() / info.scale.rx());
+    if (mx.rx() > 0) {
+        info.rotation_rad = -angle;
+    } else {
+        info.rotation_rad = angle;
+    }
+
     info.rotation_deg = 180 * info.rotation_rad / M_PI;
 
     return info;
