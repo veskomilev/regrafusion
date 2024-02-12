@@ -47,6 +47,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/editors/transform_editor.h src/editors/transform_editor.cpp
         inc/view.h
         inc/common.h
+        inc/math_utils.h
         subdirs.pro
         icons.qrc
         icons/circle.png
