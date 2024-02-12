@@ -25,13 +25,11 @@ void TransformEditor::setupWidgets(QGridLayout *grid)
     setupSingleValueControl(grid, &y_scale_label_, &y_scale_editor_, "y scale:", 9);
 }
 
-void TransformEditor::showWidgets(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+void TransformEditor::showWidgets()
 {
     for (auto &widget : widgets_) {
         widget->show();
     }
-
-    attachToLeaf(leaf, leaf_depth);
 }
 
 void TransformEditor::hideWidgets()
@@ -42,9 +40,49 @@ void TransformEditor::hideWidgets()
 
 }
 
-void TransformEditor::attachToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+void TransformEditor::connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
-    TransformationInfo tfm = decomposeMatrix(leaf->matrix());
+    if (leaf == nullptr || leaf == connected_leaf_) {
+        return;
+    }
+
+    if (isConnected()) {
+        disconnectFromLeaf();
+    }
+
+    // change state here
+    state_ = state_t::connected;
+
+    connected_leaf_ = leaf;
+    connected_leaf_depth_ = leaf_depth;
+
+    connect(connected_leaf_.get(), &Leaf::transformedNatively, this, &TransformEditor::update);
+    update();
+    showWidgets();
+}
+
+void TransformEditor::disconnectFromLeaf()
+{
+    if (!isConnected()) {
+        return;
+    }
+
+    // change state here
+    state_ = state_t::disconnected;
+
+    disconnect(connected_leaf_.get(), nullptr, this, nullptr);
+    connected_leaf_ = nullptr;
+    connected_leaf_depth_ = 0;
+    hideWidgets();
+}
+
+void TransformEditor::update()
+{
+    if (!isConnected()) {
+        return;
+    }
+
+    TransformationInfo tfm = decomposeMatrix(connected_leaf_->matrix());
 
     x_position_editor_->setText(QString::number(tfm.location.rx()));
     y_position_editor_->setText(QString::number(tfm.location.ry()));

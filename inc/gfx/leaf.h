@@ -14,8 +14,9 @@
 
 class RgfCtx;
 
-class Leaf
+class Leaf : public QObject
 {
+    Q_OBJECT
 public:
     Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type);
 
@@ -52,6 +53,11 @@ public:
     void deselect() { selected_ = false; }
 
     QPointF toLocalSpace(QPointF coordinate);
+
+    void translateNatively(QPointF translation);
+
+signals:
+    void transformedNatively();
 
 protected:
     QColor getUniqueColor(uint depth);

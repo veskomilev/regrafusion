@@ -4,12 +4,15 @@
 
 #include "editors/editor.h"
 
-Editor::Editor() {
-
+Editor::Editor() :
+    connected_leaf_(nullptr),
+    connected_leaf_depth_(0),
+    state_(state_t::disconnected)
+{
 }
 
-Editor::~Editor() {
-
+Editor::~Editor()
+{
 }
 
 void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row)

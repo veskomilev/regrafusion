@@ -200,7 +200,7 @@ void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf
 
     QPointF deltaPosition = toLeafSpace(mouseEvent->pos()) - toLeafSpace(previous_mouse_position_);
 
-    leaf->matrix().translate(deltaPosition.x(), deltaPosition.y());
+    leaf->translateNatively(deltaPosition);
 }
 
 void DisplayWidget::keyPressEvent(QKeyEvent *event)

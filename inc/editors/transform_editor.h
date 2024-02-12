@@ -20,12 +20,16 @@ public:
 
     void setupWidgets(QGridLayout *grid);
 
-    void showWidgets(std::shared_ptr<Leaf> leaf, uint leaf_depth);
+    void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
+
+    void disconnectFromLeaf();
+
+private:
+    void showWidgets();
 
     void hideWidgets();
 
-private:
-    void attachToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
+    void update();
 
     QLineEdit *x_position_editor_;
     QLineEdit *y_position_editor_;

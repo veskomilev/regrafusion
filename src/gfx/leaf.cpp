@@ -127,6 +127,12 @@ QPointF Leaf::toLocalSpace(QPointF coordinate)
     return matrix_.inverted().map(coordinate);
 }
 
+void Leaf::translateNatively(QPointF translation)
+{
+    matrix_.translate(translation.x(), translation.y());
+    emit transformedNatively();
+}
+
 QColor Leaf::getUniqueColor(uint depth)
 {
     QColor result = color_id_;

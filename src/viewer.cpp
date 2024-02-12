@@ -91,9 +91,9 @@ void viewer::onRgfCtxModeSwitched()
 void viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
     if (leaf.get() != nullptr) {
-        tfm_editor_->showWidgets(leaf, leaf_depth);
+        tfm_editor_->connectToLeaf(leaf, leaf_depth);
     } else {
-        tfm_editor_->hideWidgets();
+        tfm_editor_->disconnectFromLeaf();
     }
 }
 
