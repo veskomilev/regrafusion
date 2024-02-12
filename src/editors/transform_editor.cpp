@@ -3,6 +3,7 @@
 // Copyright (C) 2023-2024  Vesko Milev
 
 #include "editors/transform_editor.h"
+#include "math_utils.h"
 
 TransformEditor::TransformEditor(QGridLayout *grid)
 {
@@ -43,4 +44,11 @@ void TransformEditor::hideWidgets()
 
 void TransformEditor::attachToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
+    TransformationInfo tfm = decomposeMatrix(leaf->matrix());
+
+    x_position_editor_->setText(QString::number(tfm.location.rx()));
+    y_position_editor_->setText(QString::number(tfm.location.ry()));
+    rotation_editor_->setText(QString::number(tfm.rotation_deg));
+    x_scale_editor_->setText(QString::number(tfm.scale.rx()));
+    y_scale_editor_->setText(QString::number(tfm.scale.ry()));
 }
