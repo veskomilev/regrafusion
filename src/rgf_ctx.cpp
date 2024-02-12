@@ -71,9 +71,15 @@ void RgfCtx::switchModes()
 
 void RgfCtx::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
-    tree_->addShape(shape_type, position, scale);
+    std::shared_ptr<Leaf> leaf = tree_->addShape(shape_type, position, scale);
+    if (leaf == nullptr) {
+        return;
+    }
+
     display_widget_->update();
     display_widget_->updateStatus();
+
+    emit leafSelected(leaf, 0);
 }
 
 void RgfCtx::addShape(leaf_type_t shape_type)

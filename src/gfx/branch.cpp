@@ -115,7 +115,7 @@ void Branch::deleteLeaf(std::shared_ptr<Leaf> leaf)
         );
 }
 
-void Branch::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
+std::shared_ptr<Leaf> Branch::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
     assert(ctx_p != nullptr && "Branch exists for a non existant context");
@@ -127,4 +127,6 @@ void Branch::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
     leaf->matrix().translate(position.rx(), position.ry());
 
     ctx_p->leafIdentifier()->registerLeaf(leaf);
+
+    return leaf;
 }

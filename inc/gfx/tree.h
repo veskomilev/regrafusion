@@ -38,7 +38,7 @@ public:
 
     void deleteLeaf(std::shared_ptr<Leaf> leaf);
 
-    void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
+    std::shared_ptr<Leaf> addShape(leaf_type_t shape_type, QPointF position, qreal scale);
 
 private:
     // disable copy and assignment ctors

@@ -75,10 +75,10 @@ void Tree::deleteLeaf(std::shared_ptr<Leaf> leaf)
     }
 }
 
-void Tree::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
+std::shared_ptr<Leaf> Tree::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
 {
     if (branches_.size() == 0) {
-        return;
+        return nullptr;
     }
 
     // TODO: do something here if there are ever more than one branches
