@@ -113,9 +113,9 @@ void TransformEditor::setConnectedLeafTransformation()
 
     connected_leaf_->setTransformationMatrix(
         QTransform().
+        translate(tfm.location.rx(), tfm.location.ry()).
         scale(tfm.scale.rx(), tfm.scale.ry()).
-        rotate(tfm.rotation_deg).
-        translate(tfm.location.rx(), tfm.location.ry())
+        rotate(tfm.rotation_deg)
         );
 
     emit propertyEdited();
