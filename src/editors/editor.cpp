@@ -30,3 +30,15 @@ void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdi
     widgets_.push_back(*label);
     widgets_.push_back(*line_edit);
 }
+
+double Editor::valueFromLineEdit(QLineEdit *line_editor, double fallback)
+{
+    bool success = false;
+    double value = line_editor->text().toDouble(&success);
+
+    if (success) {
+        return value;
+    } else {
+        return fallback;
+    }
+}

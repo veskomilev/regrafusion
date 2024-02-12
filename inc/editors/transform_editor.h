@@ -31,6 +31,8 @@ private:
 
     void update();
 
+    void setConnectedLeafTransformation();
+
     QLineEdit *x_position_editor_;
     QLineEdit *y_position_editor_;
     QLineEdit *rotation_editor_;

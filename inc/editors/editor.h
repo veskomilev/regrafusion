@@ -38,8 +38,13 @@ public:
 
     bool isConnected() const { return state_ == state_t::connected; }
 
+signals:
+    void propertyEdited();
+
 protected:
     void setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row);
+
+    double valueFromLineEdit(QLineEdit *line_editor, double fallback);
 
     virtual void showWidgets() = 0;
 

@@ -33,6 +33,7 @@ viewer::viewer(QWidget *parent)
     ctx_->setNumBranches(num_branches);
 
     tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout);
+    connect(tfm_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
 
     // since there is no auto-adjusting of the spacer's row, set it manually to row 100
     ui->gridLayout->removeItem(ui->verticalSpacer);

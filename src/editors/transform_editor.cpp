@@ -23,6 +23,12 @@ void TransformEditor::setupWidgets(QGridLayout *grid)
     setupSingleValueControl(grid, &rotation_label_, &rotation_editor_, "rotation:", 7);
     setupSingleValueControl(grid, &x_scale_label_, &x_scale_editor_, "x scale:", 8);
     setupSingleValueControl(grid, &y_scale_label_, &y_scale_editor_, "y scale:", 9);
+
+    connect(x_position_editor_, &QLineEdit::textEdited, this, &TransformEditor::setConnectedLeafTransformation);
+    connect(y_position_editor_, &QLineEdit::textEdited, this, &TransformEditor::setConnectedLeafTransformation);
+    connect(rotation_editor_, &QLineEdit::textEdited, this, &TransformEditor::setConnectedLeafTransformation);
+    connect(x_scale_editor_, &QLineEdit::textEdited, this, &TransformEditor::setConnectedLeafTransformation);
+    connect(y_scale_editor_, &QLineEdit::textEdited, this, &TransformEditor::setConnectedLeafTransformation);
 }
 
 void TransformEditor::showWidgets()
@@ -89,4 +95,28 @@ void TransformEditor::update()
     rotation_editor_->setText(QString::number(tfm.rotation_deg));
     x_scale_editor_->setText(QString::number(tfm.scale.rx()));
     y_scale_editor_->setText(QString::number(tfm.scale.ry()));
+}
+
+void TransformEditor::setConnectedLeafTransformation()
+{
+    if (!isConnected()) {
+        return;
+    }
+
+    TransformationInfo tfm = decomposeMatrix(connected_leaf_->matrix());
+
+    tfm.location.rx() = valueFromLineEdit(x_position_editor_, tfm.location.rx());
+    tfm.location.ry() = valueFromLineEdit(y_position_editor_, tfm.location.ry());
+    tfm.rotation_deg = valueFromLineEdit(rotation_editor_, tfm.rotation_deg);
+    tfm.scale.rx() = valueFromLineEdit(x_scale_editor_, tfm.scale.rx());
+    tfm.scale.ry() = valueFromLineEdit(y_scale_editor_, tfm.scale.ry());
+
+    connected_leaf_->setTransformationMatrix(
+        QTransform().
+        scale(tfm.scale.rx(), tfm.scale.ry()).
+        rotate(tfm.rotation_deg).
+        translate(tfm.location.rx(), tfm.location.ry())
+        );
+
+    emit propertyEdited();
 }
