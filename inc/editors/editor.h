@@ -25,8 +25,6 @@ public:
 
     virtual ~Editor();
 
-    virtual void setupWidgets(QGridLayout *grid) = 0;
-
     virtual void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth) = 0;
 
     virtual void disconnectFromLeaf() = 0;
@@ -42,6 +40,8 @@ signals:
     void propertyEdited();
 
 protected:
+    virtual void setupWidgets(QGridLayout *grid, uint grid_row) = 0;
+
     void setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row);
 
     double valueFromLineEdit(QLineEdit *line_editor, double fallback);

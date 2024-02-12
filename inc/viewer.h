@@ -45,6 +45,8 @@ private slots:
     void onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
 private:
+    int getNextFreeRowInGridLayout();
+
     void setupToolbar();
 
     void enableEditModeActions();

@@ -14,17 +14,17 @@
 class TransformEditor : public Editor
 {
 public:
-    TransformEditor(QGridLayout *grid);
+    TransformEditor(QGridLayout *grid, uint grid_row);
 
     ~TransformEditor();
-
-    void setupWidgets(QGridLayout *grid);
 
     void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
     void disconnectFromLeaf();
 
 private:
+    void setupWidgets(QGridLayout *grid, uint grid_row);
+
     void showWidgets();
 
     void hideWidgets();

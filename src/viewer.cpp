@@ -32,7 +32,8 @@ viewer::viewer(QWidget *parent)
     ui->num_branches_slider->setValue(num_branches);
     ctx_->setNumBranches(num_branches);
 
-    tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout);
+    uint next_free_row = getNextFreeRowInGridLayout();
+    tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout, next_free_row);
     connect(tfm_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
 
     // since there is no auto-adjusting of the spacer's row, set it manually to row 100
@@ -43,6 +44,19 @@ viewer::viewer(QWidget *parent)
     // make this button visible only in debug mode
     ui->switch_buffers->hide();
 #endif
+}
+
+int viewer::getNextFreeRowInGridLayout()
+{
+    int next_free_row = -1;
+    QLayoutItem *grid_item;
+
+    do {
+        next_free_row++;
+        grid_item = ui->gridLayout->itemAtPosition(next_free_row, 0);
+    } while (grid_item != nullptr);
+
+    return next_free_row;
 }
 
 viewer::~viewer()
