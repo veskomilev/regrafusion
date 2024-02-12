@@ -21,7 +21,6 @@ void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdi
     (*label)->setText(label_text);
 
     *line_edit = new QLineEdit();
-    (*line_edit)->setValidator(&double_validator_);
     (*line_edit)->setText("0");
 
     grid->addWidget(*label, row, 0, 1, 1, Qt::AlignTop);

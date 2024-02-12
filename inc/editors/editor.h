@@ -54,8 +54,6 @@ protected:
 
     std::vector<QWidget *> widgets_;
 
-    QDoubleValidator double_validator_;
-
     std::shared_ptr<Leaf> connected_leaf_;
 
     uint connected_leaf_depth_;
