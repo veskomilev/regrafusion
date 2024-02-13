@@ -153,8 +153,12 @@ void viewer::setupEditors()
 
     // all other editors are going to use the same slot
     next_free_row++;
+
     circle_editor_ = std::make_shared<CircleEditor>(ui->gridLayout, next_free_row);
     connect(circle_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
+
+    line_editor_ = std::make_shared<LineEditor>(ui->gridLayout, next_free_row);
+    connect(line_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
 
     // since there is no auto-adjusting of the spacer's row, set it manually to row 100
     ui->gridLayout->removeItem(ui->verticalSpacer);
@@ -162,6 +166,7 @@ void viewer::setupEditors()
 
     editors_.push_back(tfm_editor_);
     editors_.push_back(circle_editor_);
+    editors_.push_back(line_editor_);
 }
 
 int viewer::getNextFreeRowInGridLayout()

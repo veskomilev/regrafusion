@@ -46,6 +46,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/editors/editor.h src/editors/editor.cpp
         inc/editors/transform_editor.h src/editors/transform_editor.cpp
         inc/editors/circle_editor.h src/editors/circle_editor.cpp
+        inc/editors/line_editor.h src/editors/line_editor.cpp
         inc/view.h
         inc/common.h
         inc/math_utils.h
