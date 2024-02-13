@@ -56,6 +56,8 @@ public:
 
     void translateNatively(QPointF translation);
 
+    leaf_type_t getType() const { return type_; }
+
 signals:
     void transformedNatively();
 
