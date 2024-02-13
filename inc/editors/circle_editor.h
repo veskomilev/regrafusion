@@ -25,8 +25,13 @@ private:
 
     void setConnectedCircleProperties();
 
+    void setConnectedCircleColor();
+
     QLineEdit *radius_editor_;
+    QPushButton *color_editor_;
+
     QLabel *radius_label_;
+    QLabel *color_label_;
 };
 
 #endif // CIRCLE_EDITOR_H
