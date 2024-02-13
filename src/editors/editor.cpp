@@ -7,7 +7,8 @@
 Editor::Editor() :
     connected_leaf_(nullptr),
     connected_leaf_depth_(0),
-    state_(state_t::disconnected)
+    state_(state_t::disconnected),
+    type_(leaf_type_t::invalid)
 {
 }
 

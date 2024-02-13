@@ -32,31 +32,12 @@ viewer::viewer(QWidget *parent)
     ui->num_branches_slider->setValue(num_branches);
     ctx_->setNumBranches(num_branches);
 
-    uint next_free_row = getNextFreeRowInGridLayout();
-    tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout, next_free_row);
-    connect(tfm_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
-
-    // since there is no auto-adjusting of the spacer's row, set it manually to row 100
-    ui->gridLayout->removeItem(ui->verticalSpacer);
-    ui->gridLayout->addItem(ui->verticalSpacer, 100, 0, 1, 2);
+    setupEditors();
 
 #ifndef QT_DEBUG
     // make this button visible only in debug mode
     ui->switch_buffers->hide();
 #endif
-}
-
-int viewer::getNextFreeRowInGridLayout()
-{
-    int next_free_row = -1;
-    QLayoutItem *grid_item;
-
-    do {
-        next_free_row++;
-        grid_item = ui->gridLayout->itemAtPosition(next_free_row, 0);
-    } while (grid_item != nullptr);
-
-    return next_free_row;
 }
 
 viewer::~viewer()
@@ -105,10 +86,30 @@ void viewer::onRgfCtxModeSwitched()
 
 void viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
-    if (leaf.get() != nullptr) {
-        tfm_editor_->connectToLeaf(leaf, leaf_depth);
-    } else {
-        tfm_editor_->disconnectFromLeaf();
+    if (tfm_editor_->isItTheSameLeaf(leaf)) {
+        // no change of state - no action is required
+        return;
+    }
+
+    for (auto &editor : editors_) {
+        // refresh editors
+        editor->disconnectFromLeaf();
+    }
+
+    if (leaf.get() == nullptr) {
+        // don't connect if no leaf is selected
+        return;
+    }
+
+    tfm_editor_->connectToLeaf(leaf, leaf_depth);
+
+    for (auto &editor : editors_) {
+        // activate relevant editors
+        // don't use a switch statement, so that this piece of code doesn't have to be updated
+        // each and every time a new leaf type or editor is added
+        if (editor->getType() == leaf->getType()) {
+            editor->connectToLeaf(leaf, leaf_depth);
+        }
     }
 }
 
@@ -141,6 +142,39 @@ void viewer::setupToolbar()
     addEditModeAction(toolbar, ":/icons/rectangle.png", "add a rectangle", "Drag and drop to add a rectangle", leaf_type_t::rectangle);
 
     disableEditModeActions();
+}
+
+void viewer::setupEditors()
+{
+    // setup the transformation editor first
+    uint next_free_row = getNextFreeRowInGridLayout();
+    tfm_editor_ = std::make_shared<TransformEditor>(ui->gridLayout, next_free_row);
+    connect(tfm_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
+
+    // all other editors are going to use the same slot
+    next_free_row++;
+    circle_editor_ = std::make_shared<CircleEditor>(ui->gridLayout, next_free_row);
+    connect(circle_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
+
+    // since there is no auto-adjusting of the spacer's row, set it manually to row 100
+    ui->gridLayout->removeItem(ui->verticalSpacer);
+    ui->gridLayout->addItem(ui->verticalSpacer, 100, 0, 1, 2);
+
+    editors_.push_back(tfm_editor_);
+    editors_.push_back(circle_editor_);
+}
+
+int viewer::getNextFreeRowInGridLayout()
+{
+    int next_free_row = -1;
+    QLayoutItem *grid_item;
+
+    do {
+        next_free_row++;
+        grid_item = ui->gridLayout->itemAtPosition(next_free_row, 0);
+    } while (grid_item != nullptr);
+
+    return next_free_row;
 }
 
 void viewer::enableEditModeActions()

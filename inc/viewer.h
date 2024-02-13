@@ -13,6 +13,7 @@
 #include "rgf_ctx.h"
 
 #include "editors/editor.h"
+#include "editors/circle_editor.h"
 #include "editors/transform_editor.h"
 
 QT_BEGIN_NAMESPACE
@@ -45,9 +46,11 @@ private slots:
     void onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
 private:
-    int getNextFreeRowInGridLayout();
-
     void setupToolbar();
+
+    void setupEditors();
+
+    int getNextFreeRowInGridLayout();
 
     void enableEditModeActions();
 
@@ -61,5 +64,7 @@ private:
     std::vector<QAction *> edit_mode_actions_;
 
     std::shared_ptr<TransformEditor> tfm_editor_;
+    std::shared_ptr<CircleEditor> circle_editor_;
+    std::vector<std::shared_ptr<Editor>> editors_;
 };
 #endif // VIEWER_H

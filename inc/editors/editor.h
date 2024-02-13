@@ -11,6 +11,7 @@
 #include <QGridLayout>
 #include <QWidget>
 
+#include "common.h"
 #include "gfx/leaf.h"
 
 #include <QLabel>
@@ -36,6 +37,8 @@ public:
 
     bool isConnected() const { return state_ == state_t::connected; }
 
+    leaf_type_t getType() const { return type_; }
+
 signals:
     void propertyEdited();
 
@@ -59,6 +62,8 @@ protected:
     uint connected_leaf_depth_;
 
     state_t state_;
+
+    leaf_type_t type_;
 };
 
 #endif // EDITOR_H

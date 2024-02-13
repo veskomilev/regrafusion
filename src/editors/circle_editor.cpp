@@ -7,6 +7,7 @@
 
 CircleEditor::CircleEditor(QGridLayout *grid, uint grid_row)
 {
+    type_ = leaf_type_t::circle;
     CircleEditor::setupWidgets(grid, grid_row);
     CircleEditor::hideWidgets();
 }
