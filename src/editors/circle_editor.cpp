@@ -24,8 +24,8 @@ void CircleEditor::setupWidgets(QGridLayout *grid, uint grid_row)
     QGridLayout *subgrid = new QGridLayout();
     grid->addLayout(subgrid, grid_row, 0, 1, 2, Qt::AlignTop);
 
-    setupSingleValueControl(subgrid, &radius_label_, &radius_editor_, "radius:", 0);
-    setupColorControl(subgrid, &color_label_, &color_editor_, "color:", 1);
+    setupSingleValueControl(subgrid, &radius_label_, &radius_editor_, "radius:");
+    setupColorControl(subgrid, &color_label_, &color_editor_, "color:");
 
     connect(radius_editor_, &QLineEdit::textEdited, this, &CircleEditor::setConnectedCircleProperties);
     connect(color_editor_, &QPushButton::released, this, &CircleEditor::setConnectedCircleColor);

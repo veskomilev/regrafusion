@@ -47,9 +47,9 @@ signals:
 protected:
     virtual void setupWidgets(QGridLayout *grid, uint grid_row) = 0;
 
-    void setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row);
+    void setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text);
 
-    void setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text, uint row);
+    void setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text);
 
     double valueFromLineEdit(QLineEdit *line_editor, double fallback);
 
@@ -70,6 +70,8 @@ protected:
     state_t state_;
 
     leaf_type_t type_;
+
+    uint next_free_row_;
 };
 
 #endif // EDITOR_H

@@ -8,7 +8,8 @@ Editor::Editor() :
     connected_leaf_(nullptr),
     connected_leaf_depth_(0),
     state_(state_t::disconnected),
-    type_(leaf_type_t::invalid)
+    type_(leaf_type_t::invalid),
+    next_free_row_(0)
 {
 }
 
@@ -56,7 +57,7 @@ void Editor::disconnectFromLeaf()
 }
 
 
-void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row)
+void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text)
 {
     *label = new QLabel();
     (*label)->setText(label_text);
@@ -64,14 +65,16 @@ void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdi
     *line_edit = new QLineEdit();
     (*line_edit)->setText("0");
 
-    grid->addWidget(*label, row, 0, 1, 1, Qt::AlignTop);
-    grid->addWidget(*line_edit, row, 1, 1, 1, Qt::AlignTop);
+    grid->addWidget(*label, next_free_row_, 0, 1, 1, Qt::AlignTop);
+    grid->addWidget(*line_edit, next_free_row_, 1, 1, 1, Qt::AlignTop);
 
     widgets_.push_back(*label);
     widgets_.push_back(*line_edit);
+
+    next_free_row_++;
 }
 
-void Editor::setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text, uint row)
+void Editor::setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text)
 {
     *label = new QLabel();
     (*label)->setText(label_text);
@@ -81,11 +84,13 @@ void Editor::setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **
     (*push_button)->setFlat(true);
     (*push_button)->setAutoFillBackground(true);
 
-    grid->addWidget(*label, row, 0, 1, 1, Qt::AlignTop);
-    grid->addWidget(*push_button, row, 1, 1, 1, Qt::AlignTop);
+    grid->addWidget(*label, next_free_row_, 0, 1, 1, Qt::AlignTop);
+    grid->addWidget(*push_button, next_free_row_, 1, 1, 1, Qt::AlignTop);
 
     widgets_.push_back(*label);
     widgets_.push_back(*push_button);
+
+    next_free_row_++;
 }
 
 double Editor::valueFromLineEdit(QLineEdit *line_editor, double fallback)
