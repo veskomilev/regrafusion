@@ -22,6 +22,10 @@ public:
 
     inline bool isSpawnPoint() override { return false; }
 
+    qreal getRadius() const { return radius_; }
+
+    void setRadius(qreal radius) { radius_ = radius; }
+
 private:
     static constexpr float kDefaultRadius = 20.0f;
 
