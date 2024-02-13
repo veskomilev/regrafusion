@@ -160,6 +160,9 @@ void viewer::setupEditors()
     line_editor_ = std::make_shared<LineEditor>(ui->gridLayout, next_free_row);
     connect(line_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
 
+    rectangle_editor_ = std::make_shared<RectangleEditor>(ui->gridLayout, next_free_row);
+    connect(rectangle_editor_.get(), &Editor::propertyEdited, ui->display_widget, &DisplayWidget::paintGL);
+
     // since there is no auto-adjusting of the spacer's row, set it manually to row 100
     ui->gridLayout->removeItem(ui->verticalSpacer);
     ui->gridLayout->addItem(ui->verticalSpacer, 100, 0, 1, 2);
@@ -167,6 +170,7 @@ void viewer::setupEditors()
     editors_.push_back(tfm_editor_);
     editors_.push_back(circle_editor_);
     editors_.push_back(line_editor_);
+    editors_.push_back(rectangle_editor_);
 }
 
 int viewer::getNextFreeRowInGridLayout()
