@@ -22,6 +22,14 @@ public:
 
     inline bool isSpawnPoint() override { return false; }
 
+    QLineF getLine() const { return line_; }
+
+    void setLine(QLineF line) { line_ = line; }
+
+    QColor getColor() const { return color_; }
+
+    void setColor(QColor color) { color_ = color; }
+
 private:
     static constexpr QLineF kDefaultLine = QLineF(-10.0f, -10.0f, 10.0f, 10.0f);
 
