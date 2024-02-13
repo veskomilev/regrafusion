@@ -22,6 +22,14 @@ public:
 
     inline bool isSpawnPoint() override { return false; }
 
+    QRectF getRectangle() const { return rectangle_; }
+
+    void setRectangle(QRectF rectangle) { rectangle_ = rectangle; }
+
+    QColor getColor() const { return color_; }
+
+    void setColor(QColor color) { color_ = color; }
+
 private:
     static constexpr QRectF kDefaultRectangle = QRectF(-10.0f, -10.0f, 20.0f, 20.0f);
 
