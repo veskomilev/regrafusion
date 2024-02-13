@@ -26,6 +26,10 @@ public:
 
     void setRadius(qreal radius) { radius_ = radius; }
 
+    QColor getColor() const { return color_; }
+
+    void setColor(QColor color) { color_ = color; }
+
 private:
     static constexpr float kDefaultRadius = 20.0f;
 
