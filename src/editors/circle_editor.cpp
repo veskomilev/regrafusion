@@ -9,7 +9,7 @@ CircleEditor::CircleEditor(QGridLayout *grid, uint grid_row)
 {
     type_ = leaf_type_t::circle;
     CircleEditor::setupWidgets(grid, grid_row);
-    CircleEditor::hideWidgets();
+    hideWidgets();
 }
 
 CircleEditor::~CircleEditor()
@@ -24,61 +24,6 @@ void CircleEditor::setupWidgets(QGridLayout *grid, uint grid_row)
 
     setupSingleValueControl(subgrid, &radius_label_, &radius_editor_, "radius:", 0);
     connect(radius_editor_, &QLineEdit::textEdited, this, &CircleEditor::setConnectedCircleProperties);
-}
-
-void CircleEditor::showWidgets()
-{
-    for (auto &widget : widgets_) {
-        widget->show();
-    }
-}
-
-void CircleEditor::hideWidgets()
-{
-    for (auto &widget : widgets_) {
-        widget->hide();
-    }
-
-}
-
-void CircleEditor::connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
-{
-    if (leaf == nullptr || leaf == connected_leaf_) {
-        return;
-    }
-
-    if (leaf->getType() != leaf_type_t::circle) {
-        return;
-    }
-
-    if (isConnected()) {
-        disconnectFromLeaf();
-    }
-
-    // change state here
-    state_ = state_t::connected;
-
-    connected_leaf_ = leaf;
-    connected_leaf_depth_ = leaf_depth;
-
-    // TODO: connect to circle here if widget editing is implemented
-    update();
-    showWidgets();
-}
-
-void CircleEditor::disconnectFromLeaf()
-{
-    if (!isConnected()) {
-        return;
-    }
-
-    // change state here
-    state_ = state_t::disconnected;
-
-    disconnect(connected_leaf_.get(), nullptr, this, nullptr);
-    connected_leaf_ = nullptr;
-    connected_leaf_depth_ = 0;
-    hideWidgets();
 }
 
 void CircleEditor::update()

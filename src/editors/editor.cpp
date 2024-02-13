@@ -16,6 +16,46 @@ Editor::~Editor()
 {
 }
 
+void Editor::connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+{
+    if (leaf == nullptr || leaf == connected_leaf_) {
+        return;
+    }
+
+    if (leaf->getType() != getType() && getType() != leaf_type_t::invalid) {
+        return;
+    }
+
+    if (isConnected()) {
+        disconnectFromLeaf();
+    }
+
+    // change state here
+    state_ = state_t::connected;
+
+    connected_leaf_ = leaf;
+    connected_leaf_depth_ = leaf_depth;
+
+    update();
+    showWidgets();
+}
+
+void Editor::disconnectFromLeaf()
+{
+    if (!isConnected()) {
+        return;
+    }
+
+    // change state here
+    state_ = state_t::disconnected;
+
+    disconnect(connected_leaf_.get(), nullptr, this, nullptr);
+    connected_leaf_ = nullptr;
+    connected_leaf_depth_ = 0;
+    hideWidgets();
+}
+
+
 void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row)
 {
     *label = new QLabel();
@@ -40,5 +80,19 @@ double Editor::valueFromLineEdit(QLineEdit *line_editor, double fallback)
         return value;
     } else {
         return fallback;
+    }
+}
+
+void Editor::showWidgets()
+{
+    for (auto &widget : widgets_) {
+        widget->show();
+    }
+}
+
+void Editor::hideWidgets()
+{
+    for (auto &widget : widgets_) {
+        widget->hide();
     }
 }

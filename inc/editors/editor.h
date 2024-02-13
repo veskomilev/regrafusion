@@ -26,9 +26,9 @@ public:
 
     virtual ~Editor();
 
-    virtual void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth) = 0;
+    void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
-    virtual void disconnectFromLeaf() = 0;
+    void disconnectFromLeaf();
 
     enum class state_t {
         disconnected = 0,
@@ -49,9 +49,9 @@ protected:
 
     double valueFromLineEdit(QLineEdit *line_editor, double fallback);
 
-    virtual void showWidgets() = 0;
+    void showWidgets();
 
-    virtual void hideWidgets() = 0;
+    void hideWidgets();
 
     virtual void update() = 0;
 
