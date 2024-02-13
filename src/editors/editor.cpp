@@ -71,6 +71,23 @@ void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdi
     widgets_.push_back(*line_edit);
 }
 
+void Editor::setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text, uint row)
+{
+    *label = new QLabel();
+    (*label)->setText(label_text);
+
+    *push_button = new QPushButton();
+    // make the button look like a color picker
+    (*push_button)->setFlat(true);
+    (*push_button)->setAutoFillBackground(true);
+
+    grid->addWidget(*label, row, 0, 1, 1, Qt::AlignTop);
+    grid->addWidget(*push_button, row, 1, 1, 1, Qt::AlignTop);
+
+    widgets_.push_back(*label);
+    widgets_.push_back(*push_button);
+}
+
 double Editor::valueFromLineEdit(QLineEdit *line_editor, double fallback)
 {
     bool success = false;
@@ -95,4 +112,12 @@ void Editor::hideWidgets()
     for (auto &widget : widgets_) {
         widget->hide();
     }
+}
+
+QPalette Editor::colorToPalette(QColor color)
+{
+    QPalette palette;
+    palette.setBrush(QPalette::Button, color);
+
+    return palette;
 }

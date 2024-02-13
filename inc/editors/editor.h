@@ -9,6 +9,8 @@
 #include <vector>
 #include <QDoubleValidator>
 #include <QGridLayout>
+#include <QPalette>
+#include <QPushButton>
 #include <QWidget>
 
 #include "common.h"
@@ -47,11 +49,15 @@ protected:
 
     void setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdit **line_edit, QString label_text, uint row);
 
+    void setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **push_button, QString label_text, uint row);
+
     double valueFromLineEdit(QLineEdit *line_editor, double fallback);
 
     void showWidgets();
 
     void hideWidgets();
+
+    QPalette colorToPalette(QColor color);
 
     virtual void update() = 0;
 
