@@ -22,6 +22,8 @@ public:
 
     void disconnectFromLeaf();
 
+    bool isItTheSameLeaf(std::shared_ptr<Leaf> leaf) const;
+
 private:
     void setupWidgets(QGridLayout *grid, uint grid_row);
 

@@ -84,6 +84,11 @@ void TransformEditor::disconnectFromLeaf()
     hideWidgets();
 }
 
+bool TransformEditor::isItTheSameLeaf(std::shared_ptr<Leaf> leaf) const
+{
+    return leaf == connected_leaf_;
+}
+
 void TransformEditor::update()
 {
     if (!isConnected()) {
