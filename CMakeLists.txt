@@ -49,6 +49,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/editors/line_editor.h src/editors/line_editor.cpp
         inc/editors/rectangle_editor.h src/editors/rectangle_editor.cpp
         inc/controls/control.h src/controls/control.cpp
+        inc/controls/path_control.h src/controls/path_control.cpp
         inc/view.h
         inc/common.h
         inc/math_utils.h
