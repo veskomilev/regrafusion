@@ -31,6 +31,8 @@ public:
     void setColor(QColor color) { color_ = color; }
 
 private:
+    void createControls() override;
+
     static constexpr QRectF kDefaultRectangle = QRectF(-10.0f, -10.0f, 20.0f, 20.0f);
 
     QRectF rectangle_;

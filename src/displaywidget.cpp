@@ -134,6 +134,14 @@ void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter, std::sha
 
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 {
+    // let the selected leaf's controls make use of the event first
+    // and don't handle it twice, if that's the case
+    if (ctx_ != nullptr &&
+        ctx_->getSelectedLeaf() != nullptr &&
+        ctx_->getSelectedLeaf()->passthroughEvent((event))) {
+        return true;
+    }
+
     if (event->type() == QEvent::MouseButtonPress)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);

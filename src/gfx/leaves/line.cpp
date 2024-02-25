@@ -66,6 +66,8 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         color_id_painter->setPen(pen);
     }
 
+    drawControls(painter, color_id_painter, depth);
+
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }
@@ -81,4 +83,9 @@ void Line::drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qrea
     painter->setWorldTransform(t, true);
     painter->drawLine(kDefaultLine);
     painter->setWorldTransform(t.inverted(), true);
+}
+
+void Line::createControls()
+{
+
 }

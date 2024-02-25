@@ -25,6 +25,8 @@ public:
     void addPoint(QPointF point);
 
 private:
+    void createControls() override;
+
     static const std::vector<QPointF> kDefaultPoints;
 
     std::vector<QPointF> points_;

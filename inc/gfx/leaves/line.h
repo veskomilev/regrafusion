@@ -31,6 +31,8 @@ public:
     void setColor(QColor color) { color_ = color; }
 
 private:
+    void createControls() override;
+
     static constexpr QLineF kDefaultLine = QLineF(-10.0f, -10.0f, 10.0f, 10.0f);
 
     QLineF line_;

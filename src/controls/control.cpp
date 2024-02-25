@@ -6,7 +6,7 @@
 
 Control::Control()
 {
-    type_ = leaf_type_t::circle;
+    type_ = leaf_type_t::invalid;
 }
 
 Control::~Control()

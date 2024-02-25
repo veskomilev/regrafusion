@@ -15,7 +15,8 @@ Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
     color_id_(QColor(255, 255, 255)),
     selected_(false),
     type_(type),
-    matrix_(QTransform())
+    matrix_(QTransform()),
+    controls_({})
 {
 }
 
@@ -122,6 +123,29 @@ bool Leaf::setTransformationMatrix(QTransform matrix)
     return true;
 }
 
+void Leaf::select()
+{
+    selected_ = true;
+    createControls();
+}
+
+void Leaf::deselect()
+{
+    selected_ = false;
+    destroyControls();
+}
+
+bool Leaf::passthroughEvent(QEvent *event)
+{
+    for (auto &control : controls_) {
+        if (control->handleEvent(event)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 QPointF Leaf::toLocalSpace(QPointF coordinate)
 {
     return matrix_.inverted().map(coordinate);
@@ -143,4 +167,16 @@ QColor Leaf::getUniqueColor(uint depth)
     result.setRgb(result.rgb() | depth);
 
     return result;
+}
+
+void Leaf::destroyControls()
+{
+    controls_.clear();
+}
+
+void Leaf::drawControls(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
+{
+    for (auto &control : controls_) {
+        control->draw(painter, color_id_painter, depth);
+    }
 }

@@ -68,6 +68,8 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         }
     }
 
+    drawControls(painter, color_id_painter, depth);
+
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }
@@ -95,4 +97,9 @@ void Path::drawDragged(std::shared_ptr<QPainter> painter, QPointF position, qrea
 void Path::addPoint(QPointF point)
 {
     points_.push_back(point);
+}
+
+void Path::createControls()
+{
+
 }

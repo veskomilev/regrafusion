@@ -52,6 +52,8 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
         color_id_painter->drawRect(rectangle_);
     }
 
+    drawControls(painter, color_id_painter, depth);
+
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }
@@ -67,4 +69,9 @@ void Rectangle::drawDragged(std::shared_ptr<QPainter> painter, QPointF position,
     painter->setWorldTransform(t, true);
     painter->drawRect(kDefaultRectangle);
     painter->setWorldTransform(t.inverted(), true);
+}
+
+void Rectangle::createControls()
+{
+
 }

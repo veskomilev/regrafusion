@@ -9,7 +9,6 @@
 #include <QPainter>
 
 #include "common.h"
-#include "gfx/leaf.h"
 
 class Control
 {
@@ -20,7 +19,7 @@ public:
 
     leaf_type_t getType() const { return type_; }
 
-    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter) = 0;
+    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth) = 0;
 
     virtual bool handleEvent(QEvent *event) = 0;
 

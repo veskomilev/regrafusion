@@ -31,6 +31,8 @@ public:
     void setColor(QColor color) { color_ = color; }
 
 private:
+    void createControls() override;
+
     static constexpr float kDefaultRadius = 20.0f;
 
     qreal radius_;

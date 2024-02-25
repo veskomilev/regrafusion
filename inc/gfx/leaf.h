@@ -6,11 +6,13 @@
 #define LEAF_H
 
 #include <QColor>
+#include <QEvent>
 #include <QMimeData>
 #include <QPainter>
 #include <QTransform>
 
 #include "common.h"
+#include "controls/control.h"
 
 class RgfCtx;
 
@@ -48,9 +50,11 @@ public:
     // TODO: maybe make a factory
     void setColorId(QColor color_id) { color_id_ = color_id; } /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
 
-    void select() { selected_ = true; }
+    void select();
 
-    void deselect() { selected_ = false; }
+    void deselect();
+
+    bool passthroughEvent(QEvent *event);
 
     QPointF toLocalSpace(QPointF coordinate);
 
@@ -64,11 +68,19 @@ signals:
 protected:
     QColor getUniqueColor(uint depth);
 
+    virtual void createControls() {}
+
+    void destroyControls();
+
+    void drawControls(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth);
+
     std::weak_ptr<RgfCtx> ctx_;
 
     QColor color_id_;
 
     bool selected_;
+
+    std::vector<std::shared_ptr<Control>> controls_;
 
 private:
     // disable copy and assignment ctors

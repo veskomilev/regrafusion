@@ -17,6 +17,10 @@ public:
     void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth) override;
 
     inline bool isSpawnPoint() override { return true; }
+
+private:
+    void createControls() override;
+
 };
 
 #endif // SPAWNPOINT_H
