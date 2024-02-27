@@ -49,6 +49,8 @@ public:
 
     void addShape(leaf_type_t shape_type);
 
+    View getView() const { return display_widget_->getView(); }
+
 signals:
     void modeSwitched();
 
