@@ -1,6 +1,6 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #ifndef PATH_H
 #define PATH_H
@@ -23,6 +23,10 @@ public:
     inline bool isSpawnPoint() override { return false; }
 
     void addPoint(QPointF point);
+
+    QColor getColor() const { return color_; }
+
+    void setColor(QColor color) { color_ = color; }
 
 private:
     void createControls() override;

@@ -15,6 +15,7 @@
 #include "editors/editor.h"
 #include "editors/circle_editor.h"
 #include "editors/line_editor.h"
+#include "editors/path_editor.h"
 #include "editors/rectangle_editor.h"
 #include "editors/transform_editor.h"
 
@@ -69,6 +70,7 @@ private:
     std::shared_ptr<CircleEditor> circle_editor_;
     std::shared_ptr<LineEditor> line_editor_;
     std::shared_ptr<RectangleEditor> rectangle_editor_;
+    std::shared_ptr<PathEditor> path_editor_;
     std::vector<std::shared_ptr<Editor>> editors_;
 };
 #endif // VIEWER_H
