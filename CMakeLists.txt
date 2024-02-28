@@ -53,7 +53,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         inc/controls/path_control.h src/controls/path_control.cpp
         inc/view.h
         inc/common.h
-        inc/math_utils.h
+        inc/math_utils.h src/math_utils.cpp
         subdirs.pro
         icons.qrc
         icons/circle.png
