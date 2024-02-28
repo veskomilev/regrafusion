@@ -24,7 +24,8 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     view_({View::kOffsetIdentity, View::kOffsetIdentity, 1.0}),
     previous_mouse_position_(View::kOffsetIdentity),
     draw_window_buffer_(true),
-    dragged_leaf_ {false, leaf_type_t::circle, QPointF(0, 0)}
+    dragged_leaf_ {false, leaf_type_t::circle, QPointF(0, 0)},
+    mouse_dragged_(false)
 {
     // initial window size during constructor invocation is miniscule, so set the view offset on first resizeGL() call
     // (which always gets called on start before paintGL())
@@ -32,6 +33,8 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     parent->installEventFilter(this);
     // TODO: do something about multiscreen support of the window buffer - secondary screen could have a larger resolution
     setAcceptDrops(true);
+
+    setMouseTracking(true);
 }
 
 void DisplayWidget::initializeGL()
@@ -144,6 +147,7 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 
     if (event->type() == QEvent::MouseButtonPress)
     {
+        mouse_dragged_ = true;
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         previous_mouse_position_ = mouseEvent->pos();
         QPointF cursor_position = mouseEvent->pos() + kMouseClickCorrection;
@@ -169,7 +173,7 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
         return true;
     }
 
-    if (event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::MouseMove && mouse_dragged_)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 
@@ -183,6 +187,11 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
         update();
         previous_mouse_position_ = mouseEvent->pos();
         return true;
+    }
+
+    if (event->type() == QEvent::MouseButtonRelease)
+    {
+        mouse_dragged_ = false;
     }
 
     return false;
@@ -313,4 +322,9 @@ void DisplayWidget::updateStatus()
         QString("); Scale: ") +
         QString::number(view_.scale)
         );
+}
+
+void DisplayWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    eventFilter(this, event);
 }

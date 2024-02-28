@@ -22,6 +22,8 @@ public:
 
     inline bool isSpawnPoint() override { return false; }
 
+    std::vector<QPointF>& points() { return points_; }
+
     void addPoint(QPointF point);
 
     QColor getColor() const { return color_; }

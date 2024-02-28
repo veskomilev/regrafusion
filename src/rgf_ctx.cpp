@@ -88,6 +88,11 @@ void RgfCtx::addShape(leaf_type_t shape_type)
     addShape(shape_type, view.size / 2 - view.offset, view.scale);
 }
 
+void RgfCtx::refresh()
+{
+    display_widget_->update();
+}
+
 void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
     selected_leaf_ = leaf;

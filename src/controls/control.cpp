@@ -4,9 +4,12 @@
 
 #include "controls/control.h"
 
-Control::Control()
+Control::Control(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf) :
+    type_(leaf_type_t::invalid),
+    leaf_(leaf),
+    ctx_(ctx)
 {
-    type_ = leaf_type_t::invalid;
+
 }
 
 Control::~Control()

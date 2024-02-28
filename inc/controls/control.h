@@ -10,10 +10,13 @@
 
 #include "common.h"
 
+class RgfCtx;
+class Leaf;
+
 class Control
 {
 public:
-    Control();
+    Control(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf);
 
     virtual ~Control();
 
@@ -26,6 +29,9 @@ public:
 protected:
     leaf_type_t type_;
 
+    std::weak_ptr<Leaf> leaf_;
+
+    std::weak_ptr<RgfCtx> ctx_;
 };
 
 #endif // CONTROL_H

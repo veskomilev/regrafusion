@@ -14,7 +14,7 @@
 class PathControl : public Control
 {
 public:
-    PathControl();
+    PathControl(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf);
 
     ~PathControl();
 
@@ -22,6 +22,12 @@ public:
 
     bool handleEvent(QEvent *event);
 
+private:
+    QPointF mouse_position_;
+
+    qreal kRadius = 15.0;
+    qreal kSelectionWidth = 3.0;
+    qreal kPopUpDistance = kRadius * 3;
 };
 
 #endif // PATH_CONTROL_H

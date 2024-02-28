@@ -14,9 +14,9 @@ Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
     ctx_(ctx),
     color_id_(QColor(255, 255, 255)),
     selected_(false),
+    controls_({}),
     type_(type),
-    matrix_(QTransform()),
-    controls_({})
+    matrix_(QTransform())
 {
 }
 

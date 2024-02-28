@@ -82,6 +82,8 @@ protected:
 
     std::vector<std::shared_ptr<Control>> controls_;
 
+    std::weak_ptr<Leaf> self_ref_;
+
 private:
     // disable copy and assignment ctors
     Leaf(const Leaf&) = delete;

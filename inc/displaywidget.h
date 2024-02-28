@@ -54,6 +54,8 @@ public:
 
     View getView() const { return view_; }
 
+    void mouseMoveEvent(QMouseEvent *event);
+
 private:
     void initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter);
 
@@ -93,6 +95,8 @@ private:
     bool draw_window_buffer_;
 
     dragged_leaf_t dragged_leaf_;
+
+    bool mouse_dragged_;
 };
 
 #endif // DISPLAYWIDGET_H

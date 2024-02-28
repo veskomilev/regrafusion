@@ -1,9 +1,10 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 20232-2024  Vesko Milev
 
 #include <QPainterPath>
 
+#include "controls/path_control.h"
 #include "gfx/leaves/path.h"
 #include "rgf_ctx.h"
 
@@ -31,6 +32,8 @@ std::shared_ptr<Path> Path::constructNew(std::weak_ptr<RgfCtx> ctx)
         path->addPoint(point);
     }
 
+    path->self_ref_ = path;
+
     return path;
 }
 
@@ -53,7 +56,10 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
         path.closeSubpath();
 
-        if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
+        // todo: unify selection and control behaviour between leaves
+        if (selected_ &&
+            ctx_p->getMode() == RgfCtx::mode_t::edit &&
+            ctx_p->getSelectedLeafDepth() == depth) {
             painter->setPen(QColor(0, 0, 0, 255));
         } else {
             painter->setPen(QColor(0, 0, 0, 0));
@@ -101,5 +107,5 @@ void Path::addPoint(QPointF point)
 
 void Path::createControls()
 {
-
+    controls_.push_back(std::make_shared<PathControl>(ctx_, self_ref_));
 }

@@ -51,6 +51,8 @@ public:
 
     View getView() const { return display_widget_->getView(); }
 
+    void refresh();
+
 signals:
     void modeSwitched();
 
