@@ -88,7 +88,6 @@ private:
 
     // navigation related
     QPointF previous_mouse_position_;
-    static constexpr QPointF kMouseClickCorrection = QPointF(-10.0f, -10.0f);
 
     std::shared_ptr<RgfCtx> ctx_;
 

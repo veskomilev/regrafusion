@@ -18,6 +18,8 @@ struct View
 
     static constexpr float kMinScale = 0.2f;
     static constexpr float kMaxScale = 100.0f;
+
+    static constexpr QPointF kMouseClickCorrection = QPointF(-10.0f, -10.0f);
 };
 
 #endif // VIEW_H

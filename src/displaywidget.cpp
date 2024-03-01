@@ -150,7 +150,7 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
         mouse_dragged_ = true;
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         previous_mouse_position_ = mouseEvent->pos();
-        QPointF cursor_position = mouseEvent->pos() + kMouseClickCorrection;
+        QPointF cursor_position = mouseEvent->pos() + View::kMouseClickCorrection;
 
         if (ctx_->getMode() == RgfCtx::mode_t::edit) {
 
