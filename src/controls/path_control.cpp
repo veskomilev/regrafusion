@@ -18,7 +18,8 @@ PathControl::PathControl(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf) :
     previous_mouse_position_(QPointF(0, 0)),
     vertex_dragged_(false),
     dragged_vertex_index_(0),
-    add_vertex_mode_(false)
+    add_vertex_mode_(false),
+    remove_vertex_mode_(false)
 {
     type_ = leaf_type_t::path;
 }
@@ -53,6 +54,8 @@ void PathControl::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPaint
 
     if (add_vertex_mode_) {
         drawAddVertexMode(painter, ctx_p, leaf_p, points, depth);
+    } else if (remove_vertex_mode_) {
+        drawRemoveVertexMode(painter, ctx_p, leaf_p, points, depth);
     } else {
         drawMoveVertexMode(painter, ctx_p, leaf_p, points, depth);
     }
@@ -109,6 +112,49 @@ void PathControl::drawAddVertexMode(std::shared_ptr<QPainter> painter, std::shar
     painter->drawLine(mouse_position_, side.b);
 }
 
+void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF> &points, uint depth)
+{
+    // do not allow triangles to degenerate to lines
+    size_t size = points.size();
+    if (size <= 3)
+        return;
+
+    int index_to_remove = -1;
+
+    for(size_t i = 0; i < size; i++) {
+        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, points[i], depth);
+        if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
+            index_to_remove = i;
+            break;
+        }
+    }
+
+    // cursor is too far away from any vertex, don't do anything
+    if (index_to_remove < 0)
+        return;
+
+    int index_a;
+    if (index_to_remove == 0) {
+        index_a = size - 1;
+    } else {
+        index_a = index_to_remove - 1;
+    }
+
+    int index_b;
+    if (index_to_remove == size - 1) {
+        index_b = 0;
+    } else {
+        index_b = index_to_remove + 1;
+    }
+
+    QPointF point_a = mapPointToLeafInBranch(ctx, leaf, points[index_a], depth);
+    QPointF point_b = mapPointToLeafInBranch(ctx, leaf, points[index_b], depth);
+
+    painter->setBrush(Qt::transparent);
+    painter->setPen(Qt::DashLine);
+    painter->drawLine(point_a, point_b);
+}
+
 side_t PathControl::findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF> &points, uint depth)
 {
     side_t side;
@@ -161,6 +207,8 @@ bool PathControl::handleMouseButtonPress(QMouseEvent *event)
 
     if (add_vertex_mode_) {
         return addVertex(ctx_p, leaf_p, points);
+    } else if (remove_vertex_mode_) {
+        return removeVertex(ctx_p, leaf_p, points);
     } else {
         return startDraggingVertex(ctx_p, leaf_p, points);
     }
@@ -190,6 +238,32 @@ bool PathControl::addVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> l
     side_t side = findClosestSideToCursor(ctx, leaf, points, depth);
     points.insert(points.begin() + side.ind + 1, inverseMapPointToLeafInBranch(ctx, leaf, mouse_position_, depth));
     ctx->refresh();
+    return true;
+}
+
+bool PathControl::removeVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF> &points)
+{
+    // do not allow triangles to degenerate to lines
+    size_t size = points.size();
+    if (size <= 3)
+        return true;
+
+    int index_to_remove = -1;
+
+    for(size_t i = 0; i < size; i++) {
+        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, points[i], ctx->getSelectedLeafDepth());
+        if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
+            index_to_remove = i;
+            break;
+        }
+    }
+
+    // cursor is too far away from any vertex, don't do anything
+    if (index_to_remove < 0)
+        return true;
+
+    points.erase(points.begin() + index_to_remove);
+
     return true;
 }
 
@@ -236,6 +310,9 @@ void PathControl::handleKeyPressed(QKeyEvent *event)
     case Qt::Key_Control:
         add_vertex_mode_ = true;
         break;
+    case Qt::Key_Shift:
+        remove_vertex_mode_ = true;
+        break;
     }
 }
 
@@ -244,6 +321,9 @@ void PathControl::handleKeyReleased(QKeyEvent *event)
     switch(event->key()) {
     case Qt::Key_Control:
         add_vertex_mode_ = false;
+        break;
+    case Qt::Key_Shift:
+        remove_vertex_mode_ = false;
         break;
     }
 }

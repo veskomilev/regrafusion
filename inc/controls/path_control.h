@@ -34,6 +34,8 @@ private:
 
     void drawAddVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
 
+    void drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
+
     side_t findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
 
     bool handleMouseButtonPress(QMouseEvent *event);
@@ -41,6 +43,8 @@ private:
     bool startDraggingVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
 
     bool addVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
+
+    bool removeVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
 
     bool handleMouseMove(QMouseEvent *event);
 
@@ -60,6 +64,8 @@ private:
     uint dragged_vertex_index_;
 
     bool add_vertex_mode_;
+
+    bool remove_vertex_mode_;
 };
 
 #endif // PATH_CONTROL_H
