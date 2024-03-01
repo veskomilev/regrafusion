@@ -6,6 +6,7 @@
 #define PATH_CONTROL_H
 
 #include <QEvent>
+#include <QMouseEvent>
 #include <QPainter>
 
 #include "common.h"
@@ -23,10 +24,20 @@ public:
     bool handleEvent(QEvent *event);
 
 private:
+    bool handleMouseButtonPress(QMouseEvent *event);
+
+    bool handleMouseMove(QMouseEvent *event);
+
+    bool handleMouseButtonRelease(QMouseEvent *event);
+
     QPointF mouse_position_;
+    QPointF previous_mouse_position_;
 
     qreal kRadius = 5.0;
     qreal kPopUpDistance = kRadius * 2;
+
+    bool vertex_dragged_;
+    uint dragged_vertex_index_;
 };
 
 #endif // PATH_CONTROL_H
