@@ -36,3 +36,18 @@ QPointF Control::mapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared
 
     return QPointF(xpos, ypos);
 }
+
+QPointF Control::inverseMapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
+{
+    View view = ctx->getView();
+    point /= view.scale;
+    point -= view.offset / view.scale;
+
+    QTransform tfm = leaf->matrix();
+    QTransform spawn_tfm = ctx->getSpawnPointTransformation();
+    for (uint i = 0; i < depth; i++) {
+        tfm *= spawn_tfm;
+    }
+
+    return tfm.inverted().map(point);
+}

@@ -217,6 +217,14 @@ void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf
 
 void DisplayWidget::keyPressEvent(QKeyEvent *event)
 {
+    // let the selected leaf's controls make use of the event first
+    // and don't handle it twice, if that's the case
+    if (ctx_ != nullptr &&
+        ctx_->getSelectedLeaf() != nullptr &&
+        ctx_->getSelectedLeaf()->passthroughEvent((event))) {
+        return;
+    }
+
     if (event->key() == Qt::Key_Tab) {
         ctx_->switchModesAction();
         event->accept();

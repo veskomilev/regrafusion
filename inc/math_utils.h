@@ -33,4 +33,10 @@ inline qreal getPointDistance(QPoint p1, QPoint p2)
     return getPointDistance(p1.toPointF(), p2.toPointF());
 }
 
+// calculates the cross product of two vectors, both starting at (0, 0)
+inline qreal crossProduct(QPointF v1, QPointF v2)
+{
+    return v1.x() * v2.y() - v1.y() * v2.x();
+}
+
 #endif // MATH_UTILS_H
