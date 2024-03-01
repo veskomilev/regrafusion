@@ -43,13 +43,25 @@ void PathControl::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPaint
     if (depth != ctx_p->getSelectedLeafDepth())
         return;
 
-    View view = ctx_p->getView();
-    qreal radius = kRadius / view.scale;
-    color_id_painter->setBrush(Qt::black);
+    painter->setBrush(Qt::black);
+    painter->setPen(Qt::transparent);
+
+    // in order for selection points not to be weirdly stretched and squished by leaf scalings, do the following:
+    // 1. turn off world transformations (WT)
+    // 2. map selection point coordinates to WT space
+    // 3. draw them with transformations still disabled
+    // 4. turn WT back on
+    painter->setWorldMatrixEnabled(false);
 
     for (QPointF& point : points) {
-        color_id_painter->drawEllipse(QRectF(point.rx() - radius, point.ry() - radius, radius * 2, radius * 2));
+        QPointF mapped = mapPointToLeafInBranch(ctx_p, leaf_p, point, depth);
+        if (getPointDistance(mouse_position_, mapped) > kPopUpDistance)
+            continue;
+
+        painter->drawEllipse(QRectF(mapped.rx() - kRadius, mapped.ry() - kRadius, kRadius * 2, kRadius * 2));
     }
+
+    painter->setWorldMatrixEnabled(true);
 }
 
 bool PathControl::handleEvent(QEvent *event)

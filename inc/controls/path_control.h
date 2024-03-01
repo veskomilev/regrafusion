@@ -25,9 +25,8 @@ public:
 private:
     QPointF mouse_position_;
 
-    qreal kRadius = 15.0;
-    qreal kSelectionWidth = 3.0;
-    qreal kPopUpDistance = kRadius * 3;
+    qreal kRadius = 5.0;
+    qreal kPopUpDistance = kRadius * 2;
 };
 
 #endif // PATH_CONTROL_H
