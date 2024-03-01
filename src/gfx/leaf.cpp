@@ -151,6 +151,12 @@ QPointF Leaf::toLocalSpace(QPointF coordinate)
     return matrix_.inverted().map(coordinate);
 }
 
+QPointF Leaf::fromSreenSpace(std::shared_ptr<RgfCtx> ctx, QPointF coordinate)
+{
+    coordinate = ctx->toSelectedBranchSpace(coordinate / ctx->getView().scale);
+    return toLocalSpace(coordinate);
+}
+
 void Leaf::translateNatively(QPointF translation)
 {
     matrix_.translate(translation.x(), translation.y());

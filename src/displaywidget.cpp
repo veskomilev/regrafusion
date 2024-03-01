@@ -210,12 +210,7 @@ void DisplayWidget::moveLeaf(QMouseEvent *mouseEvent, std::shared_ptr<Leaf> leaf
     if (leaf->isSpawnPoint() && ctx_->getSelectedLeafDepth() > 0)
         return;
 
-    auto toLeafSpace = [this, leaf](QPointF coords) {
-        coords = ctx_->toSelectedBranchSpace(coords / view_.scale);
-        return leaf->toLocalSpace(coords);
-    };
-
-    QPointF deltaPosition = toLeafSpace(mouseEvent->pos()) - toLeafSpace(previous_mouse_position_);
+    QPointF deltaPosition = leaf->fromSreenSpace(ctx_, mouseEvent->pos()) - leaf->fromSreenSpace(ctx_, previous_mouse_position_);
 
     leaf->translateNatively(deltaPosition);
 }

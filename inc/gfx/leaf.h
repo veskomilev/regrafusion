@@ -58,6 +58,8 @@ public:
 
     QPointF toLocalSpace(QPointF coordinate);
 
+    QPointF fromSreenSpace(std::shared_ptr<RgfCtx> ctx, QPointF coordinate);
+
     void translateNatively(QPointF translation);
 
     leaf_type_t getType() const { return type_; }
