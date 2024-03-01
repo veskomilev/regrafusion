@@ -39,6 +39,8 @@ public:
 
     QPointF toSelectedBranchSpace(QPointF coordinate);
 
+    QTransform getSpawnPointTransformation() const { return tree_->getSpawnPointTransformation(); }
+
     void deleteLeafAction();
 
     void switchModesAction();

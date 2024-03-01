@@ -7,6 +7,7 @@
 
 #include <QEvent>
 #include <QPainter>
+#include <QPointF>
 
 #include "common.h"
 
@@ -27,6 +28,8 @@ public:
     virtual bool handleEvent(QEvent *event) = 0;
 
 protected:
+    QPointF mapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
+
     leaf_type_t type_;
 
     std::weak_ptr<Leaf> leaf_;
