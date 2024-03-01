@@ -1,6 +1,6 @@
 // Regrafusion - draws graphics recursively
 // Distributed under GPL-3.0
-// Copyright (C) 2023  Vesko Milev
+// Copyright (C) 2023-2024  Vesko Milev
 
 #ifndef CIRCLE_H
 #define CIRCLE_H
