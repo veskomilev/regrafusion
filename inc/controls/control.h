@@ -28,9 +28,9 @@ public:
     virtual bool handleEvent(QEvent *event) = 0;
 
 protected:
-    QPointF mapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
+    QPointF mapLeafSpaceToScreenSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
 
-    QPointF inverseMapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
+    QPointF mapScreenSpaceToLeafSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
 
     leaf_type_t type_;
 

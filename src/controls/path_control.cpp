@@ -95,7 +95,7 @@ void PathControl::drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::sha
     painter->setPen(Qt::transparent);
 
     for (QPointF& point : points) {
-        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, point, depth);
+        QPointF mapped = mapLeafSpaceToScreenSpace(ctx, leaf, point, depth);
         if (getPointDistance(mouse_position_, mapped) > kPopUpDistance)
             continue;
 
@@ -122,7 +122,7 @@ void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::s
     int index_to_remove = -1;
 
     for(size_t i = 0; i < size; i++) {
-        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, points[i], depth);
+        QPointF mapped = mapLeafSpaceToScreenSpace(ctx, leaf, points[i], depth);
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
             index_to_remove = i;
             break;
@@ -147,8 +147,8 @@ void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::s
         index_b = index_to_remove + 1;
     }
 
-    QPointF point_a = mapPointToLeafInBranch(ctx, leaf, points[index_a], depth);
-    QPointF point_b = mapPointToLeafInBranch(ctx, leaf, points[index_b], depth);
+    QPointF point_a = mapLeafSpaceToScreenSpace(ctx, leaf, points[index_a], depth);
+    QPointF point_b = mapLeafSpaceToScreenSpace(ctx, leaf, points[index_b], depth);
 
     painter->setBrush(Qt::transparent);
     painter->setPen(Qt::DashLine);
@@ -172,8 +172,8 @@ side_t PathControl::findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::sh
             point2 = points[i + 1];
         }
 
-        QPointF mapped1 = mapPointToLeafInBranch(ctx, leaf, point1, depth);
-        QPointF mapped2 = mapPointToLeafInBranch(ctx, leaf, point2, depth);
+        QPointF mapped1 = mapLeafSpaceToScreenSpace(ctx, leaf, point1, depth);
+        QPointF mapped2 = mapLeafSpaceToScreenSpace(ctx, leaf, point2, depth);
 
         qreal weight = getPointDistance(mapped1, mouse_position_) + getPointDistance(mapped2, mouse_position_);
         if (weight < min_weight || i == 0) {
@@ -218,7 +218,7 @@ bool PathControl::startDraggingVertex(std::shared_ptr<RgfCtx> ctx, std::shared_p
 {
     uint index = 0;
     for (QPointF& point : points) {
-        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, point, ctx->getSelectedLeafDepth());
+        QPointF mapped = mapLeafSpaceToScreenSpace(ctx, leaf, point, ctx->getSelectedLeafDepth());
 
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
             vertex_dragged_ = true;
@@ -236,7 +236,7 @@ bool PathControl::addVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> l
 {
     uint depth = ctx->getSelectedLeafDepth();
     side_t side = findClosestSideToCursor(ctx, leaf, points, depth);
-    points.insert(points.begin() + side.ind + 1, inverseMapPointToLeafInBranch(ctx, leaf, mouse_position_, depth));
+    points.insert(points.begin() + side.ind + 1, mapScreenSpaceToLeafSpace(ctx, leaf, mouse_position_, depth));
     ctx->refresh();
     return true;
 }
@@ -251,7 +251,7 @@ bool PathControl::removeVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf
     int index_to_remove = -1;
 
     for(size_t i = 0; i < size; i++) {
-        QPointF mapped = mapPointToLeafInBranch(ctx, leaf, points[i], ctx->getSelectedLeafDepth());
+        QPointF mapped = mapLeafSpaceToScreenSpace(ctx, leaf, points[i], ctx->getSelectedLeafDepth());
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
             index_to_remove = i;
             break;

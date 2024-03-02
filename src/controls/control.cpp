@@ -19,7 +19,7 @@ Control::~Control()
 {
 }
 
-QPointF Control::mapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
+QPointF Control::mapLeafSpaceToScreenSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
 {
     View view = ctx->getView();
     QTransform tfm = leaf->matrix();
@@ -29,15 +29,10 @@ QPointF Control::mapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared
         tfm *= spawn_tfm;
     }
 
-    point = tfm.map(point);
-
-    qreal xpos = point.x() * view.scale + view.offset.x();
-    qreal ypos = point.y() * view.scale + view.offset.y();
-
-    return QPointF(xpos, ypos);
+    return tfm.map(point) * view.scale + view.offset;
 }
 
-QPointF Control::inverseMapPointToLeafInBranch(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
+QPointF Control::mapScreenSpaceToLeafSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
 {
     View view = ctx->getView();
     point /= view.scale;
