@@ -55,7 +55,8 @@ void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         color_id_painter->setWorldTransform(matrix_, true);
     }
 
-    if (ctx_p->getMode() != RgfCtx::mode_t::edit || !selected_)
+    // TODO: draw the transformation matrix on top of its respective shape, not below it
+    if (ctx_p->getMode() != RgfCtx::mode_t::edit || !selected_ || ctx_p->getSelectedLeafDepth() != depth)
         return;
 
     // in principle the side should be 1, but 1 pixel is too short of a length
