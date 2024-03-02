@@ -137,6 +137,26 @@ void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter, std::sha
 
 bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
 {
+    // firstly, check if the events are mouse events
+    // and if they are, don't handle them if they are outside the draw area
+    // but only when there's no dragging going on, since that is the more intuitive behaviour
+    if (!mouse_dragged_ &&
+        (event->type() == QEvent::MouseButtonPress ||
+        event->type() == QEvent::MouseMove ||
+        event->type() == QEvent::MouseButtonRelease)) {
+
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        QPointF cursor_position = mouseEvent->pos() + View::kMouseClickCorrection;
+
+        if (cursor_position.rx() < 0 ||
+            cursor_position.ry() < 0 ||
+            cursor_position.rx() >= view_.size.x() ||
+            cursor_position.ry() >= view_.size.y()) {
+
+            return false;
+        }
+    }
+
     // let the selected leaf's controls make use of the event first
     // and don't handle it twice, if that's the case
     if (ctx_ != nullptr &&
