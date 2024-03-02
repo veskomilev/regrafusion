@@ -62,7 +62,6 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
 
         path.closeSubpath();
 
-        // todo: unify selection and control behaviour between leaves
         if (selected_ &&
             ctx_p->getMode() == RgfCtx::mode_t::edit &&
             ctx_p->getSelectedLeafDepth() == depth) {

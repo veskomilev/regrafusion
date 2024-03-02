@@ -46,7 +46,9 @@ void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
     Leaf::draw(painter, color_id_painter, depth);
 
     // draw just the outline
-    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
+    if (selected_ &&
+        ctx_p->getMode() == RgfCtx::mode_t::edit &&
+        ctx_p->getSelectedLeafDepth() == depth) {
         QPen pen(QColor(0, 0, 0, 255));
         pen.setWidth(2);
         painter->setPen(pen);

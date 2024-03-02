@@ -44,7 +44,9 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
 
     Leaf::draw(painter, color_id_painter, depth);
 
-    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
+    if (selected_ &&
+        ctx_p->getMode() == RgfCtx::mode_t::edit &&
+        ctx_p->getSelectedLeafDepth() == depth) {
         painter->setPen(QColor(0, 0, 0, 255));
     } else {
         painter->setPen(QColor(0, 0, 0, 0));
