@@ -55,6 +55,8 @@ public:
 
     void refresh();
 
+    void setStatusBarMessage(const QString& message) { status_bar_->showMessage(message); }
+
 signals:
     void modeSwitched();
 
