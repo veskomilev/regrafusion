@@ -31,21 +31,23 @@ public:
     bool handleEvent(QEvent *event);
 
 private:
-    void drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
+    std::vector<QPointF>& points() { return path_->points(); }
 
-    void drawAddVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
+    void drawMoveVertexMode(std::shared_ptr<QPainter> painter);
 
-    void drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
+    void drawAddVertexMode(std::shared_ptr<QPainter> painter);
 
-    side_t findClosestSideToCursor(std::vector<QPointF>& points);
+    void drawRemoveVertexMode(std::shared_ptr<QPainter> painter);
+
+    side_t findClosestSideToCursor();
 
     bool handleMouseButtonPress(QMouseEvent *event);
 
-    bool startDraggingVertex(std::vector<QPointF>& points);
+    bool startDraggingVertex();
 
-    bool addVertex(std::vector<QPointF>& points);
+    bool addVertex();
 
-    bool removeVertex(std::vector<QPointF>& points);
+    bool removeVertex();
 
     bool handleMouseMove(QMouseEvent *event);
 
@@ -67,6 +69,8 @@ private:
     bool add_vertex_mode_;
 
     bool remove_vertex_mode_;
+
+    std::shared_ptr<Path> path_;
 };
 
 #endif // PATH_CONTROL_H

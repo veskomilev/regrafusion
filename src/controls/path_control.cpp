@@ -19,7 +19,8 @@ PathControl::PathControl(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Path> leaf
     vertex_dragged_(false),
     dragged_vertex_index_(0),
     add_vertex_mode_(false),
-    remove_vertex_mode_(false)
+    remove_vertex_mode_(false),
+    path_(std::dynamic_pointer_cast<Path>(leaf_))
 {
     type_ = leaf_type_t::path;
 }
@@ -30,8 +31,7 @@ PathControl::~PathControl()
 
 void PathControl::draw(std::shared_ptr<QPainter> painter)
 {
-    std::vector<QPointF> points = std::dynamic_pointer_cast<Path>(leaf_)->points();
-    if (points.size() == 0)
+    if (points().size() == 0)
         return;
 
     // in order for selection points not to be weirdly stretched and squished by leaf scalings, do the following:
@@ -42,11 +42,11 @@ void PathControl::draw(std::shared_ptr<QPainter> painter)
     painter->setWorldMatrixEnabled(false);
 
     if (add_vertex_mode_) {
-        drawAddVertexMode(painter, points);
+        drawAddVertexMode(painter);
     } else if (remove_vertex_mode_) {
-        drawRemoveVertexMode(painter, points);
+        drawRemoveVertexMode(painter);
     } else {
-        drawMoveVertexMode(painter, points);
+        drawMoveVertexMode(painter);
     }
 
     painter->setWorldMatrixEnabled(true);
@@ -78,12 +78,12 @@ bool PathControl::handleEvent(QEvent *event)
     return false;
 }
 
-void PathControl::drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF> &points)
+void PathControl::drawMoveVertexMode(std::shared_ptr<QPainter> painter)
 {
     painter->setBrush(Qt::black);
     painter->setPen(Qt::transparent);
 
-    for (QPointF& point : points) {
+    for (QPointF& point : points()) {
         QPointF mapped = mapLeafSpaceToScreenSpace(point);
         if (getPointDistance(mouse_position_, mapped) > kPopUpDistance)
             continue;
@@ -92,26 +92,26 @@ void PathControl::drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::vec
     }
 }
 
-void PathControl::drawAddVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF> &points)
+void PathControl::drawAddVertexMode(std::shared_ptr<QPainter> painter)
 {
-    side_t side = findClosestSideToCursor(points);
+    side_t side = findClosestSideToCursor();
     painter->setBrush(Qt::transparent);
     painter->setPen(Qt::DashLine);
     painter->drawLine(mouse_position_, side.a);
     painter->drawLine(mouse_position_, side.b);
 }
 
-void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF> &points)
+void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter)
 {
     // do not allow triangles to degenerate to lines
-    size_t size = points.size();
+    size_t size = points().size();
     if (size <= 3)
         return;
 
     int index_to_remove = -1;
 
     for(size_t i = 0; i < size; i++) {
-        QPointF mapped = mapLeafSpaceToScreenSpace(points[i]);
+        QPointF mapped = mapLeafSpaceToScreenSpace(points()[i]);
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
             index_to_remove = i;
             break;
@@ -136,29 +136,29 @@ void PathControl::drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::v
         index_b = index_to_remove + 1;
     }
 
-    QPointF point_a = mapLeafSpaceToScreenSpace(points[index_a]);
-    QPointF point_b = mapLeafSpaceToScreenSpace(points[index_b]);
+    QPointF point_a = mapLeafSpaceToScreenSpace(points()[index_a]);
+    QPointF point_b = mapLeafSpaceToScreenSpace(points()[index_b]);
 
     painter->setBrush(Qt::transparent);
     painter->setPen(Qt::DashLine);
     painter->drawLine(point_a, point_b);
 }
 
-side_t PathControl::findClosestSideToCursor(std::vector<QPointF> &points)
+side_t PathControl::findClosestSideToCursor()
 {
     side_t side;
 
-    size_t size = points.size();
+    size_t size = points().size();
     qreal min_weight = 0;
 
     for(size_t i = 0; i < size; i++) {
 
-        QPointF point1 = points[i];
+        QPointF point1 = points()[i];
         QPointF point2;
         if (i == size - 1) {
-            point2 = points[0];
+            point2 = points()[0];
         } else {
-            point2 = points[i + 1];
+            point2 = points()[i + 1];
         }
 
         QPointF mapped1 = mapLeafSpaceToScreenSpace(point1);
@@ -182,23 +182,22 @@ bool PathControl::handleMouseButtonPress(QMouseEvent *event)
     mouse_position_ = event->pos() + View::kMouseClickCorrection;
     previous_mouse_position_ = mouse_position_;
 
-    std::vector<QPointF>& points = std::dynamic_pointer_cast<Path>(leaf_)->points();
-    if (points.size() == 0)
+    if (points().size() == 0)
         return false;
 
     if (add_vertex_mode_) {
-        return addVertex(points);
+        return addVertex();
     } else if (remove_vertex_mode_) {
-        return removeVertex(points);
+        return removeVertex();
     } else {
-        return startDraggingVertex(points);
+        return startDraggingVertex();
     }
 }
 
-bool PathControl::startDraggingVertex(std::vector<QPointF>& points)
+bool PathControl::startDraggingVertex()
 {
     uint index = 0;
-    for (QPointF& point : points) {
+    for (QPointF& point : points()) {
         QPointF mapped = mapLeafSpaceToScreenSpace(point);
 
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
@@ -213,25 +212,25 @@ bool PathControl::startDraggingVertex(std::vector<QPointF>& points)
     return false;
 }
 
-bool PathControl::addVertex(std::vector<QPointF>& points)
+bool PathControl::addVertex()
 {
-    side_t side = findClosestSideToCursor(points);
-    points.insert(points.begin() + side.ind + 1, mapScreenSpaceToLeafSpace(mouse_position_));
+    side_t side = findClosestSideToCursor();
+    points().insert(points().begin() + side.ind + 1, mapScreenSpaceToLeafSpace(mouse_position_));
     ctx_->refresh();
     return true;
 }
 
-bool PathControl::removeVertex(std::vector<QPointF> &points)
+bool PathControl::removeVertex()
 {
     // do not allow triangles to degenerate to lines
-    size_t size = points.size();
+    size_t size = points().size();
     if (size <= 3)
         return true;
 
     int index_to_remove = -1;
 
     for(size_t i = 0; i < size; i++) {
-        QPointF mapped = mapLeafSpaceToScreenSpace(points[i]);
+        QPointF mapped = mapLeafSpaceToScreenSpace(points()[i]);
         if (getPointDistance(mouse_position_, mapped) <= kPopUpDistance) {
             index_to_remove = i;
             break;
@@ -242,7 +241,7 @@ bool PathControl::removeVertex(std::vector<QPointF> &points)
     if (index_to_remove < 0)
         return true;
 
-    points.erase(points.begin() + index_to_remove);
+    points().erase(points().begin() + index_to_remove);
     ctx_->refresh();
 
     return true;
@@ -255,9 +254,8 @@ bool PathControl::handleMouseMove(QMouseEvent *event)
 
     if (vertex_dragged_) {
         QPointF deltaPosition = leaf_->fromSreenSpace(ctx_, mouse_position_) - leaf_->fromSreenSpace(ctx_, previous_mouse_position_);
-        std::vector<QPointF>& points = std::dynamic_pointer_cast<Path>(leaf_)->points();
-        points[dragged_vertex_index_].rx() += deltaPosition.x();
-        points[dragged_vertex_index_].ry() += deltaPosition.y();
+        points()[dragged_vertex_index_].rx() += deltaPosition.x();
+        points()[dragged_vertex_index_].ry() += deltaPosition.y();
         event_blocked = true;
     }
 
