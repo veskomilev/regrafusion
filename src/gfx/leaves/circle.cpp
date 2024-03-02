@@ -25,7 +25,13 @@ std::shared_ptr<Circle> Circle::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    return std::make_shared<Circle>(ctx_p, kDefaultRadius, Qt::red);
+    // just a wrapper to get to the private ctor
+    struct CircleCtor : public Circle {
+        CircleCtor(std::weak_ptr<RgfCtx> ctx, qreal radius, QColor color) :
+            Circle {ctx, radius, color} {}
+    };
+
+    return std::make_shared<CircleCtor>(ctx_p, kDefaultRadius, Qt::red);
 }
 
 void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)

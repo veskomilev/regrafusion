@@ -27,7 +27,13 @@ std::shared_ptr<Path> Path::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    auto path = std::make_shared<Path>(ctx_p, Qt::red);
+    // just a wrapper to get to the private ctor
+    struct PathCtor : public Path {
+        PathCtor(std::weak_ptr<RgfCtx> ctx, QColor color) :
+            Path {ctx, color} {}
+    };
+
+    auto path = std::make_shared<PathCtor>(ctx_p, Qt::red);
     for (const QPointF& point : kDefaultPoints) {
         path->addPoint(point);
     }

@@ -9,9 +9,10 @@
 
 class Rectangle : public Leaf
 {
-public:
+private:
     Rectangle(std::weak_ptr<RgfCtx> ctx, QRectF rectangle, QColor color);
 
+public:
     ~Rectangle();
 
     static std::shared_ptr<Rectangle> constructNew(std::weak_ptr<RgfCtx> ctx);

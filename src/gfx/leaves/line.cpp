@@ -26,7 +26,13 @@ std::shared_ptr<Line> Line::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    return std::make_shared<Line>(ctx_p, kDefaultLine, Qt::red);
+    // just a wrapper to get to the private ctor
+    struct LineCtor : public Line {
+        LineCtor(std::weak_ptr<RgfCtx> ctx, QLineF line, QColor color) :
+            Line {ctx, line, color} {}
+    };
+
+    return std::make_shared<LineCtor>(ctx_p, kDefaultLine, Qt::red);
 }
 
 void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)

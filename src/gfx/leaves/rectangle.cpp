@@ -25,7 +25,13 @@ std::shared_ptr<Rectangle> Rectangle::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    return std::make_shared<Rectangle>(ctx_p, kDefaultRectangle, Qt::red);
+    // just a wrapper to get to the private ctor
+    struct RectangleCtor : public Rectangle {
+        RectangleCtor(std::weak_ptr<RgfCtx> ctx, QRectF rectangle, QColor color) :
+            Rectangle {ctx, rectangle, color} {}
+    };
+
+    return std::make_shared<RectangleCtor>(ctx_p, kDefaultRectangle, Qt::red);
 }
 
 void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)

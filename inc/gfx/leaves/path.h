@@ -9,9 +9,10 @@
 
 class Path : public Leaf
 {
-public:
+private:
     Path(std::weak_ptr<RgfCtx> ctx, QColor color);
 
+public:
     ~Path();
 
     static std::shared_ptr<Path> constructNew(std::weak_ptr<RgfCtx> ctx);

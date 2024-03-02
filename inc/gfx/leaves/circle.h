@@ -9,9 +9,10 @@
 
 class Circle : public Leaf
 {
-public:
+private:
     Circle(std::weak_ptr<RgfCtx> ctx, qreal radius, QColor color);
 
+public:
     ~Circle();
 
     static std::shared_ptr<Circle> constructNew(std::weak_ptr<RgfCtx> ctx);

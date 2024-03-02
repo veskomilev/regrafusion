@@ -9,9 +9,10 @@
 
 class Line : public Leaf
 {
-public:
+private:
     Line(std::weak_ptr<RgfCtx> ctx, QLineF line, QColor color);
 
+public:
     ~Line();
 
     static std::shared_ptr<Line> constructNew(std::weak_ptr<RgfCtx> ctx);
