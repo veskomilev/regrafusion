@@ -26,7 +26,7 @@ std::shared_ptr<Line> Line::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    return std::make_shared<Line>(ctx_p, kDefaultLine, QColor(0, 0, 0, 255));
+    return std::make_shared<Line>(ctx_p, kDefaultLine, Qt::red);
 }
 
 void Line::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)

@@ -25,7 +25,7 @@ std::shared_ptr<Circle> Circle::constructNew(std::weak_ptr<RgfCtx> ctx)
     std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
     assert(ctx_p != nullptr && "A non existant context was accessed");
 
-    return std::make_shared<Circle>(ctx_p, kDefaultRadius, QColor(0, 0, 0, 255));
+    return std::make_shared<Circle>(ctx_p, kDefaultRadius, Qt::red);
 }
 
 void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
