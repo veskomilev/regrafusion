@@ -22,6 +22,7 @@ Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
 
 Leaf::~Leaf()
 {
+    destroyControls();
 }
 
 leaf_type_t Leaf::extractType(const QMimeData *mime_data)
