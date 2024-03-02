@@ -160,7 +160,7 @@ side_t PathControl::findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::sh
     side_t side;
 
     size_t size = points.size();
-    qreal min_cross = 0;
+    qreal min_weight = 0;
 
     for(size_t i = 0; i < size; i++) {
 
@@ -175,9 +175,9 @@ side_t PathControl::findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::sh
         QPointF mapped1 = mapPointToLeafInBranch(ctx, leaf, point1, depth);
         QPointF mapped2 = mapPointToLeafInBranch(ctx, leaf, point2, depth);
 
-        qreal cross = crossProduct(mapped1 - mouse_position_, mapped2 - mouse_position_);
-        if (cross < min_cross || i == 0) {
-            min_cross = cross;
+        qreal weight = getPointDistance(mapped1, mouse_position_) + getPointDistance(mapped2, mouse_position_);
+        if (weight < min_weight || i == 0) {
+            min_weight = weight;
             side.a = mapped1;
             side.b = mapped2;
             side.ind = i;
