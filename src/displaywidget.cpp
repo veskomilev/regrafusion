@@ -316,7 +316,6 @@ void DisplayWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void DisplayWidget::updateStatus()
 {
-    assert(status_bar_ != nullptr);
     status_bar_->showMessage(
         QString("Position: (") +
         QString::number(view_.size.x() / view_.scale / 2 - view_.offset.x() / view_.scale) +
