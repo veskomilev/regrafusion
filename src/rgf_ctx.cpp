@@ -107,8 +107,6 @@ void RgfCtx::setSelectedLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth)
         }
     }
 
-    display_widget_->updateStatus();
-
     emit leafSelected(leaf, leaf_depth);
 }
 
