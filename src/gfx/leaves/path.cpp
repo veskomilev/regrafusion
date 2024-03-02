@@ -105,6 +105,16 @@ void Path::addPoint(QPointF point)
     points_.push_back(point);
 }
 
+void Path::select()
+{
+    Leaf::select();
+
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+    if (ctx_p == nullptr)
+        return;
+    ctx_p->setStatusBarMessage("Add vertex: Ctrl + LMB    |    Delete vertex: Shift + LMB");
+}
+
 void Path::createControls()
 {
     controls_.push_back(std::make_shared<PathControl>(ctx_, self_ref_));

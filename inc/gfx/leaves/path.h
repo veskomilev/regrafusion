@@ -30,6 +30,8 @@ public:
 
     void setColor(QColor color) { color_ = color; }
 
+    void select() override;
+
 private:
     void createControls() override;
 

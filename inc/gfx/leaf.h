@@ -50,7 +50,7 @@ public:
     // TODO: maybe make a factory
     void setColorId(QColor color_id) { color_id_ = color_id; } /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
 
-    void select();
+    virtual void select();
 
     void deselect();
 
