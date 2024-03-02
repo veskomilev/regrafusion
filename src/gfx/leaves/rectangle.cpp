@@ -58,8 +58,6 @@ void Rectangle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter
         color_id_painter->drawRect(rectangle_);
     }
 
-    drawControls(painter, color_id_painter, depth);
-
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }

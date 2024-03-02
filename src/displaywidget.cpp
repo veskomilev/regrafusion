@@ -159,8 +159,8 @@ bool DisplayWidget::eventFilter(QObject *obj, QEvent *event)
             uint leaf_depth = 0;
             auto leaf = ctx_->leafIdentifier()->getLeaf(ctx_->colorIdBuffer(), cursor_position, leaf_depth);
             if (leaf != nullptr) {
-                leaf->select();
                 ctx_->setSelectedLeaf(leaf, leaf_depth);
+                leaf->select();
 
             } else {
                 ctx_->setSelectedLeaf(nullptr, 0);

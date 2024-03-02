@@ -38,8 +38,6 @@ void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainte
         color_id_painter->setPen(QColor(0, 0, 0, 0));
         color_id_painter->drawEllipse(QPointF(0, 0), 3, 3);
     }
-
-    drawControls(painter, color_id_painter, depth);
 }
 
 void SpawnPoint::createControls()

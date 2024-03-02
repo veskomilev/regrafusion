@@ -80,8 +80,6 @@ void Path::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> col
         }
     }
 
-    drawControls(painter, color_id_painter, depth);
-
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }
@@ -123,5 +121,15 @@ void Path::select()
 
 void Path::createControls()
 {
-    controls_.push_back(std::make_shared<PathControl>(ctx_, self_ref_));
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+    if (ctx_p == nullptr)
+        return;
+
+    std::shared_ptr<Leaf> leaf_p = self_ref_.lock();
+    if (leaf_p == nullptr)
+        return;
+
+    std::shared_ptr<Path> path_p = std::dynamic_pointer_cast<Path>(leaf_p);
+
+    controls_.push_back(std::make_shared<PathControl>(ctx_p, path_p, ctx_p->getSelectedLeafDepth()));
 }

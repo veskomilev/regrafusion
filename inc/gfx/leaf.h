@@ -64,6 +64,10 @@ public:
 
     leaf_type_t getType() const { return type_; }
 
+    void drawControls(std::shared_ptr<QPainter> painter);
+
+    bool isSelected() const { return selected_; }
+
 signals:
     void transformedNatively();
 
@@ -73,8 +77,6 @@ protected:
     virtual void createControls() {}
 
     void destroyControls();
-
-    void drawControls(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth);
 
     std::weak_ptr<RgfCtx> ctx_;
 

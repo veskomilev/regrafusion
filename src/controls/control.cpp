@@ -7,42 +7,40 @@
 #include "rgf_ctx.h"
 #include "view.h"
 
-Control::Control(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf) :
+Control::Control(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, uint leaf_depth) :
     type_(leaf_type_t::invalid),
     leaf_(leaf),
-    ctx_(ctx)
+    ctx_(ctx),
+    leaf_depth_(leaf_depth)
 {
-
 }
 
 Control::~Control()
 {
 }
 
-QPointF Control::mapLeafSpaceToScreenSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
+QTransform Control::calculateTotalLeafTransforamtion()
 {
-    View view = ctx->getView();
-    QTransform tfm = leaf->matrix();
-    QTransform spawn_tfm = ctx->getSpawnPointTransformation();
+    QTransform tfm = leaf_->matrix();
+    QTransform spawn_tfm = ctx_->getSpawnPointTransformation();
 
-    for (uint i = 0; i < depth; i++) {
+    for (uint i = 0; i < leaf_depth_; i++) {
         tfm *= spawn_tfm;
     }
 
-    return tfm.map(point) * view.scale + view.offset;
+    return tfm;
 }
 
-QPointF Control::mapScreenSpaceToLeafSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth)
+QPointF Control::mapLeafSpaceToScreenSpace(QPointF point)
 {
-    View view = ctx->getView();
+    View view = ctx_->getView();
+    return calculateTotalLeafTransforamtion().map(point) * view.scale + view.offset;
+}
+
+QPointF Control::mapScreenSpaceToLeafSpace(QPointF point)
+{
+    View view = ctx_->getView();
     point /= view.scale;
     point -= view.offset / view.scale;
-
-    QTransform tfm = leaf->matrix();
-    QTransform spawn_tfm = ctx->getSpawnPointTransformation();
-    for (uint i = 0; i < depth; i++) {
-        tfm *= spawn_tfm;
-    }
-
-    return tfm.inverted().map(point);
+    return calculateTotalLeafTransforamtion().inverted().map(point);
 }

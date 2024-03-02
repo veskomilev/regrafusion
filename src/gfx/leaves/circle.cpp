@@ -60,8 +60,6 @@ void Circle::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> c
         color_id_painter->drawEllipse(QRectF(-radius_, -radius_, radius_ * 2, radius_ * 2));
     }
 
-    drawControls(painter, color_id_painter, depth);
-
     unapplyLocalTransformations(painter);
     unapplyLocalTransformations(color_id_painter);
 }

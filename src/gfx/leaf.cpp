@@ -181,9 +181,9 @@ void Leaf::destroyControls()
     controls_.clear();
 }
 
-void Leaf::drawControls(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
+void Leaf::drawControls(std::shared_ptr<QPainter> painter)
 {
     for (auto &control : controls_) {
-        control->draw(painter, color_id_painter, depth);
+        control->draw(painter);
     }
 }

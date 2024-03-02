@@ -11,6 +11,7 @@
 
 #include "common.h"
 #include "controls/control.h"
+#include "gfx/leaves/path.h"
 
 typedef struct {
     QPointF a;
@@ -21,30 +22,30 @@ typedef struct {
 class PathControl : public Control
 {
 public:
-    PathControl(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf);
+    PathControl(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Path> leaf, uint leaf_depth);
 
     ~PathControl();
 
-    void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth);
+    void draw(std::shared_ptr<QPainter> painter);
 
     bool handleEvent(QEvent *event);
 
 private:
-    void drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
+    void drawMoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
 
-    void drawAddVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
+    void drawAddVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
 
-    void drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
+    void drawRemoveVertexMode(std::shared_ptr<QPainter> painter, std::vector<QPointF>& points);
 
-    side_t findClosestSideToCursor(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points, uint depth);
+    side_t findClosestSideToCursor(std::vector<QPointF>& points);
 
     bool handleMouseButtonPress(QMouseEvent *event);
 
-    bool startDraggingVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
+    bool startDraggingVertex(std::vector<QPointF>& points);
 
-    bool addVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
+    bool addVertex(std::vector<QPointF>& points);
 
-    bool removeVertex(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, std::vector<QPointF>& points);
+    bool removeVertex(std::vector<QPointF>& points);
 
     bool handleMouseMove(QMouseEvent *event);
 

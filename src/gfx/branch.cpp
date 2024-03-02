@@ -45,6 +45,11 @@ void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> c
         if (!leaf->isSpawnPoint()) {
             leaf->draw(painter, color_id_painter, depth);
 
+            // draw controls on the first iteration, so that they are on top of everything
+            if (depth == 0 && leaf->isSelected()) {
+                leaf->drawControls(painter);
+            }
+
         } else if (num_iterations > 0) {
             leaf->draw(painter, color_id_painter, depth);
 

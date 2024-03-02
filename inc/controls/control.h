@@ -17,26 +17,30 @@ class Leaf;
 class Control
 {
 public:
-    Control(std::weak_ptr<RgfCtx> ctx, std::weak_ptr<Leaf> leaf);
+    Control(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
     virtual ~Control();
 
     leaf_type_t getType() const { return type_; }
 
-    virtual void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth) = 0;
+    virtual void draw(std::shared_ptr<QPainter> painter) = 0;
 
     virtual bool handleEvent(QEvent *event) = 0;
 
 protected:
-    QPointF mapLeafSpaceToScreenSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
+    QTransform calculateTotalLeafTransforamtion();
 
-    QPointF mapScreenSpaceToLeafSpace(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, QPointF point, uint depth);
+    QPointF mapLeafSpaceToScreenSpace(QPointF point);
+
+    QPointF mapScreenSpaceToLeafSpace(QPointF point);
 
     leaf_type_t type_;
 
-    std::weak_ptr<Leaf> leaf_;
+    std::shared_ptr<Leaf> leaf_;
 
-    std::weak_ptr<RgfCtx> ctx_;
+    std::shared_ptr<RgfCtx> ctx_;
+
+    uint leaf_depth_;
 };
 
 #endif // CONTROL_H
