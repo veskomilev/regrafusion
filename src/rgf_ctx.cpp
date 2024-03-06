@@ -12,7 +12,7 @@ RgfCtx::RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar) :
     status_bar_(status_bar),
     leaf_identifier_(std::make_shared<LeafIdentifier>()),
     tree_(nullptr),
-    window_buffer_(std::make_shared<QImage>(
+    user_view_buffer_(std::make_shared<QImage>(
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
         QImage::Format_RGB32)),
@@ -25,7 +25,7 @@ RgfCtx::RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar) :
     selected_leaf_depth_(0),
     cumulative_branch_transformations_(QTransform())
 {
-    assert(window_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
+    assert(user_view_buffer_ != nullptr && color_id_buffer_ != nullptr && "Couldn't allocate drawing bufffers");
 }
 
 std::shared_ptr<RgfCtx> RgfCtx::create(DisplayWidget *display_widget, QStatusBar* status_bar)
@@ -38,7 +38,7 @@ std::shared_ptr<RgfCtx> RgfCtx::create(DisplayWidget *display_widget, QStatusBar
 
     std::shared_ptr<RgfCtx> ctx = std::make_shared<ctor>(display_widget, status_bar);
     ctx->tree_ = std::make_shared<Tree>(ctx, 100);
-    display_widget->setCtx(ctx);
+    display_widget->setRgfCtx(ctx);
 
     return ctx;
 }

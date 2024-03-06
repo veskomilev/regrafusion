@@ -9,7 +9,7 @@
 #include "common.h"
 #include "displaywidget.h"
 
-shapeWidgetEventFilter::shapeWidgetEventFilter(std::shared_ptr<RgfCtx> rgf_ctx, QAction *action, QWidget *widget, leaf_type_t leaf_type) :
+ShapeWidgetEventFilter::ShapeWidgetEventFilter(std::shared_ptr<RgfCtx> rgf_ctx, QAction *action, QWidget *widget, leaf_type_t leaf_type) :
     rgf_ctx_(rgf_ctx),
     action_(action),
     widget_(widget),
@@ -19,7 +19,7 @@ shapeWidgetEventFilter::shapeWidgetEventFilter(std::shared_ptr<RgfCtx> rgf_ctx, 
 
 }
 
-bool shapeWidgetEventFilter::eventFilter(QObject *obj, QEvent *event)
+bool ShapeWidgetEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     if (!action_->isEnabled())
         return QObject::eventFilter(obj, event);

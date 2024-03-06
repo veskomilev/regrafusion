@@ -8,6 +8,7 @@
 #include <QPainter>
 
 #include "displaywidget.h"
+
 #include "gfx/leaves/circle.h"
 #include "gfx/leaves/line.h"
 #include "gfx/leaves/path.h"
@@ -23,7 +24,7 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     status_bar_(nullptr),
     view_({View::kOffsetIdentity, View::kOffsetIdentity, 1.0}),
     previous_mouse_position_(View::kOffsetIdentity),
-    draw_window_buffer_(true),
+    draw_user_view_buffer_(true),
     dragged_leaf_ {false, leaf_type_t::circle, QPointF(0, 0)},
     mouse_dragged_(false)
 {
@@ -37,16 +38,12 @@ DisplayWidget::DisplayWidget(QWidget* parent) :
     setMouseTracking(true);
 }
 
-void DisplayWidget::initializeGL()
-{
-}
-
 void DisplayWidget::paintGL()
 {
-    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(ctx_->windowBuffer().get());
+    std::shared_ptr<QPainter> painter = std::make_shared<QPainter>(ctx_->userViewBuffer().get());
     std::shared_ptr<QPainter> color_id_painter = std::make_shared<QPainter>(ctx_->colorIdBuffer().get());
 
-    initializeCanvas(painter, color_id_painter);
+    initializeDrawBuffers(painter, color_id_painter);
 
     UiPainter uipainter(view_, painter);
 
@@ -79,8 +76,8 @@ void DisplayWidget::paintGL()
     uipainter.drawCtxMode(ctx_->getMode());
 
     QPainter display_painter(this);
-    if (draw_window_buffer_) {
-        display_painter.drawImage(0, 0, *ctx_->windowBuffer());
+    if (draw_user_view_buffer_) {
+        display_painter.drawImage(0, 0, *ctx_->userViewBuffer());
     } else {
         display_painter.drawImage(0, 0, *ctx_->colorIdBuffer());
     }
@@ -122,10 +119,10 @@ void DisplayWidget::setStatusBar(QStatusBar * const &bar)
 
 void DisplayWidget::switchBuffers()
 {
-    draw_window_buffer_ = !draw_window_buffer_;
+    draw_user_view_buffer_ = !draw_user_view_buffer_;
 }
 
-void DisplayWidget::initializeCanvas(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
+void DisplayWidget::initializeDrawBuffers(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter)
 {
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     painter->fillRect(QRectF(View::kOffsetIdentity, view_.size), Qt::white);

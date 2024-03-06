@@ -210,7 +210,7 @@ void viewer::addEditModeAction(QToolBar *toolbar, std::string resource_path, std
     action->setStatusTip(status_tip.c_str());
     toolbar->addAction(action);
 
-    shapeWidgetEventFilter *filter = new shapeWidgetEventFilter(ctx_, action, toolbar->widgetForAction(action), type);
+    ShapeWidgetEventFilter *filter = new ShapeWidgetEventFilter(ctx_, action, toolbar->widgetForAction(action), type);
     toolbar->widgetForAction(action)->installEventFilter(filter);
     edit_mode_actions_.push_back(action);
 }
