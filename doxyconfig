@@ -1,0 +1,6 @@
+PROJECT_NAME          = Regrafusion
+INPUT                 = src inc
+FILE_PATTERNS         = *.cpp *.h
+RECURSIVE             = YES
+SOURCE_BROWSER        = YES
+
