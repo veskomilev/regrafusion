@@ -64,7 +64,7 @@ QTransform Tree::getSpawnPointTransformation()
         return QTransform();
     }
 
-    // TODO: do something here if there are ever more than one branches
+    // TODO: do something here if there is ever more than one branch
     return branches_[0]->getSpawnPointTransformation();
 }
 
