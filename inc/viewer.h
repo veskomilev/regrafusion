@@ -25,12 +25,12 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class viewer;
+class Viewer;
 }
 QT_END_NAMESPACE
 
 //!  Viewer is the class of the program window. It holds points to main program widgets, as well as the program context (RgfCtx).
-class viewer : public QMainWindow
+class Viewer : public QMainWindow
 {
     Q_OBJECT
 
@@ -40,9 +40,9 @@ public:
     //!
     //! \sa RgfCtx
     //!
-    viewer(QWidget *parent = nullptr);
+    Viewer(QWidget *parent = nullptr);
 
-    ~viewer();
+    ~Viewer();
 
 private slots:
     void on_reset_view_button_pressed();
@@ -96,7 +96,7 @@ private:
     void addEditModeAction(QToolBar* toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type);
 
     //!  Qt framework internal pointer
-    Ui::viewer *ui;
+    Ui::Viewer *ui;
 
     std::shared_ptr<RgfCtx> ctx_;
 

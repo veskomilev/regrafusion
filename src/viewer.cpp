@@ -13,15 +13,15 @@
 #include "viewer.h"
 #include "ui_viewer.h"
 
-viewer::viewer(QWidget *parent)
+Viewer::Viewer(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::viewer)
+    , ui(new Ui::Viewer)
 {
     ui->setupUi(this);
 
     ctx_ = RgfCtx::create(ui->display_widget, ui->status_bar);
-    connect(ctx_.get(), &RgfCtx::modeSwitched, this, &viewer::onRgfCtxModeSwitched);
-    connect(ctx_.get(), &RgfCtx::leafSelected, this, &viewer::onLeafSelected);
+    connect(ctx_.get(), &RgfCtx::modeSwitched, this, &Viewer::onRgfCtxModeSwitched);
+    connect(ctx_.get(), &RgfCtx::leafSelected, this, &Viewer::onLeafSelected);
 
     ui->display_widget->setStatusBar(ui->status_bar);
 
@@ -40,42 +40,42 @@ viewer::viewer(QWidget *parent)
 #endif
 }
 
-viewer::~viewer()
+Viewer::~Viewer()
 {
     delete ui;
 }
 
-void viewer::on_reset_view_button_pressed()
+void Viewer::on_reset_view_button_pressed()
 {
     ui->display_widget->resetViewPosition();
 }
 
-void viewer::on_reset_scale_button_pressed()
+void Viewer::on_reset_scale_button_pressed()
 {
     ui->display_widget->resetViewScale();
 }
 
-void viewer::on_num_branches_slider_valueChanged(int value)
+void Viewer::on_num_branches_slider_valueChanged(int value)
 {
     ui->num_branches_spin_box->setValue(value);
     ctx_->setNumBranches(value);
     ui->display_widget->update();
 }
 
-void viewer::on_num_branches_spin_box_valueChanged(int arg1)
+void Viewer::on_num_branches_spin_box_valueChanged(int arg1)
 {
     ui->num_branches_slider->setValue(arg1);
     ctx_->setNumBranches(arg1);
     ui->display_widget->update();
 }
 
-void viewer::on_switch_buffers_pressed()
+void Viewer::on_switch_buffers_pressed()
 {
     ui->display_widget->switchBuffers();
     ui->display_widget->update();
 }
 
-void viewer::onRgfCtxModeSwitched()
+void Viewer::onRgfCtxModeSwitched()
 {
     if (ctx_->getMode() == RgfCtx::mode_t::edit) {
         enableEditModeActions();
@@ -84,7 +84,7 @@ void viewer::onRgfCtxModeSwitched()
     }
 }
 
-void viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
+void Viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
 {
     if (tfm_editor_->isItTheSameLeaf(leaf)) {
         // no change of state - no action is required
@@ -113,7 +113,7 @@ void viewer::onLeafSelected(std::shared_ptr<Leaf> leaf, uint leaf_depth)
     }
 }
 
-void viewer::setupToolbar()
+void Viewer::setupToolbar()
 {
     QToolBar* toolbar = new QToolBar("edit");
     this->addToolBar(Qt::LeftToolBarArea, toolbar);
@@ -144,7 +144,7 @@ void viewer::setupToolbar()
     disableEditModeActions();
 }
 
-void viewer::setupEditors()
+void Viewer::setupEditors()
 {
     // setup the transformation editor first
     uint next_free_row = getNextFreeRowInGridLayout();
@@ -177,7 +177,7 @@ void viewer::setupEditors()
     editors_.push_back(path_editor_);
 }
 
-int viewer::getNextFreeRowInGridLayout()
+int Viewer::getNextFreeRowInGridLayout()
 {
     int next_free_row = -1;
     QLayoutItem *grid_item;
@@ -190,21 +190,21 @@ int viewer::getNextFreeRowInGridLayout()
     return next_free_row;
 }
 
-void viewer::enableEditModeActions()
+void Viewer::enableEditModeActions()
 {
     for (auto &action : edit_mode_actions_) {
         action->setEnabled(true);
     }
 }
 
-void viewer::disableEditModeActions()
+void Viewer::disableEditModeActions()
 {
     for (auto &action : edit_mode_actions_) {
         action->setEnabled(false);
     }
 }
 
-void viewer::addEditModeAction(QToolBar *toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type)
+void Viewer::addEditModeAction(QToolBar *toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type)
 {
     QAction *action = new QAction(QIcon(resource_path.c_str()), description.c_str(), this);
     action->setStatusTip(status_tip.c_str());
