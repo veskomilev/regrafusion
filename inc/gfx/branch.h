@@ -73,12 +73,12 @@ public:
     //!
     //! Creates a leaf in the branch
     //!
-    //! \param shape_type The type of the newly created leaf
+    //! \param leaf_type The type of the newly created leaf
     //! \param position Translation of the new leaf's transformation matrix
     //! \param scale Scaling of the new leaf's transformation matrix
     //! \return A pointer to the newly created leaf
     //!
-    std::shared_ptr<Leaf> addShape(leaf_type_t shape_type, QPointF position, qreal scale);
+    std::shared_ptr<Leaf> createLeaf(leaf_type_t leaf_type, QPointF position, qreal scale);
 
 private:
     // disable copy and assignment ctors

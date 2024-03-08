@@ -69,9 +69,9 @@ void RgfCtx::switchModes()
     emit modeSwitched();
 }
 
-void RgfCtx::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
+void RgfCtx::createLeaf(leaf_type_t leaf_type, QPointF position, qreal scale)
 {
-    std::shared_ptr<Leaf> leaf = tree_->addShape(shape_type, position, scale);
+    std::shared_ptr<Leaf> leaf = tree_->createLeaf(leaf_type, position, scale);
     if (leaf == nullptr) {
         return;
     }
@@ -82,10 +82,10 @@ void RgfCtx::addShape(leaf_type_t shape_type, QPointF position, qreal scale)
     emit leafSelected(leaf, 0);
 }
 
-void RgfCtx::addShape(leaf_type_t shape_type)
+void RgfCtx::createLeaf(leaf_type_t leaf_type)
 {
     View view = display_widget_->getView();
-    addShape(shape_type, view.size / 2 - view.offset, view.scale);
+    createLeaf(leaf_type, view.size / 2 - view.offset, view.scale);
 }
 
 void RgfCtx::refresh()

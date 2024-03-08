@@ -321,7 +321,7 @@ void DisplayWidget::dropEvent(QDropEvent *event)
         return;
     }
 
-    ctx_->addShape(leaf_type, event->position() - view_.offset, view_.scale);
+    ctx_->createLeaf(leaf_type, event->position() - view_.offset, view_.scale);
     update();
     event->acceptProposedAction();
 }

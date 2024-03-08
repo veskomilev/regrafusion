@@ -47,7 +47,7 @@ bool ShapeWidgetEventFilter::eventFilter(QObject *obj, QEvent *event)
         }
     } else if (event->type() == QEvent::MouseButtonRelease) {
         if (pressed_) {
-            rgf_ctx_->addShape(leaf_type_);
+            rgf_ctx_->createLeaf(leaf_type_);
             pressed_ = false;
         }
     } else {

@@ -88,18 +88,18 @@ public:
     //!
     //! Adds a new leaf to the tree
     //!
-    //! \param shape_type Type of the leaf to be added
+    //! \param leaf_type Type of the leaf to be added
     //! \param position Position of the leaf to be added
     //! \param scale Scale of the leaf to be added
     //!
-    void addShape(leaf_type_t shape_type, QPointF position, qreal scale);
+    void createLeaf(leaf_type_t leaf_type, QPointF position, qreal scale);
 
     //!
-    //! Polymorphic variant of addShape() with default position and scale
+    //! Polymorphic variant of createLeaf() with default position and scale
     //!
-    //! \param shape_type Type of the leaf to be added
+    //! \param leaf_type Type of the leaf to be added
     //!
-    void addShape(leaf_type_t shape_type);
+    void createLeaf(leaf_type_t leaf_type);
 
     View getView() const { return display_widget_->getView(); }
 
