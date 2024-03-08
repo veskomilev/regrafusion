@@ -17,7 +17,8 @@ private:
     //! New leaves are meant to be constructed only by calling the factory method constructNew().
     //!
     //! \param ctx A pointer to the context
-    //! \param type Which type the newly created leaf is
+    //! \param line The geometry of the line
+    //! \param color The color of the line
     //! \sa constructNew()
     //!
     Line(std::weak_ptr<RgfCtx> ctx, QLineF line, QColor color);

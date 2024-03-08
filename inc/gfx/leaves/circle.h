@@ -17,7 +17,8 @@ private:
     //! New leaves are meant to be constructed only by calling the factory method constructNew().
     //!
     //! \param ctx A pointer to the context
-    //! \param type Which type the newly created leaf is
+    //! \param radius The radius of the circle
+    //! \param color The color of the circle
     //! \sa constructNew()
     //!
     Circle(std::weak_ptr<RgfCtx> ctx, qreal radius, QColor color);
