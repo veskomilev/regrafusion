@@ -125,13 +125,10 @@ std::shared_ptr<Leaf> Branch::addShape(leaf_type_t shape_type, QPointF position,
     std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
     assert(ctx_p != nullptr && "Branch exists for a non existant context");
 
-    leaves_.push_back(Leaf::constructNew(ctx_p, shape_type));
-
-    auto leaf = *(leaves_.end() - 1);
+    auto leaf = Leaf::constructNew(ctx_p, shape_type);
     leaf->matrix().scale(1 / scale, 1 / scale);
     leaf->matrix().translate(position.rx(), position.ry());
-
-    ctx_p->leafIdentifier()->registerLeaf(leaf);
+    leaves_.push_back(leaf);
 
     return leaf;
 }

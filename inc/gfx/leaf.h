@@ -69,7 +69,7 @@ public:
     //! \param leaf_type Which type the newly created leaf should be
     //! \return A pointer to the newly created leaf
     //!
-    static std::shared_ptr<Leaf> constructNew(std::weak_ptr<RgfCtx> ctx, leaf_type_t leaf_type);
+    static std::shared_ptr<Leaf> constructNew(std::shared_ptr<RgfCtx> ctx, leaf_type_t leaf_type);
 
     //!
     //! \return Whether the leaf is a spawn point
@@ -101,9 +101,6 @@ public:
     }
 
     QColor getColorId() const { return color_id_; }
-
-    // TODO: move it into the factory somehow
-    void setColorId(QColor color_id) { color_id_ = color_id; } /// NOTE: should be used only in LeafIdentifier::RegisterLeaf()
 
     //!
     //! Sets internal selected_ flag to true and creates the associated leaf controls

@@ -94,26 +94,29 @@ void Leaf::drawDragged(std::shared_ptr<QPainter> painter, leaf_type_t leaf_type,
     }
 }
 
-std::shared_ptr<Leaf> Leaf::constructNew(std::weak_ptr<RgfCtx> ctx, leaf_type_t leaf_type)
+std::shared_ptr<Leaf> Leaf::constructNew(std::shared_ptr<RgfCtx> ctx, leaf_type_t leaf_type)
 {
+    std::shared_ptr<Leaf> leaf;
     switch(leaf_type) {
     case leaf_type_t::circle:
-        return Circle::constructNew(ctx);
+        leaf = Circle::constructNew(ctx);
         break;
     case leaf_type_t::line:
-        return Line::constructNew(ctx);
+        leaf = Line::constructNew(ctx);
         break;
     case leaf_type_t::path:
-        return Path::constructNew(ctx);
+        leaf = Path::constructNew(ctx);
         break;
     case leaf_type_t::rectangle:
-        return Rectangle::constructNew(ctx);
+        leaf = Rectangle::constructNew(ctx);
         break;
     default:
         assert("Invalid leaf type passed!");
     }
 
-    return nullptr;
+    leaf->color_id_ = ctx->leafIdentifier()->registerLeaf(leaf);
+
+    return leaf;
 }
 
 bool Leaf::setTransformationMatrix(QTransform matrix)

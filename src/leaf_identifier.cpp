@@ -15,11 +15,11 @@ LeafIdentifier::~LeafIdentifier()
 
 }
 
-bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
+QColor LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
 {
     if (next_unused_color_ == kBackgroundColor) {
         // TODO: add wraparound functionality if someone ever adds enough leaves manually to 'overflow' the RNG
-        return false;
+        return QColor("invalid color");
     }
 
     size_t rng = next_unused_color_.rgb();
@@ -33,11 +33,10 @@ bool LeafIdentifier::registerLeaf(std::shared_ptr<Leaf> leaf)
     QColor display_color;
     display_color.setRgb(rng);
 
-    leaf->setColorId(display_color);
     leaf_map_.insert(std::pair<QColor, std::shared_ptr<Leaf>>(display_color, leaf));
     goToNextColor();
 
-    return true;
+    return display_color;
 }
 
 void LeafIdentifier::unregisterLeaf(std::shared_ptr<Leaf> leaf)

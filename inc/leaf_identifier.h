@@ -36,9 +36,9 @@ public:
     //! Assign a unique color to a leaf and mark the color as used
     //!
     //! \param leaf A pointer to the leaf to be assigned color to
-    //! \return Whether the operation h as been successful
+    //! \return A unique color that corresponds to the leaf if the operation has been successful, or an invalid color otherwise
     //!
-    bool registerLeaf(std::shared_ptr<Leaf> leaf);
+    QColor registerLeaf(std::shared_ptr<Leaf> leaf);
 
     //!
     //! Unassign a color from a leaf and marked it as unused
