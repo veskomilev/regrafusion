@@ -30,7 +30,7 @@ public:
     //! so that editor values are updated each time the user moves a leaf with the cursor
     //!
     //! \param leaf The leaf to be controlled
-    //! \param leaf_depth The leaf to be controlled's depth
+    //! \param leaf_depth The leaf instance's depth, on top of which the editor should be drawn
     //!
     void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 

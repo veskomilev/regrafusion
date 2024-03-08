@@ -39,7 +39,7 @@ public:
     //!
     //! \param painter A pointer to the painter that paints onto the view area (view buffer)
     //! \param color_id_painter A pointer to painter that paints onto the color id buffer
-    //! \param depth Which consecutive branch the leaf is on
+    //! \param depth Which consecutive branch the leaf instance is on
     //!
     void draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth) override;
 

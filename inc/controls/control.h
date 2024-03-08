@@ -23,7 +23,7 @@ public:
     //!
     //! \param ctx A pointer to the context
     //! \param leaf The leaf, which will be edited
-    //! \param leaf_depth The leaf's depth within its tree
+    //! \param leaf_depth The leaf instance's depth within its tree
     //!
     Control(std::shared_ptr<RgfCtx> ctx, std::shared_ptr<Leaf> leaf, uint leaf_depth);
 

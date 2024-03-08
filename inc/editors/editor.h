@@ -38,7 +38,7 @@ public:
     //! Used by Viewer class to make a Leaf controllable by the Editor and to synchronize data between the two instances
     //!
     //! \param leaf The leaf to be controlled
-    //! \param leaf_depth The leaf to be controlled's depth
+    //! \param leaf_depth The leaf instance's depth, on top of which the editor should be drawn
     //!
     void connectToLeaf(std::shared_ptr<Leaf> leaf, uint leaf_depth);
 
@@ -126,7 +126,7 @@ protected:
     //!  A pointer to the currently connected leaf
     std::shared_ptr<Leaf> connected_leaf_;
 
-    //!  Connected leaf's depth within its tree
+    //!  The connected leaf instance's depth, on top of which the editor is drawn
     uint connected_leaf_depth_;
 
     //!  A value indicating if the editor is connected to a leaf
