@@ -90,7 +90,7 @@ void Leaf::drawDragged(std::shared_ptr<QPainter> painter, leaf_type_t leaf_type,
         Rectangle::drawDragged(painter, position, scale);
         break;
     default:
-        assert("Invalid leaf type passed!");
+        assert(0 && "Invalid leaf type passed!");
     }
 }
 
@@ -111,7 +111,7 @@ std::shared_ptr<Leaf> Leaf::constructNew(std::shared_ptr<RgfCtx> ctx, leaf_type_
         leaf = Rectangle::constructNew(ctx);
         break;
     default:
-        assert("Invalid leaf type passed!");
+        assert(0 && "Invalid leaf type passed!");
     }
 
     leaf->color_id_ = ctx->leafIdentifier()->registerLeaf(leaf);
