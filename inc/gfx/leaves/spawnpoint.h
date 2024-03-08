@@ -14,11 +14,23 @@
 //! \sa Branch
 class SpawnPoint : public Leaf
 {
-public:
+private:
+    //!
+    //! New leaves are meant to be constructed only by calling the factory method constructNew().
     //!
     //! \param ctx A pointer to the context
+    //! \sa constructNew()
     //!
     SpawnPoint(std::weak_ptr<RgfCtx> ctx);
+
+public:
+    //!
+    //! Factory method for instantiating new leaves
+    //!
+    //! \param ctx A pointer to the context
+    //! \return A pointer to the newly created leaf
+    //!
+    static std::shared_ptr<SpawnPoint> constructNew(std::weak_ptr<RgfCtx> ctx);
 
     ~SpawnPoint();
 

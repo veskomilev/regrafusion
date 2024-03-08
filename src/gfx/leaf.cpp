@@ -8,6 +8,7 @@
 #include "gfx/leaves/line.h"
 #include "gfx/leaves/path.h"
 #include "gfx/leaves/rectangle.h"
+#include "gfx/leaves/spawnpoint.h"
 #include "rgf_ctx.h"
 
 Leaf::Leaf(std::weak_ptr<RgfCtx> ctx, leaf_type_t type) :
@@ -109,6 +110,9 @@ std::shared_ptr<Leaf> Leaf::constructNew(std::shared_ptr<RgfCtx> ctx, leaf_type_
         break;
     case leaf_type_t::rectangle:
         leaf = Rectangle::constructNew(ctx);
+        break;
+    case leaf_type_t::spawn_point:
+        leaf = SpawnPoint::constructNew(ctx);
         break;
     default:
         assert(0 && "Invalid leaf type passed!");

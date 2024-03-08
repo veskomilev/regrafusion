@@ -10,6 +10,20 @@ SpawnPoint::SpawnPoint(std::weak_ptr<RgfCtx> ctx) :
 {
 }
 
+std::shared_ptr<SpawnPoint> SpawnPoint::constructNew(std::weak_ptr<RgfCtx> ctx)
+{
+    std::shared_ptr<RgfCtx> ctx_p = ctx.lock();
+    assert(ctx_p != nullptr && "A non existant context was accessed");
+
+    // just a wrapper to get to the private ctor
+    struct SpawnPointCtor : public SpawnPoint {
+        SpawnPointCtor(std::weak_ptr<RgfCtx> ctx) :
+            SpawnPoint {ctx} {}
+    };
+
+    return std::make_shared<SpawnPointCtor>(ctx_p);
+}
+
 SpawnPoint::~SpawnPoint()
 {
 }

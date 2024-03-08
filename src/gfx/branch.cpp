@@ -19,12 +19,9 @@ Branch::Branch(std::weak_ptr<RgfCtx> ctx) :
 
     assert(ctx_p != nullptr && "Branch was created for a non existant context");
 
-    std::shared_ptr<LeafIdentifier> leaf_id = ctx_p->leafIdentifier();
-
-    // each and every branch has at least one spawn (branching) point
-    leaves_.push_back(std::make_shared<SpawnPoint>(ctx_p));
-    leaves_[0]->setTransformationMatrix(leaves_[0]->matrix().translate(60, 0).rotate(-10).scale(0.98, 0.98));
-    leaf_id->registerLeaf(leaves_[0]);
+    auto leaf = Leaf::constructNew(ctx_p, leaf_type_t::spawn_point);
+    leaf->setTransformationMatrix(leaf->matrix().translate(60, 0).rotate(-10).scale(0.98, 0.98));
+    leaves_.push_back(leaf);
 }
 
 void Branch::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint num_iterations, BranchStatistics& stats, uint depth)
