@@ -1,0 +1,63 @@
+@startuml
+
+participant DisplayWidget	  as DW
+participant "QPainter" as QP
+participant UiPainter as UP
+participant Tree      as TR
+
+skinparam sequenceMessageAlign direction
+
+?->      DW : ""PaintGL()""
+
+
+DW -> QP ** : make_shared<QP>(userViewBuffer)
+DW -> QP: make_shared<QP>(colorIdBuffer)
+note right: only in\nedit mode
+
+DW -> DW: initializeDrawBuffers()
+activate DW
+DW -> QP: (setup calls)
+deactivate DW
+
+|||
+
+
+DW -> UP ** : UiPainter(view_)
+DW -> UP: drawGridAndAxes()
+UP -> QP: (draw routines)
+DW -> UP: drawRulerNumbers()
+UP -> QP: (draw routines)
+|||
+DW -> QP: setWorldMatrixEnabled(true)
+DW -> QP: setWorldTransform(QTransform(view_))
+|||
+DW -> TR: Draw()
+
+rnote over TR: (draw functionality)
+
+rnote over TR: process stats
+TR -> DW: <back:white>return tree stats
+
+
+
+DW -> DW: drawDraggedLeaf()
+|||
+
+DW -> QP: setWorldMatrixEnabled(false)
+|||
+
+DW -> UP: uipainter.drawCoordinateLabels()
+UP -> QP: (draw routines)
+DW -> UP: uipainter.drawStats()
+UP -> QP: (draw routines)
+DW -> UP: uipainter.drawCtxMode()
+UP -> QP: (draw routines)
+
+
+|||
+
+rnote over DW: drawImage(userViewBuffer)
+
+
+@enduml
+

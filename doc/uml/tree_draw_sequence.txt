@@ -1,0 +1,65 @@
+@startuml
+participant Tree      as TR
+participant Branch    as BR
+participant Leaf      as LF
+participant Control   as CTRL
+participant "QPainter" as QP
+
+skinparam sequenceMessageAlign direction
+
+?->      TR : ""Draw()""
+
+
+TR -> BR: Draw()
+
+
+loop each Leaf
+
+  BR -> LF: Draw()
+  
+  |||
+  
+  LF -> QP: <back:white>setWorldTransform(combine with matrix_)\ni.e. apply local transformations
+  
+  alt selected && isInEditMode() && isAtSelectionDepth()
+    LF -> QP: <back:white>(draw transformation matrix)
+  end
+  
+  LF -> QP: <back:white>(draw leaf-specific graphics)
+  
+  alt !isSpawnPoint
+    LF -> QP: <back:white>setWorldTransform(combine with inverted matrix_)\ni.e. unapply local transformations
+  end
+  
+  |||
+
+  alt	depth == 0 && leaf->isSelected()
+    BR -> LF: DrawControls()
+    loop each control
+      LF -> CTRL: Draw()
+      CTRL -> QP: <back:white>setWorldMatrixEnabled(false)
+      note right: turn off WT transformations\nand map controls to leaf space,\nso that selection points\naren't weirdly stretched
+      CTRL -> QP: draw control-specific graphics
+      CTRL -> QP: <back:white>setWorldMatrixEnabled(true)
+    end
+  end
+
+  alt  depth < final depth && leaf is SpawnPoint
+    BR -> BR: Draw(depth + 1)
+    note left: recursion\n<i>depth</i> times
+    LF -> QP: <back:white>setWorldTransform(combine with inverted matrix_)\ni.e. unapply spawn point (= branch) transformations
+  end
+
+end
+
+
+rnote over BR: process stats
+BR -> TR: <back:white>return branch stats
+
+
+
+rnote over TR: process stats
+[<- TR: <back:white>return tree stats
+
+@enduml
+
