@@ -136,10 +136,10 @@ void Viewer::setupToolbar()
 
     toolbar->addSeparator();
 
-    addEditModeAction(toolbar, ":/icons/circle.png", "add a circle", "Drag and drop to add a circle", leaf_type_t::circle);
-    addEditModeAction(toolbar, ":/icons/line.png", "add a line", "Drag and drop to add a line", leaf_type_t::line);
-    addEditModeAction(toolbar, ":/icons/polygon.png", "add a polygon", "Drag and drop to add a polygon", leaf_type_t::path);
-    addEditModeAction(toolbar, ":/icons/rectangle.png", "add a rectangle", "Drag and drop to add a rectangle", leaf_type_t::rectangle);
+    addLeafButton(toolbar, ":/icons/circle.png", "add a circle", "Drag and drop to add a circle", leaf_type_t::circle);
+    addLeafButton(toolbar, ":/icons/line.png", "add a line", "Drag and drop to add a line", leaf_type_t::line);
+    addLeafButton(toolbar, ":/icons/polygon.png", "add a polygon", "Drag and drop to add a polygon", leaf_type_t::path);
+    addLeafButton(toolbar, ":/icons/rectangle.png", "add a rectangle", "Drag and drop to add a rectangle", leaf_type_t::rectangle);
 
     disableEditModeActions();
 }
@@ -204,7 +204,7 @@ void Viewer::disableEditModeActions()
     }
 }
 
-void Viewer::addEditModeAction(QToolBar *toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type)
+void Viewer::addLeafButton(QToolBar *toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type)
 {
     QAction *action = new QAction(QIcon(resource_path.c_str()), description.c_str(), this);
     action->setStatusTip(status_tip.c_str());

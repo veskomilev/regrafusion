@@ -93,7 +93,7 @@ private:
     //! \param status_tip Tooltip to be used for the button
     //! \param type The type of the leaf that should be added when the action is invoked
     //!
-    void addEditModeAction(QToolBar* toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type);
+    void addLeafButton(QToolBar* toolbar, std::string resource_path, std::string description, std::string status_tip, leaf_type_t type);
 
     //!  Qt framework internal pointer
     Ui::Viewer *ui;
