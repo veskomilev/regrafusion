@@ -1,0 +1,63 @@
+@startuml
+
+participant Viewer                 as V
+participant ShapeWidgetEventFilter as SWEF
+participant DisplayWidget  as DW
+participant RgfCtx         as CTX
+participant Tree           as TR
+participant Branch         as BR
+participant Leaf           as LF
+
+!pragma teoz true
+
+skinparam sequenceMessageAlign direction
+
+== Add Leaf button creation at program start ==
+
+?->      V : addLeafButton(\n  leaf_type)
+rnote right: a separate button\nis created\nfor each shape type
+V -> SWEF **: new SWEF(\n  leaf_type)
+
+== User Clicks on a Button to Add a Leaf ==
+
+
+?->  SWEF: eventFilter(event)
+
+alt <back:white>event->type() == QEvent::MouseMove  (i.e. Leaf is being created by Drag-and-Drop)
+
+SWEF -> LF: <back:white>::insertType(mimeData, leaf_type_)
+|||
+{start} SWEF ->?: <back:white>triggerDragging(\n  mimeData)
+note right of SWEF: User drags\nthe new leaf to\nthe desired location
+{end} ?-> DW: <back:white>dropEvent(\n  mimeData)
+
+DW -> LF: <back:white>::extractType(event->mimeData())
+LF -> DW: <back:white>leaf_type
+DW -> CTX: createLeaf(\n  leaf_type,\n  event->position())
+|||
+else \n<back:white>[event->type() == QEvent::MouseButtonRelease  (i.e. Leaf is being created by clicking on the button)
+
+SWEF -> CTX: createLeaf(leaf_type_)
+CTX -> CTX: createLeaf(\n  leaf_type,\n  view position)
+
+end
+
+
+== Leaf Creation ==
+
+?-> CTX: <back:white>createLeaf(\n  leaf_type,\n  location)
+CTX -> TR: <back:white>createLeaf(\n  leaf_type,\n  location)
+TR -> BR: <back:white>createLeaf(\n  leaf_type,\n  location)
+BR -> LF: constructNew(leaf_type)
+note over LF: leaf_type-specific\nfactory call
+
+LF -> BR: shared_ptr<Leaf> leaf
+BR -> LF: leaf->matrix().translate(location)
+BR -> BR: leaves_.push_back(leaf)
+BR -> TR: leaf
+TR -> CTX: leaf
+
+CTX ->?: <back:white>emit leafSelected(leaf)
+
+@enduml
+
