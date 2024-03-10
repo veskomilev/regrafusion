@@ -44,6 +44,14 @@ public:
     static leaf_type_t extractType(const QMimeData *mime_data);
 
     //!
+    //! Inserts leaf type into QMimeData, which is used for Drag-and-Drop events
+    //!
+    //! \param mime_data The data that contains leaf type
+    //! \param type The inserted leaf type
+    //!
+    static void insertType(QMimeData *mime_data, leaf_type_t type);
+
+    //!
     //! Draws a leaf instance onto the view area and the color id buffer
     //!
     //! \param painter A pointer to the painter that paints onto the view area (view buffer)

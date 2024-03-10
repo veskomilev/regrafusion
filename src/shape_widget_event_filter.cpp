@@ -6,8 +6,8 @@
 
 #include "shape_widget_event_filter.h"
 
-#include "common.h"
 #include "displaywidget.h"
+#include "gfx/leaf.h"
 
 ShapeWidgetEventFilter::ShapeWidgetEventFilter(std::shared_ptr<RgfCtx> rgf_ctx, QAction *action, QWidget *widget, leaf_type_t leaf_type) :
     rgf_ctx_(rgf_ctx),
@@ -37,7 +37,7 @@ bool ShapeWidgetEventFilter::eventFilter(QObject *obj, QEvent *event)
             mouse_event->pos().y() > widget_->rect().height())) {
 
                 QMimeData *mimeData = new QMimeData;
-                mimeData->setData(kRgfMimeType, QByteArray(1, static_cast<char>(leaf_type_)));
+                Leaf::insertType(mimeData, leaf_type_);
 
                 QDrag *drag = new QDrag(this);
                 drag->setMimeData(mimeData);

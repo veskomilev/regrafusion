@@ -42,6 +42,14 @@ leaf_type_t Leaf::extractType(const QMimeData *mime_data)
     return static_cast<leaf_type_t>(data.front());
 }
 
+void Leaf::insertType(QMimeData *mime_data, leaf_type_t type)
+{
+    if (mime_data == nullptr)
+        return;
+
+    mime_data->setData(kRgfMimeType, QByteArray(1, static_cast<char>(type)));
+}
+
 
 void Leaf::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
