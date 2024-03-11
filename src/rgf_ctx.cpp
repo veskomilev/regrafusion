@@ -20,7 +20,7 @@ RgfCtx::RgfCtx(DisplayWidget *display_widget, QStatusBar* status_bar) :
         QGuiApplication::primaryScreen()->geometry().width(),
         QGuiApplication::primaryScreen()->geometry().height(),
         QImage::Format_RGB32)),
-    mode_(mode_t::view),
+    mode_(mode_t::navigation),
     selected_leaf_(nullptr),
     selected_leaf_depth_(0),
     cumulative_branch_transformations_(QTransform())
@@ -55,11 +55,14 @@ void RgfCtx::setNumBranches(uint num_branches)
 void RgfCtx::switchModes()
 {
     switch(mode_) {
-        case mode_t::view:
+        case mode_t::navigation:
             mode_ = mode_t::edit;
             break;
         case mode_t::edit:
             mode_ = mode_t::view;
+            break;
+        case mode_t::view:
+            mode_ = mode_t::navigation;
             break;
         default:
             mode_ = mode_t::view;

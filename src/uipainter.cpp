@@ -274,11 +274,14 @@ void UiPainter::drawCtxMode(RgfCtx::mode_t mode)
     std::string mode_string = "";
 
     switch(mode) {
-        case RgfCtx::mode_t::view:
-            mode_string = "View mode";
+        case RgfCtx::mode_t::navigation:
+            mode_string = "Navigation mode";
             break;
         case RgfCtx::mode_t::edit:
             mode_string = "Edit mode";
+            break;
+        case RgfCtx::mode_t::view:
+            mode_string = "View mode";
             break;
         default:
             mode_string = "Error: Unknown mode";

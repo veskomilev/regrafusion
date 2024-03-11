@@ -42,9 +42,10 @@ public:
 
     const std::shared_ptr<QImage> & colorIdBuffer() const { return color_id_buffer_; }
 
-    //!  Mode of the program - in view mode maximum frame rate is greater since the color id buffer isn't drawn and some events aren't processed,
-    //!  but the tree cannot be edited.
-    enum class mode_t {view, edit};
+    //!  Mode of the program - in view and navigation modes maximum frame rate is greater since the color id buffer isn't drawn
+    //! and some events aren't processed, but the tree cannot be edited.
+    //! In navigation mode grid and rulers are drawn, whereas in view mode only the tree is drawn.
+    enum class mode_t {navigation, edit, view};
 
     const mode_t& getMode() const { return mode_; }
 
