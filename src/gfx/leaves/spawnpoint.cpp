@@ -30,17 +30,20 @@ SpawnPoint::~SpawnPoint()
 
 void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainter> color_id_painter, uint depth)
 {
-    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
+    Leaf::draw(painter, color_id_painter, depth);
 
+    std::shared_ptr<RgfCtx> ctx_p = ctx_.lock();
     if (ctx_p == nullptr)
         return;
 
-    // only highlight the editable spawn point instance, so as not to clutter the viewport
-    bool editable = (depth == 0);
-
-    Leaf::draw(painter, color_id_painter, depth);
+    // don't draw spawn points in view mode
+    if (ctx_p->getMode() == RgfCtx::mode_t::view)
+        return;
 
     painter->setBrush(Qt::transparent);
+
+    // only highlight the editable spawn point instance, so as not to clutter the viewport
+    bool editable = (depth == 0);
 
     if (editable) {
         painter->setPen(QColor(100, 0, 0, 160));
