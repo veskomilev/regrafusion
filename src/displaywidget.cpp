@@ -47,9 +47,10 @@ void DisplayWidget::paintGL()
 
     UiPainter uipainter(view_, painter);
 
-    uipainter.drawGridAndAxes();
-
-    uipainter.drawRulerNumbers();
+    if (ctx_->getMode() != RgfCtx::mode_t::view) {
+        uipainter.drawGridAndAxes();
+        uipainter.drawRulerNumbers();
+    }
 
     // above elements are at constant relative position - they shouldn't be affected by the matrix
     // also, grid and axes look better when they're always a single pixel wide
@@ -62,18 +63,22 @@ void DisplayWidget::paintGL()
     // draw the tree itself
     TreeStatistics stats = ctx_->tree()->draw(painter, color_id_painter);
 
-    // draw a new DnD leaf
-    drawDraggedLeaf(painter);
+    if (ctx_->getMode() != RgfCtx::mode_t::view) {
+        // draw a new DnD leaf
+        drawDraggedLeaf(painter);
+    }
 
     // disable the matrix for overlaid elements
     painter->setWorldMatrixEnabled(false);
 
-    // overlay coordinate labels on top of drawn elements
-    uipainter.drawCoordinateLabels();
+    if (ctx_->getMode() != RgfCtx::mode_t::view) {
+        // overlay coordinate labels on top of drawn elements
+        uipainter.drawCoordinateLabels();
 
-    uipainter.drawStats(stats);
+        uipainter.drawStats(stats);
 
-    uipainter.drawCtxMode(ctx_->getMode());
+        uipainter.drawCtxMode(ctx_->getMode());
+    }
 
     QPainter display_painter(this);
     if (draw_user_view_buffer_) {
