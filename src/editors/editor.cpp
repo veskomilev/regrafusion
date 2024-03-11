@@ -64,6 +64,7 @@ void Editor::setupSingleValueControl(QGridLayout *grid, QLabel **label, QLineEdi
 
     *line_edit = new QLineEdit();
     (*line_edit)->setText("0");
+    (*line_edit)->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
 
     grid->addWidget(*label, next_free_row_, 0, 1, 1, Qt::AlignTop);
     grid->addWidget(*line_edit, next_free_row_, 1, 1, 1, Qt::AlignTop);
@@ -83,6 +84,7 @@ void Editor::setupColorControl(QGridLayout *grid, QLabel **label, QPushButton **
     // make the button look like a color picker
     (*push_button)->setFlat(true);
     (*push_button)->setAutoFillBackground(true);
+    (*push_button)->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
 
     grid->addWidget(*label, next_free_row_, 0, 1, 1, Qt::AlignTop);
     grid->addWidget(*push_button, next_free_row_, 1, 1, 1, Qt::AlignTop);
