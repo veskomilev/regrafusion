@@ -19,6 +19,7 @@ struct TransformationInfo {
     qreal rotation_rad; //!< rotation in radians
     qreal rotation_deg; //!< rotation in degrees
     QPointF scale; //!< scaling
+    qreal avg_scale; //!< average x and y scale
 };
 
 //!

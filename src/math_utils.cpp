@@ -15,6 +15,7 @@ TransformationInfo decomposeMatrix(QTransform matrix)
 
     info.scale.rx() = sqrt(mx.rx() * mx.rx() + mx.ry() * mx.ry());
     info.scale.ry() = sqrt(my.rx() * my.rx() + my.ry() * my.ry());
+    info.avg_scale = (info.scale.rx() + info.scale.ry()) / 2;
 
     double angle = asin(mx.ry() / info.scale.rx());
     if (mx.rx() > 0) {
