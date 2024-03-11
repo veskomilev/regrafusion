@@ -35,19 +35,27 @@ void SpawnPoint::draw(std::shared_ptr<QPainter> painter, std::shared_ptr<QPainte
     if (ctx_p == nullptr)
         return;
 
+    // only highlight the editable spawn point instance, so as not to clutter the viewport
+    bool editable = (depth == 0);
 
     Leaf::draw(painter, color_id_painter, depth);
 
+    painter->setBrush(Qt::transparent);
 
-    painter->setPen(QColor(0, 0, 0, 128));
-    painter->drawEllipse(QPointF(0, 0), 3, 3);
+    if (editable) {
+        painter->setPen(QColor(100, 0, 0, 160));
+        painter->drawEllipse(QPointF(0, 0), 3, 3);
+    } else {
+        painter->setPen(QColor(0, 0, 0, 128));
+        painter->drawEllipse(QPointF(0, 0), 2, 2);
+    }
 
-    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit) {
+    if (selected_ && ctx_p->getMode() == RgfCtx::mode_t::edit && editable) {
         painter->setPen(QColor(0, 0, 0, 255));
         painter->drawEllipse(QPointF(0, 0), 4, 4);
     }
 
-    if (ctx_p->getMode() == RgfCtx::mode_t::edit) {
+    if (ctx_p->getMode() == RgfCtx::mode_t::edit && editable) {
         color_id_painter->setBrush(getUniqueColor(depth));
         color_id_painter->setPen(QColor(0, 0, 0, 0));
         color_id_painter->drawEllipse(QPointF(0, 0), 3, 3);
