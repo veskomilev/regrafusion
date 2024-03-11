@@ -121,7 +121,7 @@ scale</string>
       <item row="4" column="0">
        <widget class="QSpinBox" name="num_branches_spin_box">
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="minimum">
          <number>1</number>
