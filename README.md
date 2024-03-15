@@ -1,3 +1,5 @@
+https://github.com/veskomilev/regrafusion/assets/153009714/ad045686-fab8-4214-beb4-f5bbdcfa0c2b
+
 # Regrafusion
 
 Regrafusion is a tool for creation of repeating and self-similar patterns. It's designed to effortlessly create mesmerizing graphics, illusions and fractal-like patterns alike. Using Regrafusion, you can unleash your imagination and explore endless possibilities in pattern design.
